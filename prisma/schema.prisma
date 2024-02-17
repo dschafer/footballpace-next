@@ -25,9 +25,6 @@ model matches {
   FTHG     Int
   FTAG     Int
   FTR      Result
-  HTHG     Int
-  HTAG     Int
-  HTR      Result
 
   @@id([League, Date, HomeTeam, AwayTeam])
 }
