@@ -1,17 +1,14 @@
 {
-  "name": "postgres-prisma",
-  "repository": "https://github.com/vercel/examples.git",
+  "name": "footballpace-next",
+  "repository": "https://github.com/dschafer/footballpace-next.git",
   "license": "MIT",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && prisma db push && prisma db seed && next build",
+    "build": "prisma generate && prisma db push && next build",
     "start": "next start",
     "lint": "next lint"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.4.1",

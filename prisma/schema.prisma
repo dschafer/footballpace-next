@@ -11,10 +11,23 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model users {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  image     String
-  createdAt DateTime @default(now())
+enum Result {
+  H
+  A
+  D
+}
+
+model matches {
+  League   String
+  Date     DateTime
+  HomeTeam String
+  AwayTeam String
+  FTHG     Int
+  FTAG     Int
+  FTR      Result
+  HTHG     Int
+  HTAG     Int
+  HTR      Result
+
+  @@id([League, Date, HomeTeam, AwayTeam])
 }
