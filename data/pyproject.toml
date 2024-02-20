@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["footballpace"]
+
+[tool.dagster]
+module_name = "footballpace"
+
+[project]
+name = "footballpace"
+version = "0.0.1"
+dependencies = [
+  "dagster",
+  "dagster-cloud",
+  "dagster-pandas",
+  "pandas",
+  "psycopg[binary]",
+  "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+  "dagster-webserver",
+  "pytest",
+]
