@@ -1,4 +1,6 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import theme from '@/lib/theme';
 
 export const metadata = {
   metadataBase: new URL('https://postgres-prisma.vercel.app'),
@@ -19,7 +21,9 @@ export default function RootLayout({
       </head>
       <body>
         <AppRouterCacheProvider>
-          {children}
+          <ThemeProvider theme={theme}>
+            {children}
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
