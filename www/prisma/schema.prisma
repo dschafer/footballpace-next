@@ -19,6 +19,7 @@ enum Result {
 
 model matches {
   League   String
+  Season   Int
   Date     DateTime
   HomeTeam String
   AwayTeam String

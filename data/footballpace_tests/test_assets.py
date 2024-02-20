@@ -1,6 +1,6 @@
 import pandas as pd
 
-from dagster import Output
+from dagster import MultiPartitionKey, Output, build_asset_context
 
 from footballpace.assets import match_results_df, match_results_postgres
 
@@ -9,25 +9,36 @@ sample_bytes_22 = b"Div,Date,Time,HomeTeam,AwayTeam,FTHG,FTAG,FTR,HTHG,HTAG,HTR,
 
 
 def test_match_results_df_95():
-    df_output = match_results_df(sample_bytes_95)
+    df_output = match_results_df(
+        build_asset_context(partition_key=MultiPartitionKey({"season": "1995"})),
+        sample_bytes_95,
+    )
     assert isinstance(df_output, Output)
     df = df_output.value
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 2
     assert df["Date"][0] == pd.Timestamp("1995-08-19")
+    assert df["Season"][0] == 1995
 
 
 def test_match_results_df_22():
-    df_output = match_results_df(sample_bytes_22)
+    df_output = match_results_df(
+        build_asset_context(partition_key=MultiPartitionKey({"season": "2022"})),
+        sample_bytes_22,
+    )
     assert isinstance(df_output, Output)
     df = df_output.value
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 2
     assert df["Date"][0] == pd.Timestamp("2022-08-05")
+    assert df["Season"][0] == 2022
 
 
 def test_match_results_postgres():
-    df_output = match_results_df(sample_bytes_22)
+    df_output = match_results_df(
+        build_asset_context(partition_key=MultiPartitionKey({"season": "2022"})),
+        sample_bytes_22,
+    )
     assert isinstance(df_output, Output)
     df = df_output.value
 

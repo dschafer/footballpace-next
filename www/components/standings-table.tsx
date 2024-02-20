@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default async function StandingsTable() {
-  const matches = await prisma.matches.findMany({ take: 10, where: { League: "E0" } })
+  const matches = await prisma.matches.findMany({ take: 10, where: { League: "E0", Season: 2023 } })
 
   return (
     <TableContainer component={Paper}>

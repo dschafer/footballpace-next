@@ -50,7 +50,7 @@ def match_results_csv(
     return Output(results_data, metadata={"size": len(results_data)})
 
 
-data_frame_dtypes = {
+csv_dtypes = {
     "Div": "string",
     "Date": "string",  # This gets converted to Date later
     "HomeTeam": "string",
@@ -64,6 +64,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
     name="MatchResultsDataFrame",
     columns=[
         PandasColumn.string_column("Div"),
+        PandasColumn.integer_column("Season"),
         PandasColumn.datetime_column("Date"),
         PandasColumn.string_column("HomeTeam"),
         PandasColumn.string_column("AwayTeam"),
@@ -85,19 +86,24 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
     code_version="v1",
     dagster_type=MatchResultsDataFrame,
 )
-def match_results_df(match_results_csv: bytes) -> Output[pd.DataFrame]:
+def match_results_df(
+    context: AssetExecutionContext, match_results_csv: bytes
+) -> Output[pd.DataFrame]:
     """Convert the CSV from football-data.co.uk into a Pandas DataFrame.
 
     API Docs: https://www.football-data.co.uk/notes.txt
     """
+    assert isinstance(context.partition_key, MultiPartitionKey)
+    season = int(context.partition_key.keys_by_dimension["season"])
+
     parsable_string = "\n".join(
         [str(s, encoding="utf-8") for s in match_results_csv.splitlines()]
     )
     df = pd.read_csv(
         StringIO(parsable_string),
         header=0,
-        usecols=list(data_frame_dtypes.keys()),
-        dtype=data_frame_dtypes,
+        usecols=list(csv_dtypes.keys()),
+        dtype=csv_dtypes,
     ).dropna(how="all")
 
     if len(df["Date"][0]) == 8:
@@ -106,6 +112,8 @@ def match_results_df(match_results_csv: bytes) -> Output[pd.DataFrame]:
     else:
         # Dates like 31/08/2003
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
+
+    df["Season"] = season
 
     return Output(
         df,

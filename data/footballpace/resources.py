@@ -49,8 +49,8 @@ class VercelPostgresResource(ConfigurableResource):
         """Given a list of matches, upserts them into the DB."""
         with self._db_connection.cursor() as cur:
             cur.executemany(
-                """INSERT INTO matches ("League", "Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG", "FTR")
-    VALUES(%(Div)s, %(Date)s, %(HomeTeam)s, %(AwayTeam)s, %(FTHG)s, %(FTAG)s, %(FTR)s)
+                """INSERT INTO matches ("League", "Season", "Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG", "FTR")
+    VALUES(%(Div)s, %(Season)s, %(Date)s, %(HomeTeam)s, %(AwayTeam)s, %(FTHG)s, %(FTAG)s, %(FTR)s)
     ON CONFLICT ("League", "Date", "HomeTeam", "AwayTeam") DO NOTHING;""",
                 matches,
             )
