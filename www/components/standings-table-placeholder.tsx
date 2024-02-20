@@ -13,15 +13,27 @@ export default function StandingsTablePlaceholder() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Home</TableCell>
-            <TableCell>Away</TableCell>
-            <TableCell>Score</TableCell>
+            <TableCell>#</TableCell>
+            <TableCell>Team</TableCell>
+            <TableCell>Played</TableCell>
+            <TableCell>Won</TableCell>
+            <TableCell>Drawn</TableCell>
+            <TableCell>Lost</TableCell>
+            <TableCell>For</TableCell>
+            <TableCell>Against</TableCell>
+            <TableCell>GD</TableCell>
+            <TableCell>Points</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {[...Array(10)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <TableRow key={i}>
+              <TableCell><Skeleton variant="text" /></TableCell>
+              <TableCell><Skeleton variant="text" /></TableCell>
+              <TableCell><Skeleton variant="text" /></TableCell>
+              <TableCell><Skeleton variant="text" /></TableCell>
+              <TableCell><Skeleton variant="text" /></TableCell>
+              <TableCell><Skeleton variant="text" /></TableCell>
               <TableCell><Skeleton variant="text" /></TableCell>
               <TableCell><Skeleton variant="text" /></TableCell>
               <TableCell><Skeleton variant="text" /></TableCell>
