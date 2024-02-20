@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
-import Table from '@/components/table'
-import TablePlaceholder from '@/components/table-placeholder'
+import StandingsTable from '@/components/standings-table'
+import StandingsTablePlaceholder from '@/components/standings-table-placeholder'
 
 export default function Home() {
   return (
     <main>
-      <Suspense fallback={<TablePlaceholder />}>
-        <Table />
+      <Suspense fallback={<StandingsTablePlaceholder />}>
+        <StandingsTable />
       </Suspense>
     </main>
   )

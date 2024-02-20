@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
 export const metadata = {
   metadataBase: new URL('https://postgres-prisma.vercel.app'),
@@ -7,12 +7,6 @@ export const metadata = {
     'Tracking the pace of football clubs towards the championship',
 }
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +14,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>{children}</body>
+      <head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </head>
+      <body>
+        <AppRouterCacheProvider>
+          {children}
+        </AppRouterCacheProvider>
+      </body>
     </html>
   )
 }
