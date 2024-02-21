@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"command": "pnpm run dev",
+			"label": "www dev",
+			"options": {
+				"cwd": "www"
+			}
+		},
+		{
+			"type": "shell",
+			"command": "dagster dev",
+			"label": "dagster dev",
+			"options": {
+				"cwd": "data"
+			}
+		}
+	]
+}
