@@ -1,8 +1,8 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import theme from "@/lib/theme";
+import { ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import theme from "@/lib/theme";
 
 export const metadata = {
   metadataBase: new URL("https://footballpace-next.vercel.app/"),
