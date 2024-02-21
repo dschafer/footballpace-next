@@ -21,7 +21,7 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Typography variant="h1" gutterBottom>
+            <Typography variant="h3" gutterBottom>
               Football Pace
             </Typography>
             {children}

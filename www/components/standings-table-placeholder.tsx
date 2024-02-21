@@ -6,66 +6,79 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import leagues from "@/lib/leagues";
 
 export default async function StandingsTablePlaceholder({
   rowCount,
+  league,
 }: {
   rowCount: number;
+  league: string;
 }) {
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell>Team</TableCell>
-            <TableCell>Played</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Drawn</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell>For</TableCell>
-            <TableCell>Against</TableCell>
-            <TableCell>GD</TableCell>
-            <TableCell>Points</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {[...Array(rowCount)].map((_, i) => (
-            <TableRow key={i}>
-              <TableCell>
-                <Skeleton variant="text" />
+    <>
+      <Typography variant="h4" gutterBottom>
+        {leagues.get(league)}
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">#</TableCell>
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                Team
               </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
-              </TableCell>
-              <TableCell>
-                <Skeleton variant="text" />
+              <TableCell align="right">Played</TableCell>
+              <TableCell align="right">Won</TableCell>
+              <TableCell align="right">Drawn</TableCell>
+              <TableCell align="right">Lost</TableCell>
+              <TableCell align="right">For</TableCell>
+              <TableCell align="right">Against</TableCell>
+              <TableCell align="right">GD</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                Points
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {[...Array(rowCount)].map((_, i) => (
+              <TableRow key={i}>
+                <TableCell align="center">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right">
+                  <Skeleton variant="text" />
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                  <Skeleton variant="text" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

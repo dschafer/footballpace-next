@@ -5,6 +5,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
 type StandingsRow = {
@@ -72,39 +74,52 @@ export default async function StandingsTable({
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell>Team</TableCell>
-            <TableCell>Played</TableCell>
-            <TableCell>Won</TableCell>
-            <TableCell>Drawn</TableCell>
-            <TableCell>Lost</TableCell>
-            <TableCell>For</TableCell>
-            <TableCell>Against</TableCell>
-            <TableCell>GD</TableCell>
-            <TableCell>Points</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedStandings.map(([team, row], i) => (
-            <TableRow key={team}>
-              <TableCell>{i + 1}</TableCell>
-              <TableCell>{team}</TableCell>
-              <TableCell>{row.w + row.d + row.l}</TableCell>
-              <TableCell>{row.w}</TableCell>
-              <TableCell>{row.d}</TableCell>
-              <TableCell>{row.l}</TableCell>
-              <TableCell>{row.f}</TableCell>
-              <TableCell>{row.a}</TableCell>
-              <TableCell>{gd(row)}</TableCell>
-              <TableCell>{pts(row)}</TableCell>
+    <>
+      <Typography variant="h4" gutterBottom>
+        {leagues.get(league)}
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">#</TableCell>
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                Team
+              </TableCell>
+              <TableCell align="right">Played</TableCell>
+              <TableCell align="right">Won</TableCell>
+              <TableCell align="right">Drawn</TableCell>
+              <TableCell align="right">Lost</TableCell>
+              <TableCell align="right">For</TableCell>
+              <TableCell align="right">Against</TableCell>
+              <TableCell align="right">GD</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                Points
+              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {sortedStandings.map(([team, row], i) => (
+              <TableRow key={team}>
+                <TableCell align="center">{i + 1}</TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                  {team}
+                </TableCell>
+                <TableCell align="right">{row.w + row.d + row.l}</TableCell>
+                <TableCell align="right">{row.w}</TableCell>
+                <TableCell align="right">{row.d}</TableCell>
+                <TableCell align="right">{row.l}</TableCell>
+                <TableCell align="right">{row.f}</TableCell>
+                <TableCell align="right">{row.a}</TableCell>
+                <TableCell align="right">{gd(row)}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                  {pts(row)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
