@@ -29,6 +29,9 @@ export default async function StandingsTable({
   const matches = await prisma.matches.findMany({
     where: { League: league, Season: season },
   });
+  if (matches.length == 0) {
+    return null;
+  }
   const standings: Map<string, StandingsRow> = new Map();
   for (const match of matches) {
     if (!standings.has(match.HomeTeam)) {
