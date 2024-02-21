@@ -15,9 +15,17 @@ type StandingsRow = {
   a: number;
 };
 
-export default async function StandingsTable() {
+export default async function StandingsTable({
+  rowCount,
+  league,
+  season,
+}: {
+  rowCount?: number;
+  league: string;
+  season: number;
+}) {
   const matches = await prisma.matches.findMany({
-    where: { League: "E0", Season: 2023 },
+    where: { League: league, Season: season },
   });
   const standings: Map<string, StandingsRow> = new Map();
   for (const match of matches) {
@@ -56,9 +64,12 @@ export default async function StandingsTable() {
   const pts = (r: StandingsRow) => r.w * 2 + r.d;
   const gd = (r: StandingsRow) => r.f - r.a;
 
-  const sortedStandings = Array.from(standings.entries()).sort(
+  var sortedStandings = Array.from(standings.entries()).sort(
     ([_a, a], [_b, b]) => pts(b) - pts(a) || gd(b) - gd(a) || b.f - a.f,
   );
+  if (rowCount) {
+    sortedStandings = sortedStandings.slice(0, rowCount);
+  }
 
   return (
     <TableContainer component={Paper}>

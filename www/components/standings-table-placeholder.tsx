@@ -7,7 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-export default function StandingsTablePlaceholder() {
+export default async function StandingsTablePlaceholder({
+  rowCount,
+}: {
+  rowCount: number;
+}) {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -26,7 +30,7 @@ export default function StandingsTablePlaceholder() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {[...Array(20)].map((_, i) => (
+          {[...Array(rowCount)].map((_, i) => (
             <TableRow key={i}>
               <TableCell>
                 <Skeleton variant="text" />
