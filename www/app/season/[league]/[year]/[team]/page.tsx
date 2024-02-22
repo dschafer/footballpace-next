@@ -1,18 +1,18 @@
-import FixturesTable from "@/components/fixtures-table";
+import FixturesTable from "@/components/fixtures-table/fixtures-table";
 
-export default function Team({
+export default function Season({
   params,
 }: {
   params: {
     league: string;
-    season: string;
+    year: string;
     team: string;
   };
 }) {
   return (
     <FixturesTable
       league={params.league}
-      season={parseInt(params.season)}
+      year={parseInt(params.year)}
       team={params.team}
     />
   );

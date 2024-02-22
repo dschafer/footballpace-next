@@ -21,14 +21,14 @@ type StandingsRow = {
 export default async function StandingsTable({
   rowCount,
   league,
-  season,
+  year,
 }: {
   rowCount?: number;
   league: string;
-  season: number;
+  year: number;
 }) {
   const matches = await prisma.matches.findMany({
-    where: { League: league, Season: season },
+    where: { League: league, Season: year },
   });
   if (matches.length == 0) {
     return null;
@@ -80,7 +80,9 @@ export default async function StandingsTable({
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        {leagues.get(league)}
+        <Link href={`/leagueyear/${league}/${year}`}>
+          {leagues.get(league)} {year}
+        </Link>
       </Typography>
       <TableContainer component={Paper}>
         <Table stickyHeader>
@@ -107,7 +109,7 @@ export default async function StandingsTable({
               <TableRow key={team}>
                 <TableCell align="center">{i + 1}</TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  <Link href={`${league}/${season}/${team}`}>{team}</Link>
+                  <Link href={`/season/${league}/${year}/${team}`}>{team}</Link>
                 </TableCell>
                 <TableCell align="right">{row.w + row.d + row.l}</TableCell>
                 <TableCell align="right">{row.w}</TableCell>

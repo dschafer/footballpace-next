@@ -7,19 +7,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import leagues from "@/lib/leagues";
 
 export default async function StandingsTablePlaceholder({
   rowCount,
-  league,
 }: {
   rowCount: number;
-  league: string;
 }) {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        {leagues.get(league)}
+        <Skeleton variant="text" />
       </Typography>
       <TableContainer component={Paper}>
         <Table stickyHeader>
