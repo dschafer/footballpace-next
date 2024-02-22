@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -106,7 +107,7 @@ export default async function StandingsTable({
               <TableRow key={team}>
                 <TableCell align="center">{i + 1}</TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  {team}
+                  <Link href={`${league}/${season}/${team}`}>{team}</Link>
                 </TableCell>
                 <TableCell align="right">{row.w + row.d + row.l}</TableCell>
                 <TableCell align="right">{row.w}</TableCell>
