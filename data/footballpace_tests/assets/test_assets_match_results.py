@@ -1,14 +1,13 @@
-from os import path
 import pandas as pd
 
 from dagster import MultiPartitionKey, Output, build_asset_context
 
-from footballpace.assets import match_results_df, match_results_postgres
+from footballpace.assets.match_results import (
+    match_results_df,
+    match_results_postgres,
+)
 
-
-def read_csv_bytes(name: str) -> bytes:
-    with open(path.join(path.dirname(__file__), "csvs", name), "rb") as file:
-        return file.read()
+from .read_csv_bytes import read_csv_bytes
 
 
 def test_match_results_df_93():

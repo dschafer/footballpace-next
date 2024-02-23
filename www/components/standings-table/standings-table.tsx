@@ -10,14 +10,6 @@ import Typography from "@mui/material/Typography";
 import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
-type StandingsRow = {
-  w: number;
-  l: number;
-  d: number;
-  f: number;
-  a: number;
-};
-
 export default async function StandingsTable({
   rowCount,
   league,
@@ -27,51 +19,15 @@ export default async function StandingsTable({
   league: string;
   year: number;
 }) {
-  const matches = await prisma.matches.findMany({
-    where: { League: league, Season: year },
+  const standings = await prisma.standingsRow.findMany({
+    where: { league: league, year: year },
   });
-  if (matches.length == 0) {
+  if (standings.length == 0) {
     return null;
   }
-  const standings: Map<string, StandingsRow> = new Map();
-  for (const match of matches) {
-    if (!standings.has(match.HomeTeam)) {
-      standings.set(match.HomeTeam, { w: 0, l: 0, d: 0, f: 0, a: 0 });
-    }
-    if (!standings.has(match.AwayTeam)) {
-      standings.set(match.AwayTeam, { w: 0, l: 0, d: 0, f: 0, a: 0 });
-    }
 
-    standings.get(match.HomeTeam)!.f =
-      standings.get(match.HomeTeam)!.f + match.FTHG;
-    standings.get(match.HomeTeam)!.a =
-      standings.get(match.HomeTeam)!.a + match.FTAG;
-    standings.get(match.AwayTeam)!.f =
-      standings.get(match.AwayTeam)!.f + match.FTAG;
-    standings.get(match.AwayTeam)!.a =
-      standings.get(match.AwayTeam)!.a + match.FTHG;
-
-    switch (match.FTR) {
-      case "H":
-        standings.get(match.HomeTeam)!.w = standings.get(match.HomeTeam)!.w + 1;
-        standings.get(match.AwayTeam)!.l = standings.get(match.AwayTeam)!.l + 1;
-        break;
-      case "A":
-        standings.get(match.HomeTeam)!.l = standings.get(match.HomeTeam)!.l + 1;
-        standings.get(match.AwayTeam)!.w = standings.get(match.AwayTeam)!.w + 1;
-        break;
-      case "D":
-        standings.get(match.HomeTeam)!.d = standings.get(match.HomeTeam)!.d + 1;
-        standings.get(match.AwayTeam)!.d = standings.get(match.AwayTeam)!.d + 1;
-        break;
-    }
-  }
-
-  const pts = (r: StandingsRow) => r.w * 2 + r.d;
-  const gd = (r: StandingsRow) => r.f - r.a;
-
-  var sortedStandings = Array.from(standings.entries()).sort(
-    ([_a, a], [_b, b]) => pts(b) - pts(a) || gd(b) - gd(a) || b.f - a.f,
+  var sortedStandings = standings.sort(
+    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
   );
   if (rowCount) {
     sortedStandings = sortedStandings.slice(0, rowCount);
@@ -105,21 +61,23 @@ export default async function StandingsTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedStandings.map(([team, row], i) => (
-              <TableRow key={team}>
+            {sortedStandings.map((row, i) => (
+              <TableRow key={row.team}>
                 <TableCell align="center">{i + 1}</TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  <Link href={`/season/${league}/${year}/${team}`}>{team}</Link>
+                  <Link href={`/season/${league}/${year}/${row.team}`}>
+                    {row.team}
+                  </Link>
                 </TableCell>
-                <TableCell align="right">{row.w + row.d + row.l}</TableCell>
-                <TableCell align="right">{row.w}</TableCell>
-                <TableCell align="right">{row.d}</TableCell>
-                <TableCell align="right">{row.l}</TableCell>
-                <TableCell align="right">{row.f}</TableCell>
-                <TableCell align="right">{row.a}</TableCell>
-                <TableCell align="right">{gd(row)}</TableCell>
+                <TableCell align="right">{row.played}</TableCell>
+                <TableCell align="right">{row.wins}</TableCell>
+                <TableCell align="right">{row.draws}</TableCell>
+                <TableCell align="right">{row.losses}</TableCell>
+                <TableCell align="right">{row.goalsFor}</TableCell>
+                <TableCell align="right">{row.goalsAgainst}</TableCell>
+                <TableCell align="right">{row.gd}</TableCell>
                 <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                  {pts(row)}
+                  {row.points}
                 </TableCell>
               </TableRow>
             ))}

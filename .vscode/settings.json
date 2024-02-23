@@ -1,6 +1,6 @@
 {
     "python.testing.pytestArgs": [
-        "data/footballpace_tests"
+        "data/footballpace_tests/"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,

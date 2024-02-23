@@ -19,11 +19,11 @@ export default async function FixturesTable({
   year: number;
   team: string;
 }) {
-  const matches = await prisma.matches.findMany({
+  const matches = await prisma.match.findMany({
     where: {
-      League: league,
-      Season: year,
-      OR: [{ HomeTeam: team }, { AwayTeam: team }],
+      league: league,
+      year: year,
+      OR: [{ homeTeam: team }, { awayTeam: team }],
     },
   });
 
@@ -51,19 +51,19 @@ export default async function FixturesTable({
             {matches.map((match, i) => (
               <TableRow key={i}>
                 <TableCell align="left">
-                  {match.Date.toLocaleDateString()}
+                  {match.date.toLocaleDateString()}
                 </TableCell>
                 <TableCell align="right">
-                  <Link href={`/season/${league}/${year}/${match.HomeTeam}`}>
-                    {match.HomeTeam}
+                  <Link href={`/season/${league}/${year}/${match.homeTeam}`}>
+                    {match.homeTeam}
                   </Link>
                 </TableCell>
                 <TableCell align="center">
-                  {match.FTHG} - {match.FTAG}
+                  {match.ftHomeGoals} - {match.ftAwayGoals}
                 </TableCell>
                 <TableCell align="left">
-                  <Link href={`${league}/${year}/${match.AwayTeam}`}>
-                    {match.AwayTeam}
+                  <Link href={`${league}/${year}/${match.awayTeam}`}>
+                    {match.awayTeam}
                   </Link>
                 </TableCell>
               </TableRow>

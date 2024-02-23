@@ -49,9 +49,20 @@ class VercelPostgresResource(ConfigurableResource):
         """Given a list of matches, upserts them into the DB."""
         with self._db_connection.cursor() as cur:
             cur.executemany(
-                """INSERT INTO matches ("League", "Season", "Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG", "FTR")
+                """INSERT INTO matches (league, year, date, home_team, away_team, ft_home_goals, ft_away_goals, ft_result)
     VALUES(%(Div)s, %(Season)s, %(Date)s, %(HomeTeam)s, %(AwayTeam)s, %(FTHG)s, %(FTAG)s, %(FTR)s)
-    ON CONFLICT ("League", "Date", "HomeTeam", "AwayTeam") DO NOTHING;""",
+    ON CONFLICT (league, date, home_team, away_team) DO NOTHING;""",
                 matches,
+            )
+            return cur.rowcount
+
+    def upsert_standings_rows(self, standings_rows: list[dict[str, Any]]) -> int:
+        """Given a list of standings_row, upserts them into the DB."""
+        with self._db_connection.cursor() as cur:
+            cur.executemany(
+                """INSERT INTO standings_rows (league, year, team, wins, losses, draws, goals_for, goals_against)
+    VALUES(%(Div)s, %(Season)s, %(Team)s, %(Wins)s, %(Losses)s, %(Draws)s, %(For)s, %(Against)s)
+    ON CONFLICT (league, year, team) DO UPDATE SET (wins, losses, draws, goals_for, goals_against) = (EXCLUDED.wins, EXCLUDED.losses, EXCLUDED.draws, EXCLUDED.goals_for, EXCLUDED.goals_against);""",
+                standings_rows,
             )
             return cur.rowcount

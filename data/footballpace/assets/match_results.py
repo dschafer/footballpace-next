@@ -3,26 +3,15 @@ import pandas as pd
 from dagster import (
     AssetExecutionContext,
     MetadataValue,
-    MultiPartitionsDefinition,
     MultiPartitionKey,
     Output,
-    StaticPartitionsDefinition,
     asset,
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 from io import StringIO
 
 from footballpace.resources import FootballDataResource, VercelPostgresResource
-
-all_seasons = [str(s) for s in range(1993, 2024)]
-all_leagues = ["E0", "D1", "SP1", "I1", "F1"]
-
-all_seasons_leagues_partition = MultiPartitionsDefinition(
-    {
-        "season": StaticPartitionsDefinition(all_seasons),
-        "league": StaticPartitionsDefinition(all_leagues),
-    }
-)
+from .partition import all_seasons_leagues_partition
 
 
 @asset(
