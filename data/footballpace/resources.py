@@ -2,7 +2,6 @@ from contextlib import contextmanager
 from pydantic import PrivateAttr
 import requests
 import psycopg
-from requests import Response
 from dagster import (
     ConfigurableResource,
     InitResourceContext,
@@ -13,7 +12,7 @@ from typing import Any
 class FootballDataResource(ConfigurableResource):
     """Resource to fetch data from https://www.football-data.co.uk."""
 
-    def request(self, season: int, league: str) -> Response:
+    def request(self, season: int, league: str) -> requests.Response:
         """Get the CSV for a given season (as an int representing the starting
         year, so for the the 2023-2024, one would pass 2023) and league."""
         return requests.get(self._url(season, league))
