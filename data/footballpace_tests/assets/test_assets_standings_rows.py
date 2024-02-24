@@ -2,7 +2,8 @@ import pandas as pd
 
 from dagster import MultiPartitionKey, Output, build_asset_context
 
-from footballpace.assets import match_results_df, standings_rows_df
+from footballpace.assets.match_results import match_results_df
+from footballpace.assets.standings_rows import standings_rows_df
 
 from .read_csv_bytes import read_csv_bytes
 
