@@ -2,6 +2,7 @@ import pandas as pd
 
 from dagster import (
     AssetExecutionContext,
+    AssetIn,
     MetadataValue,
     MultiPartitionKey,
     Output,
@@ -118,6 +119,7 @@ def match_results_df(
     compute_kind="Postgres",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
+    ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
@@ -156,6 +158,7 @@ StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     dagster_type=StandingsRowsDataFrame,
+    ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
 )
 def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     """Transform the Match Results data frame into a Standings Table."""
@@ -190,6 +193,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     compute_kind="Postgres",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
+    ins={"standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame)},
 )
 def standings_rows_postgres(
     standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
