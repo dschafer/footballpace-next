@@ -8,9 +8,9 @@ from dagster import (
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
-from footballpace.resources import VercelPostgresResource
-from footballpace.partitions import all_seasons_leagues_partition
-from footballpace.assets.match_results import MatchResultsDataFrame
+from ..resources import VercelPostgresResource
+from ..partitions import all_seasons_leagues_partition
+from .match_results import MatchResultsDataFrame
 
 
 StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(

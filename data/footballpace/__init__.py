@@ -1,8 +1,8 @@
 from dagster import Definitions, EnvVar
 
-from footballpace.assets import all_assets
-from footballpace.resources import FootballDataResource, VercelPostgresResource
-from footballpace.jobs import all_assets_job, current_season_daily_refresh_schedule
+from .assets import all_assets
+from .resources import FootballDataResource, VercelPostgresResource
+from .jobs import all_assets_job, current_season_daily_refresh_schedule
 
 defs = Definitions(
     assets=all_assets,

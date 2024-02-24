@@ -1,10 +1,10 @@
-from footballpace.assets.match_results import match_results_csv as match_results_csv
-from footballpace.assets.match_results import match_results_df as match_results_df
-from footballpace.assets.match_results import (
+from .match_results import match_results_csv as match_results_csv
+from .match_results import match_results_df as match_results_df
+from .match_results import (
     match_results_postgres as match_results_postgres,
 )
-from footballpace.assets.standings_rows import standings_rows_df as standings_rows_df
-from footballpace.assets.standings_rows import (
+from .standings_rows import standings_rows_df as standings_rows_df
+from .standings_rows import (
     standings_rows_postgres as standings_rows_postgres,
 )
 
