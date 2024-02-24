@@ -1,6 +1,6 @@
 from dagster import define_asset_job, MultiPartitionKey, RunRequest, schedule
 
-from .partitions import all_leagues, all_seasons
+from footballpace.partitions import all_leagues, all_seasons
 
 all_assets_job = define_asset_job(name="all_assets_job")
 
