@@ -11,7 +11,7 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 from io import StringIO
 
 from footballpace.resources import FootballDataResource, VercelPostgresResource
-from .partition import all_seasons_leagues_partition
+from footballpace.partitions import all_seasons_leagues_partition
 
 
 @asset(

@@ -1,7 +1,7 @@
 from dagster import MultiPartitionKey, RunRequest, schedule
 
 from .jobs import all_assets_job
-from .assets.partition import all_leagues, all_seasons
+from .partitions import all_leagues, all_seasons
 
 
 @schedule(cron_schedule="0 0 * * *", job=all_assets_job)
