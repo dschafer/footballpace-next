@@ -44,3 +44,15 @@ model StandingsRow {
   @@id([league, year, team])
   @@map("standings_rows")
 }
+
+model PaceSheetEntry {
+  league         String
+  year           Int
+  teamFinish     Int     @map("team_finish")
+  opponentFinish Int     @map("opponent_finish")
+  home           Boolean
+  expectedPoints Float   @map("expected_points")
+
+  @@id([league, year, teamFinish, opponentFinish, home])
+  @@map("pace_sheet_entries")
+}

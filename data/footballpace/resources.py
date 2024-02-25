@@ -65,3 +65,16 @@ class VercelPostgresResource(ConfigurableResource):
                 standings_rows,
             )
             return cur.rowcount
+
+    def upsert_pace_sheet_entries(
+        self, pace_sheet_entries: list[dict[str, Any]]
+    ) -> int:
+        """Given a list of standings_row, upserts them into the DB."""
+        with self._db_connection.cursor() as cur:
+            cur.executemany(
+                """INSERT INTO pace_sheet_entries (league, year, team_finish, opponent_finish, home, expected_points)
+    VALUES(%(Div)s, %(Season)s, %(TeamFinish)s, %(OpponentFinish)s, %(Home)s, %(ExpectedPoints)s)
+    ON CONFLICT (league, year, team_finish, opponent_finish, home) DO UPDATE SET expected_points = EXCLUDED.expected_points;""",
+                pace_sheet_entries,
+            )
+            return cur.rowcount

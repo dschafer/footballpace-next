@@ -4,6 +4,7 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "python.analysis.extraPaths": ["./data"],
     "python.analysis.typeCheckingMode": "standard",
     "[javascript]": {
         "editor.tabSize": 2,
