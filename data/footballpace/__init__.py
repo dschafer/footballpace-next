@@ -6,7 +6,8 @@ from dagster import (
 
 from . import assets
 from .resources import FootballDataResource, VercelPostgresResource
-from .jobs import all_assets_job, current_season_daily_refresh_schedule
+from .jobs import all_assets_job
+from .schedules import current_season_daily_refresh_schedule
 
 defs = Definitions(
     assets=load_assets_from_modules([assets]),
