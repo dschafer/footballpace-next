@@ -1,7 +1,7 @@
 from dagster import (
     Definitions,
     EnvVar,
-    load_assets_from_package_module,
+    load_assets_from_modules,
 )
 
 from . import assets
@@ -10,7 +10,7 @@ from .jobs import all_assets_job
 from .schedules import current_season_daily_refresh_schedule
 
 defs = Definitions(
-    assets=load_assets_from_package_module(assets),
+    assets=load_assets_from_modules([assets]),
     jobs=[all_assets_job],
     resources={
         "football_data": FootballDataResource(),
