@@ -1,6 +1,6 @@
 import FixturesTable from "@/components/fixtures-table/fixtures-table";
 
-export default function Season({
+export default function SeasonPage({
   params,
 }: {
   params: {

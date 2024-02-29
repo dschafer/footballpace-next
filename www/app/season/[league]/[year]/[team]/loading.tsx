@@ -1,5 +1,5 @@
 import FixturesTablePlaceholder from "@/components/fixtures-table/fixtures-table-placeholder";
 
-export default function Season() {
+export default function SeasonLoading() {
   return <FixturesTablePlaceholder rowCount={38} />;
 }

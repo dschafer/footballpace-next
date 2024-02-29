@@ -1,7 +1,5 @@
-import Stack from "@mui/material/Stack";
 import StandingsTablePlaceholder from "@/components/standings-table/standings-table-placeholder";
-import leagues from "@/lib/leagues";
 
-export default function LeagueYear() {
+export default function LeagueYearLoading() {
   return <StandingsTablePlaceholder rowCount={20} />;
 }
