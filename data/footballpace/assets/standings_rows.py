@@ -34,7 +34,7 @@ StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
 
 
 @asset(
-    group_name="football_data_co_uk",
+    group_name="Transform",
     compute_kind="Pandas",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
@@ -70,7 +70,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
 
 
 @asset(
-    group_name="football_data_co_uk",
+    group_name="Load",
     compute_kind="Postgres",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
