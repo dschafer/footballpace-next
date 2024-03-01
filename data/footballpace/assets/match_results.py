@@ -87,7 +87,7 @@ def match_results_df(
     season = int(context.partition_key.keys_by_dimension["season"])
 
     parsable_string = "\n".join(
-        [str(s, encoding="utf-8") for s in match_results_csv.splitlines()]
+        [str(s, encoding="Windows-1252") for s in match_results_csv.splitlines()]
     )
     df = pd.read_csv(
         StringIO(parsable_string),
