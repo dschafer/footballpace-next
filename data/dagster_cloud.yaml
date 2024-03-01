@@ -2,6 +2,3 @@ locations:
 - code_source:
     package_name: footballpace
   location_name: footballpace
-  working_directory: ./data
-  build:
-    directory: ./data
