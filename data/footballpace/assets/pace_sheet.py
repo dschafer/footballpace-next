@@ -87,10 +87,17 @@ def pace_sheet_entries_df(
         all_results.groupby(["Div", "TeamFinish", "OpponentFinish", "Home"])
         .ExpectedPoints.agg("mean")
         .reset_index()
-        .sort_values(by=["TeamFinish", "OpponentFinish", "Home"])
         .query("TeamFinish == 1")
+        .sort_values(by=["TeamFinish", "Home", "OpponentFinish"])
+        .reset_index(drop=True)
     )
     summarized_results["Season"] = season
+
+    summarized_results["ExpectedPoints"] = (
+        summarized_results.groupby("Home")
+        .ExpectedPoints.apply(lambda x: x.sort_values(ignore_index=True))
+        .reset_index(drop=True)
+    )
 
     return Output(
         summarized_results,
