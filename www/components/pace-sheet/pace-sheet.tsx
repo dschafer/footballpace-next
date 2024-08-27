@@ -1,12 +1,16 @@
+import {
+  Anchor,
+  NumberFormatter,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  Title,
+} from "@mantine/core";
 import Link from "next/link";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
@@ -36,31 +40,41 @@ export default async function PaceSheet({
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        <Link href={`/leagueyear/${league}/${year}`}>
+      <Title order={2}>Pace Sheet</Title>
+      <Anchor component={Link} href={`/leagueyear/${league}/${year}`}>
+        <Text fs="italic">
           {leagues.get(league)} {year}
-        </Link>
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Opponent Position</TableCell>
-              <TableCell align="right">Home</TableCell>
-              <TableCell align="right">Away</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {[...Array(paceSheetEntries.length / 2)].map((_, i) => (
-              <TableRow key={i}>
-                <TableCell align="center">{i + 1}</TableCell>
-                <TableCell align="right">{i == 0 ? "" : homePace[i]}</TableCell>
-                <TableCell align="right">{i == 0 ? "" : awayPace[i]}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        </Text>
+      </Anchor>
+
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="center">Opponent Position</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="right">Away</TableTh>
+          </TableTr>
+        </TableThead>
+        <TableTbody>
+          {[...Array(paceSheetEntries.length / 2)].map((_, i) => (
+            <TableTr key={i}>
+              <TableTd ta="center">{i + 1}</TableTd>
+              <TableTd ta="right">
+                <NumberFormatter
+                  value={i == 0 ? "" : homePace[i]}
+                  decimalScale={2}
+                />
+              </TableTd>
+              <TableTd ta="right">
+                <NumberFormatter
+                  value={i == 0 ? "" : awayPace[i]}
+                  decimalScale={2}
+                />
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
     </>
   );
 }

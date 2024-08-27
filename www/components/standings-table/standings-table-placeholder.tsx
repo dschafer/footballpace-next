@@ -1,81 +1,84 @@
-import Paper from "@mui/material/Paper";
-import Skeleton from "@mui/material/Skeleton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
+import {
+  Skeleton,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  Title,
+} from "@mantine/core";
 
 export default async function StandingsTablePlaceholder({
   rowCount,
 }: {
   rowCount: number;
 }) {
+  var link = null;
+  if (rowCount < 10) {
+    link = (
+      <Text ta="right">
+        <Skeleton>Full Table »</Skeleton>
+      </Text>
+    );
+  }
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        <Skeleton variant="text" />
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">#</TableCell>
-              <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                Team
-              </TableCell>
-              <TableCell align="right">Played</TableCell>
-              <TableCell align="right">Won</TableCell>
-              <TableCell align="right">Drawn</TableCell>
-              <TableCell align="right">Lost</TableCell>
-              <TableCell align="right">For</TableCell>
-              <TableCell align="right">Against</TableCell>
-              <TableCell align="right">GD</TableCell>
-              <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                Points
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {[...Array(rowCount)].map((_, i) => (
-              <TableRow key={i}>
-                <TableCell align="center">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right">
-                  <Skeleton variant="text" />
-                </TableCell>
-                <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                  <Skeleton variant="text" />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Title order={2}>
+        <Skeleton>English Premier League 2023</Skeleton>
+      </Title>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="center">#</TableTh>
+            <TableTh ta="left">Team</TableTh>
+            <TableTh ta="right">Played</TableTh>
+            <TableTh ta="right">Won</TableTh>
+            <TableTh ta="right">Drawn</TableTh>
+            <TableTh ta="right">Lost</TableTh>
+            <TableTh ta="right">For</TableTh>
+            <TableTh ta="right">Against</TableTh>
+            <TableTh ta="right">GD</TableTh>
+            <TableTh ta="right">Points</TableTh>
+          </TableTr>
+        </TableThead>
+        <TableTbody>
+          {[...Array(rowCount)].map((_, i) => (
+            <TableTr key={i}>
+              <TableTd ta="center">{i + 1}</TableTd>
+              <TableTh ta="left">
+                <Skeleton>Arsenal</Skeleton>
+              </TableTh>
+              <TableTd ta="right">
+                <Skeleton>38</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>26</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>12</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>0</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>73</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>26</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>+47</Skeleton>
+              </TableTd>
+              <TableTd ta="right" fw={600}>
+                <Skeleton>90</Skeleton>
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
+      {link}
     </>
   );
 }

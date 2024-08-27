@@ -1,12 +1,14 @@
+import {
+  Anchor,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Title,
+} from "@mantine/core";
 import Link from "next/link";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
@@ -29,61 +31,71 @@ export default async function StandingsTable({
   var sortedStandings = standings.sort(
     (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
   );
+  let hasMore = false;
   if (rowCount) {
+    hasMore = sortedStandings.length > rowCount;
     sortedStandings = sortedStandings.slice(0, rowCount);
   }
 
+  let hasMoreLink = null;
+  if (hasMore) {
+    hasMoreLink = (
+      <Anchor
+        component={Link}
+        href={`/leagueyear/${league}/${year}`}
+        ta="right"
+      >
+        Full Table »
+      </Anchor>
+    );
+  }
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        <Link href={`/leagueyear/${league}/${year}`}>
-          {leagues.get(league)} {year}
-        </Link>
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">#</TableCell>
-              <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                Team
-              </TableCell>
-              <TableCell align="right">Played</TableCell>
-              <TableCell align="right">Won</TableCell>
-              <TableCell align="right">Drawn</TableCell>
-              <TableCell align="right">Lost</TableCell>
-              <TableCell align="right">For</TableCell>
-              <TableCell align="right">Against</TableCell>
-              <TableCell align="right">GD</TableCell>
-              <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                Points
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedStandings.map((row, i) => (
-              <TableRow key={row.team}>
-                <TableCell align="center">{i + 1}</TableCell>
-                <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  <Link href={`/season/${league}/${year}/${row.team}`}>
-                    {row.team}
-                  </Link>
-                </TableCell>
-                <TableCell align="right">{row.played}</TableCell>
-                <TableCell align="right">{row.wins}</TableCell>
-                <TableCell align="right">{row.draws}</TableCell>
-                <TableCell align="right">{row.losses}</TableCell>
-                <TableCell align="right">{row.goalsFor}</TableCell>
-                <TableCell align="right">{row.goalsAgainst}</TableCell>
-                <TableCell align="right">{row.gd}</TableCell>
-                <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                  {row.points}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Title order={2}>
+        {leagues.get(league)} {year}
+      </Title>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="center">#</TableTh>
+            <TableTh ta="left">Team</TableTh>
+            <TableTh ta="right">Played</TableTh>
+            <TableTh ta="right">Won</TableTh>
+            <TableTh ta="right">Drawn</TableTh>
+            <TableTh ta="right">Lost</TableTh>
+            <TableTh ta="right">For</TableTh>
+            <TableTh ta="right">Against</TableTh>
+            <TableTh ta="right">GD</TableTh>
+            <TableTh ta="right">Points</TableTh>
+          </TableTr>
+        </TableThead>
+        <TableTbody>
+          {sortedStandings.map((row, i) => (
+            <TableTr key={row.team}>
+              <TableTd ta="center">{i + 1}</TableTd>
+              <TableTh ta="left">
+                <Anchor
+                  component={Link}
+                  href={`/season/${league}/${year}/${row.team}`}
+                >
+                  {row.team}
+                </Anchor>
+              </TableTh>
+              <TableTd ta="right">{row.played}</TableTd>
+              <TableTd ta="right">{row.wins}</TableTd>
+              <TableTd ta="right">{row.draws}</TableTd>
+              <TableTd ta="right">{row.losses}</TableTd>
+              <TableTd ta="right">{row.goalsFor}</TableTd>
+              <TableTd ta="right">{row.goalsAgainst}</TableTd>
+              <TableTd ta="right">{row.gd}</TableTd>
+              <TableTd ta="right" fw={600}>
+                {row.points}
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
+      {hasMoreLink}
     </>
   );
 }

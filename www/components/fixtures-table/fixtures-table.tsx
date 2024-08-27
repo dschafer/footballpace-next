@@ -1,12 +1,15 @@
+import {
+  Anchor,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  Title,
+} from "@mantine/core";
 import Link from "next/link";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
 import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
@@ -29,48 +32,48 @@ export default async function FixturesTable({
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        <Link href={`/leagueyear/${league}/${year}`}>
+      <Title order={2}>{team}</Title>
+      <Anchor component={Link} href={`/leagueyear/${league}/${year}`}>
+        <Text fs="italic">
           {leagues.get(league)} {year}
-        </Link>
-      </Typography>
-      <Typography variant="h5" gutterBottom>
-        {team}
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Date</TableCell>
-              <TableCell align="right">Home</TableCell>
-              <TableCell align="center">Result</TableCell>
-              <TableCell align="left">Away</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {matches.map((match, i) => (
-              <TableRow key={i}>
-                <TableCell align="left">
-                  {match.date.toLocaleDateString()}
-                </TableCell>
-                <TableCell align="right">
-                  <Link href={`/season/${league}/${year}/${match.homeTeam}`}>
-                    {match.homeTeam}
-                  </Link>
-                </TableCell>
-                <TableCell align="center">
-                  {match.ftHomeGoals} - {match.ftAwayGoals}
-                </TableCell>
-                <TableCell align="left">
-                  <Link href={`${league}/${year}/${match.awayTeam}`}>
-                    {match.awayTeam}
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        </Text>
+      </Anchor>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="left">Date</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="center">Result</TableTh>
+            <TableTh ta="left">Away</TableTh>
+          </TableTr>
+        </TableThead>
+        <TableTbody>
+          {matches.map((match, i) => (
+            <TableTr key={i}>
+              <TableTd ta="left">{match.date.toLocaleDateString()}</TableTd>
+              <TableTd ta="right">
+                <Anchor
+                  component={Link}
+                  href={`/season/${league}/${year}/${match.homeTeam}`}
+                >
+                  {match.homeTeam}
+                </Anchor>
+              </TableTd>
+              <TableTd ta="center">
+                {match.ftHomeGoals} - {match.ftAwayGoals}
+              </TableTd>
+              <TableTd ta="left">
+                <Anchor
+                  component={Link}
+                  href={`${league}/${year}/${match.awayTeam}`}
+                >
+                  {match.awayTeam}
+                </Anchor>
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
     </>
   );
 }
