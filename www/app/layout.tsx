@@ -5,11 +5,13 @@ import {
   AppShellHeader,
   AppShellMain,
   AppShellNavbar,
+  Box,
   ColorSchemeScript,
   Group,
   MantineProvider,
   Title,
 } from "@mantine/core";
+import { IconSoccerField } from "@tabler/icons-react";
 import Link from "next/link";
 import { NavLinks } from "./nav-links";
 import theme from "@/lib/theme";
@@ -39,6 +41,7 @@ export default function RootLayout({
           >
             <AppShellHeader p="xs">
               <Group h="100%">
+                <IconSoccerField size="48" />
                 <Anchor component={Link} size="inherit" href={`/`}>
                   <Title order={1}>Football Pace</Title>
                 </Anchor>

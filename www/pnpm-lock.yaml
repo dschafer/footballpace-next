@@ -14,6 +14,9 @@ dependencies:
   '@prisma/client':
     specifier: ^5.19.0
     version: 5.19.0(prisma@5.19.0)
+  '@tabler/icons-react':
+    specifier: ^3.14.0
+    version: 3.14.0(react@18.2.0)
   next:
     specifier: 13.5.4
     version: 13.5.4(react-dom@18.2.0)(react@18.2.0)
@@ -386,6 +389,19 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.7.0
+    dev: false
+
+  /@tabler/icons-react@3.14.0(react@18.2.0):
+    resolution: {integrity: sha512-3XdbuyhBNq8aZW0qagR9YL8diACZYSAtaw6VuwcO2l6HzVFPN6N5TDex9WTz/3lf+uktAvOv1kNuuFBjSjN9yw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      '@tabler/icons': 3.14.0
+      react: 18.2.0
+    dev: false
+
+  /@tabler/icons@3.14.0:
+    resolution: {integrity: sha512-OakKjK1kuDWKoNwdnHHVMt11kTZAC10iZpN/8o/CSYdeBH7S3v5n8IyqAYynFxLI8yBGTyBvljtvWdmWh57zSg==}
     dev: false
 
   /@tsconfig/node10@1.0.11:
