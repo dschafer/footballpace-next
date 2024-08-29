@@ -1,6 +1,11 @@
 "use client";
 
-import { IconColumns, IconHome, IconStopwatch } from "@tabler/icons-react";
+import {
+  IconChartCovariate,
+  IconColumns,
+  IconHome,
+  IconStopwatch,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { NavLink } from "@mantine/core";
 import { usePathname } from "next/navigation";
@@ -19,9 +24,16 @@ export function NavLinks() {
       />
       <NavLink
         component={Link}
-        href="/leagueyear/E0/2023"
-        label="Standings"
-        active={pathname == "/leagueyear/E0/2023"}
+        href="/pace/E0/2023"
+        label="Pace"
+        active={pathname == "/pace/E0/2023"}
+        leftSection={<IconChartCovariate />}
+      />
+      <NavLink
+        component={Link}
+        href="/table/E0/2023"
+        label="Table"
+        active={pathname == "/table/E0/2023"}
         leftSection={<IconColumns />}
       />
       <NavLink

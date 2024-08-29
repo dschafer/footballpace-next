@@ -41,7 +41,7 @@ export default async function PaceSheet({
   return (
     <>
       <Title order={2}>Pace Sheet</Title>
-      <Anchor component={Link} href={`/leagueyear/${league}/${year}`}>
+      <Anchor component={Link} href={`/table/${league}/${year}`}>
         <Text fs="italic">
           {leagues.get(league)} {year}
         </Text>

@@ -1,6 +1,6 @@
 import StandingsTable from "@/components/standings-table/standings-table";
 
-export default function LeagueYearPage({
+export default function TablePage({
   params,
 }: {
   params: {

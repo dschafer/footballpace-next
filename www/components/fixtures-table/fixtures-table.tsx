@@ -33,7 +33,7 @@ export default async function FixturesTable({
   return (
     <>
       <Title order={2}>{team}</Title>
-      <Anchor component={Link} href={`/leagueyear/${league}/${year}`}>
+      <Anchor component={Link} href={`/table/${league}/${year}`}>
         <Text fs="italic">
           {leagues.get(league)} {year}
         </Text>

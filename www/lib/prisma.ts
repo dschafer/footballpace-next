@@ -12,7 +12,7 @@ const extendedClient = new PrismaClient().$extends({
       points: {
         needs: { wins: true, draws: true },
         compute(standingsRow) {
-          return 2 * standingsRow.wins + standingsRow.draws;
+          return 3 * standingsRow.wins + standingsRow.draws;
         },
       },
       gd: {

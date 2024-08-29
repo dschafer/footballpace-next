@@ -40,11 +40,7 @@ export default async function StandingsTable({
   let hasMoreLink = null;
   if (hasMore) {
     hasMoreLink = (
-      <Anchor
-        component={Link}
-        href={`/leagueyear/${league}/${year}`}
-        ta="right"
-      >
+      <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
         Full Table »
       </Anchor>
     );
