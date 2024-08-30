@@ -1,6 +1,7 @@
 import {
   Anchor,
   Box,
+  Code,
   NumberFormatter,
   Popover,
   PopoverDropdown,
@@ -25,7 +26,7 @@ export default async function PaceTable({
   league: string;
   year: number;
 }) {
-  const [allStandings, allMatches, allPaceSheets] = await Promise.all([
+  let [allStandings, allMatches, allPaceSheets] = await Promise.all([
     prisma.standingsRow.findMany({
       where: { league: league, year: year },
     }),
@@ -37,6 +38,9 @@ export default async function PaceTable({
       where: { league: league, year: year, teamFinish: 1 },
     }),
   ]);
+  allStandings = allStandings.sort(
+    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
+  );
 
   const teamToFinish = new Map(
     allStandings.map(({ team }, i) => [team, i + 1]),
@@ -222,6 +226,7 @@ export default async function PaceTable({
                       />{" "}
                       ({match.home ? "Home" : "Away"} to {match.opponentFinish})
                     </Text>
+                    <Code block>{JSON.stringify(match, null, 2)}</Code>
                   </PopoverDropdown>
                 </Popover>
               </TableTd>
