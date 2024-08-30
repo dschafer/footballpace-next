@@ -1,12 +1,17 @@
 import {
   Anchor,
+  Box,
   NumberFormatter,
+  Popover,
+  PopoverDropdown,
+  PopoverTarget,
   Table,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
+  Text,
 } from "@mantine/core";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
@@ -139,22 +144,61 @@ export default async function PaceTable({
               </Anchor>
             </TableTh>
             <TableTd ta="right">
-              <NumberFormatter value={row.points} decimalScale={2} />
+              <NumberFormatter value={row.points} decimalScale={0} />
             </TableTd>
             <TableTd ta="right">
-              <NumberFormatter value={row.pace} decimalScale={2} />
+              <NumberFormatter
+                value={row.pace}
+                decimalScale={2}
+                fixedDecimalScale
+              />
             </TableTd>
             <TableTd ta="right">
-              <NumberFormatter value={row.points - row.pace} decimalScale={2} />
+              <NumberFormatter
+                value={row.points - row.pace}
+                decimalScale={2}
+                fixedDecimalScale
+              />
             </TableTd>
             {row.matches.map((match, matchNum) => (
               <TableTd ta="right" key={matchNum}>
-                <NumberFormatter value={match.points} decimalScale={2} /> -{" "}
-                <NumberFormatter
-                  value={match.expectedPoints}
-                  decimalScale={2}
-                />{" "}
-                = <NumberFormatter value={match.delta} decimalScale={2} />
+                <Popover>
+                  <PopoverTarget>
+                    <Box>
+                      {match.delta > 0 ? "+" : ""}
+                      <NumberFormatter
+                        value={match.delta}
+                        decimalScale={2}
+                        fixedDecimalScale
+                      />
+                    </Box>
+                  </PopoverTarget>
+                  <PopoverDropdown>
+                    <Text ta="center">{match.date.toLocaleDateString()}</Text>
+                    <Text ta="center">
+                      {match.homeTeam} {match.ftHomeGoals}:{match.ftAwayGoals}{" "}
+                      {match.awayTeam}
+                    </Text>
+                    <Text ta="center">
+                      <Text fw={600} span>
+                        Points
+                      </Text>
+                      : {match.points}
+                    </Text>
+                    <Text ta="center">
+                      <Text fw={600} span>
+                        Pace
+                      </Text>
+                      :{" "}
+                      <NumberFormatter
+                        value={match.expectedPoints}
+                        decimalScale={2}
+                        fixedDecimalScale
+                      />{" "}
+                      ({match.home ? "Home" : "Away"} to {match.opponentFinish})
+                    </Text>
+                  </PopoverDropdown>
+                </Popover>
               </TableTd>
             ))}
           </TableTr>

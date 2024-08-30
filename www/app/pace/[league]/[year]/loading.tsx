@@ -7,7 +7,7 @@ export default function PaceLoading() {
       <Title order={2}>
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
-      <PaceTablePlaceholder rowCount={20} />
+      <PaceTablePlaceholder rowCount={20} matchdayCount={20} />
       <Text ta="right">
         <Skeleton>Pace Sheet »</Skeleton>
       </Text>

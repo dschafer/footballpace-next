@@ -11,8 +11,10 @@ import {
 
 export default function PaceTablePlaceholder({
   rowCount,
+  matchdayCount,
 }: {
   rowCount: number;
+  matchdayCount: number;
 }) {
   return (
     <Table stickyHeader striped>
@@ -20,14 +22,14 @@ export default function PaceTablePlaceholder({
         <TableTr>
           <TableTh ta="center">#</TableTh>
           <TableTh ta="left">Team</TableTh>
-          <TableTh ta="right">Played</TableTh>
-          <TableTh ta="right">Won</TableTh>
-          <TableTh ta="right">Drawn</TableTh>
-          <TableTh ta="right">Lost</TableTh>
-          <TableTh ta="right">For</TableTh>
-          <TableTh ta="right">Against</TableTh>
-          <TableTh ta="right">GD</TableTh>
           <TableTh ta="right">Points</TableTh>
+          <TableTh ta="right">Pace</TableTh>
+          <TableTh ta="right">Delta</TableTh>
+          {[...Array(matchdayCount)].map((_, i) => (
+            <TableTh ta="right" key={i}>
+              <Skeleton>{i + 1}</Skeleton>
+            </TableTh>
+          ))}
         </TableTr>
       </TableThead>
       <TableTbody>
@@ -38,29 +40,19 @@ export default function PaceTablePlaceholder({
               <Skeleton>Arsenal</Skeleton>
             </TableTh>
             <TableTd ta="right">
-              <Skeleton>38</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>26</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>12</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>0</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>73</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>26</Skeleton>
-            </TableTd>
-            <TableTd ta="right">
-              <Skeleton>+47</Skeleton>
-            </TableTd>
-            <TableTd ta="right" fw={600}>
               <Skeleton>90</Skeleton>
             </TableTd>
+            <TableTd ta="right">
+              <Skeleton>89</Skeleton>
+            </TableTd>
+            <TableTd ta="right">
+              <Skeleton>+1.00</Skeleton>
+            </TableTd>
+            {[...Array(matchdayCount)].map((_, i) => (
+              <TableTd ta="right" key={i}>
+                <Skeleton>{i + 1}</Skeleton>
+              </TableTd>
+            ))}
           </TableTr>
         ))}
       </TableTbody>
