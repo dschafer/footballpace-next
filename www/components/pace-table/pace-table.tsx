@@ -115,6 +115,20 @@ export default async function PaceTable({
   }
 
   const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
+  const bgColors = [
+    "#762a83",
+    "#af8dc3",
+    "#e7d4e8",
+    "#f7f7f7",
+    "#d9f0d3",
+    "#7fbf7b",
+    "#1b7837",
+  ];
+  const bg = (delta: number) => bgColors[Math.floor(delta + 3.5)];
+  // TODO This should probably use isLightColor() from mantine, and not hardcode white and black
+  const fg = (delta: number) =>
+    Math.floor(delta + 3.5) == 0 ? "white" : "black";
+
   return (
     <Table stickyHeader striped>
       <TableThead>
@@ -161,10 +175,21 @@ export default async function PaceTable({
               />
             </TableTd>
             {row.matches.map((match, matchNum) => (
-              <TableTd ta="right" key={matchNum}>
+              <TableTd
+                ta="right"
+                key={matchNum}
+                bg={bg(match.delta)}
+                c={fg(match.delta)}
+                p={0}
+              >
                 <Popover>
                   <PopoverTarget>
-                    <Box>
+                    <Box
+                      w="100%"
+                      h="100%"
+                      p="0.5rem"
+                      style={{ cursor: "default" }}
+                    >
                       {match.delta > 0 ? "+" : ""}
                       <NumberFormatter
                         value={match.delta}
