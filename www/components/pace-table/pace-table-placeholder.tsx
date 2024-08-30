@@ -15,14 +15,6 @@ export default async function PaceTablePlaceholder({
 }: {
   rowCount: number;
 }) {
-  var link = null;
-  if (rowCount < 10) {
-    link = (
-      <Text ta="right">
-        <Skeleton>Full Pace »</Skeleton>
-      </Text>
-    );
-  }
   return (
     <>
       <Title order={2}>
@@ -78,7 +70,6 @@ export default async function PaceTablePlaceholder({
           ))}
         </TableTbody>
       </Table>
-      {link}
     </>
   );
 }

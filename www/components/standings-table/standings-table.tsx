@@ -37,14 +37,6 @@ export default async function StandingsTable({
     sortedStandings = sortedStandings.slice(0, rowCount);
   }
 
-  let hasMoreLink = null;
-  if (hasMore) {
-    hasMoreLink = (
-      <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
-        Full Table »
-      </Anchor>
-    );
-  }
   return (
     <>
       <Title order={2}>
@@ -91,7 +83,6 @@ export default async function StandingsTable({
           ))}
         </TableTbody>
       </Table>
-      {hasMoreLink}
     </>
   );
 }

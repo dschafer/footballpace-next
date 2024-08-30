@@ -107,19 +107,8 @@ export default async function PaceTable({
     })
     .sort((a, b) => b.delta - a.delta || b.points - a.points);
 
-  let hasMore = false;
   if (rowCount) {
-    hasMore = rows.length > rowCount;
     rows = rows.slice(0, rowCount);
-  }
-
-  let hasMoreLink = null;
-  if (hasMore) {
-    hasMoreLink = (
-      <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
-        Full Pace »
-      </Anchor>
-    );
   }
 
   const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
@@ -181,7 +170,6 @@ export default async function PaceTable({
           ))}
         </TableTbody>
       </Table>
-      {hasMoreLink}
     </>
   );
 }
