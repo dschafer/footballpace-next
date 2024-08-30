@@ -6,12 +6,12 @@ export default function Home() {
   return (
     <Stack>
       {Array.from(leagues).map(([league, _]) => (
-        <>
+        <Stack key={league}>
           <StandingsTablePlaceholder rowCount={5} key={league} />
           <Text ta="right">
             <Skeleton>Full Table »</Skeleton>
           </Text>
-        </>
+        </Stack>
       ))}
     </Stack>
   );

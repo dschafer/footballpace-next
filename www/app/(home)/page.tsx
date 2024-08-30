@@ -8,17 +8,12 @@ export default function Home() {
   return (
     <Stack>
       {Array.from(leagues).map(([league, _]) => (
-        <>
-          <StandingsTable
-            rowCount={5}
-            league={league}
-            year={year}
-            key={league}
-          />
+        <Stack key={league}>
+          <StandingsTable rowCount={5} league={league} year={year} />
           <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
             Full Table »
           </Anchor>
-        </>
+        </Stack>
       ))}
     </Stack>
   );

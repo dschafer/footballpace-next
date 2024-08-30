@@ -36,7 +36,7 @@ export default function RootLayout({
         <MantineProvider theme={theme}>
           <AppShell
             header={{ height: 72 }}
-            navbar={{ width: 160, breakpoint: "sm" }}
+            navbar={{ width: 240, breakpoint: "sm" }}
             padding="xs"
           >
             <AppShellHeader p="xs">

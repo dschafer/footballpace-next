@@ -6,9 +6,12 @@ import {
   IconHome,
   IconStopwatch,
 } from "@tabler/icons-react";
+
 import Link from "next/link";
 import { NavLink } from "@mantine/core";
+import leagues from "@/lib/leagues";
 import { usePathname } from "next/navigation";
+import year from "@/lib/year";
 
 export function NavLinks() {
   const pathname = usePathname();
@@ -22,27 +25,28 @@ export function NavLinks() {
         active={pathname == "/"}
         leftSection={<IconHome />}
       />
-      <NavLink
-        component={Link}
-        href="/pace/E0/2023"
-        label="Pace"
-        active={pathname == "/pace/E0/2023"}
-        leftSection={<IconChartCovariate />}
-      />
-      <NavLink
-        component={Link}
-        href="/table/E0/2023"
-        label="Table"
-        active={pathname == "/table/E0/2023"}
-        leftSection={<IconColumns />}
-      />
-      <NavLink
-        component={Link}
-        href="/pacesheet/E0/2023"
-        label="Pace Sheet"
-        active={pathname == "/pacesheet/E0/2023"}
-        leftSection={<IconStopwatch />}
-      />
+      {Array.from(leagues).map(([league, name]) => (
+        <NavLink
+          label={name}
+          key={league}
+          active={pathname.includes(`/${league}/${year}`)}
+        >
+          <NavLink
+            component={Link}
+            href={`/pace/${league}/${year}`}
+            label="Pace"
+            active={pathname == `/pace/${league}/${year}`}
+            leftSection={<IconChartCovariate />}
+          />
+          <NavLink
+            component={Link}
+            href={`/table/${league}/${year}`}
+            label="Table"
+            active={pathname == `/table/${league}/${year}`}
+            leftSection={<IconColumns />}
+          />
+        </NavLink>
+      ))}
     </>
   );
 }
