@@ -61,7 +61,7 @@ export default async function StandingsTable({
           {sortedStandings.map((row, i) => (
             <TableTr key={row.team}>
               <TableTd ta="center">{i + 1}</TableTd>
-              <TableTh ta="left">
+              <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}
                   href={`/season/${league}/${year}/${row.team}`}

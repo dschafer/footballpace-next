@@ -15,7 +15,7 @@ export default function TablePage({
       <PaceTable league={params.league} year={parseInt(params.year)} />
       <Anchor
         component={Link}
-        href={`/table/${params.league}/${parseInt(params.year)}`}
+        href={`/pacesheet/${params.league}/${parseInt(params.year)}`}
         ta="right"
       >
         Pace Sheet »

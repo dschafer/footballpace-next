@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  IconChartCovariate,
-  IconColumns,
-  IconHome,
-  IconStopwatch,
-} from "@tabler/icons-react";
+import { IconChartCovariate, IconColumns, IconHome } from "@tabler/icons-react";
 
 import Link from "next/link";
 import { NavLink } from "@mantine/core";

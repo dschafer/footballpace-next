@@ -6,11 +6,10 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
   Title,
 } from "@mantine/core";
 
-export default async function PaceTablePlaceholder({
+export default function PaceTablePlaceholder({
   rowCount,
 }: {
   rowCount: number;

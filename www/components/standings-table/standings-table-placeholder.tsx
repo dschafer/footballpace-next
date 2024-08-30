@@ -6,11 +6,10 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
   Title,
 } from "@mantine/core";
 
-export default async function StandingsTablePlaceholder({
+export default function StandingsTablePlaceholder({
   rowCount,
 }: {
   rowCount: number;
@@ -39,7 +38,7 @@ export default async function StandingsTablePlaceholder({
           {[...Array(rowCount)].map((_, i) => (
             <TableTr key={i}>
               <TableTd ta="center">{i + 1}</TableTd>
-              <TableTh ta="left">
+              <TableTh ta="left" scope="row">
                 <Skeleton>Arsenal</Skeleton>
               </TableTh>
               <TableTd ta="right">

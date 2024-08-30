@@ -1,50 +1,50 @@
 import {
-  Anchor,
   Skeleton,
   Table,
   TableTbody,
   TableTd,
   TableTh,
+  TableThead,
   TableTr,
   Text,
   Title,
 } from "@mantine/core";
 
-export default async function PaceSheetPlaceholder({
-  rowCount,
+export default function PaceSheetPlaceholder({
+  teamCount,
 }: {
-  rowCount: number;
+  teamCount: number;
 }) {
   return (
     <>
-      <Title order={2}>
-        <Skeleton>Pace Sheet</Skeleton>
-      </Title>
-      <Text fs="italic">
-        <Skeleton>English Premier League 2023</Skeleton>
-      </Text>
       <Table stickyHeader striped>
-        <TableTh>
+        <TableThead>
           <TableTr>
-            <TableTh ta="center">Opponent Position</TableTh>
-            <TableTh ta="right">Home</TableTh>
-            <TableTh ta="right">Away</TableTh>
+            <TableTh>Match</TableTh>
+            {[...Array(teamCount)].map((_, i) => (
+              <TableTh key={i} ta="right">
+                {i + 1}
+              </TableTh>
+            ))}
           </TableTr>
-        </TableTh>
+        </TableThead>
         <TableTbody>
-          {[...Array(rowCount)].map((_, i) => (
-            <TableTr key={i}>
-              <TableTd ta="center">
-                <Skeleton>{i + 1}</Skeleton>
+          <TableTr>
+            <TableTh scope="row">Home</TableTh>
+            {[...Array(teamCount)].map((_, i) => (
+              <TableTd ta="right" key={i}>
+                <Skeleton>0</Skeleton>
               </TableTd>
-              <TableTd ta="right">
-                <Skeleton>2.00</Skeleton>
+            ))}
+          </TableTr>
+          <TableTr>
+            <TableTh scope="row">Away</TableTh>
+            {[...Array(teamCount)].map((_, i) => (
+              <TableTd ta="right" key={i}>
+                <Skeleton>0</Skeleton>
               </TableTd>
-              <TableTd ta="right">
-                <Skeleton>2.00</Skeleton>
-              </TableTd>
-            </TableTr>
-          ))}
+            ))}
+          </TableTr>
         </TableTbody>
       </Table>
     </>

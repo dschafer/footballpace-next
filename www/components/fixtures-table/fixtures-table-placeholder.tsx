@@ -10,7 +10,7 @@ import {
   Title,
 } from "@mantine/core";
 
-export default async function FixturesTablePlaceholder({
+export default function FixturesTablePlaceholder({
   rowCount,
 }: {
   rowCount: number;

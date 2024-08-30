@@ -40,39 +40,34 @@ export default async function PaceSheet({
 
   return (
     <>
-      <Title order={2}>Pace Sheet</Title>
-      <Anchor component={Link} href={`/table/${league}/${year}`}>
-        <Text fs="italic">
-          {leagues.get(league)} {year}
-        </Text>
-      </Anchor>
-
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
-            <TableTh ta="center">Opponent Position</TableTh>
-            <TableTh ta="right">Home</TableTh>
-            <TableTh ta="right">Away</TableTh>
+            <TableTh>Match</TableTh>
+            {[...Array(homePace.length)].map((pace, i) => (
+              <TableTh key={i} ta="right">
+                {i + 1}
+              </TableTh>
+            ))}
           </TableTr>
         </TableThead>
         <TableTbody>
-          {[...Array(paceSheetEntries.length / 2)].map((_, i) => (
-            <TableTr key={i}>
-              <TableTd ta="center">{i + 1}</TableTd>
-              <TableTd ta="right">
-                <NumberFormatter
-                  value={i == 0 ? "" : homePace[i]}
-                  decimalScale={2}
-                />
+          <TableTr>
+            <TableTh scope="row">Home</TableTh>
+            {homePace.map((pace, i) => (
+              <TableTd ta="right" key={i}>
+                <NumberFormatter value={i == 0 ? "" : pace} decimalScale={2} />
               </TableTd>
-              <TableTd ta="right">
-                <NumberFormatter
-                  value={i == 0 ? "" : awayPace[i]}
-                  decimalScale={2}
-                />
+            ))}
+          </TableTr>
+          <TableTr>
+            <TableTh scope="row">Away</TableTh>
+            {awayPace.map((pace, i) => (
+              <TableTd ta="right" key={i}>
+                <NumberFormatter value={i == 0 ? "" : pace} decimalScale={2} />
               </TableTd>
-            </TableTr>
-          ))}
+            ))}
+          </TableTr>
         </TableTbody>
       </Table>
     </>
