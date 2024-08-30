@@ -1,6 +1,7 @@
-import { Anchor, Stack } from "@mantine/core";
+import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import PaceTable from "@/components/pace-table/pace-table";
+import leagues from "@/lib/leagues";
 
 export default function TablePage({
   params,
@@ -10,12 +11,16 @@ export default function TablePage({
     year: string;
   };
 }) {
+  const yearInt = parseInt(params.year);
   return (
     <Stack>
-      <PaceTable league={params.league} year={parseInt(params.year)} />
+      <Title order={2}>
+        {leagues.get(params.league)} {yearInt}
+      </Title>
+      <PaceTable league={params.league} year={yearInt} />
       <Anchor
         component={Link}
-        href={`/pacesheet/${params.league}/${parseInt(params.year)}`}
+        href={`/pacesheet/${params.league}/${yearInt}`}
         ta="right"
       >
         Pace Sheet »

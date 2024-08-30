@@ -7,10 +7,8 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Title,
 } from "@mantine/core";
 import Link from "next/link";
-import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
 export default async function PaceTable({
@@ -113,63 +111,55 @@ export default async function PaceTable({
 
   const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
   return (
-    <>
-      <Title order={2}>
-        {leagues.get(league)} {year}
-      </Title>
-      <Table stickyHeader striped>
-        <TableThead>
-          <TableTr>
-            <TableTh ta="center">#</TableTh>
-            <TableTh ta="left">Team</TableTh>
-            <TableTh ta="right">Points</TableTh>
-            <TableTh ta="right">Pace</TableTh>
-            <TableTh ta="right">Delta</TableTh>
-            {[...Array(maxMatchday)].map((_, i) => (
-              <TableTh ta="right" key={i}>
-                {i + 1}
-              </TableTh>
+    <Table stickyHeader striped>
+      <TableThead>
+        <TableTr>
+          <TableTh ta="center">#</TableTh>
+          <TableTh ta="left">Team</TableTh>
+          <TableTh ta="right">Points</TableTh>
+          <TableTh ta="right">Pace</TableTh>
+          <TableTh ta="right">Delta</TableTh>
+          {[...Array(maxMatchday)].map((_, i) => (
+            <TableTh ta="right" key={i}>
+              {i + 1}
+            </TableTh>
+          ))}
+        </TableTr>
+      </TableThead>
+      <TableTbody>
+        {rows.map((row, rowNum) => (
+          <TableTr key={row.team}>
+            <TableTd ta="center">{rowNum + 1}</TableTd>
+            <TableTh ta="left" scope="row">
+              <Anchor
+                component={Link}
+                href={`/season/${league}/${year}/${row.team}`}
+              >
+                {row.team}
+              </Anchor>
+            </TableTh>
+            <TableTd ta="right">
+              <NumberFormatter value={row.points} decimalScale={2} />
+            </TableTd>
+            <TableTd ta="right">
+              <NumberFormatter value={row.pace} decimalScale={2} />
+            </TableTd>
+            <TableTd ta="right">
+              <NumberFormatter value={row.points - row.pace} decimalScale={2} />
+            </TableTd>
+            {row.matches.map((match, matchNum) => (
+              <TableTd ta="right" key={matchNum}>
+                <NumberFormatter value={match.points} decimalScale={2} /> -{" "}
+                <NumberFormatter
+                  value={match.expectedPoints}
+                  decimalScale={2}
+                />{" "}
+                = <NumberFormatter value={match.delta} decimalScale={2} />
+              </TableTd>
             ))}
           </TableTr>
-        </TableThead>
-        <TableTbody>
-          {rows.map((row, rowNum) => (
-            <TableTr key={row.team}>
-              <TableTd ta="center">{rowNum + 1}</TableTd>
-              <TableTh ta="left" scope="row">
-                <Anchor
-                  component={Link}
-                  href={`/season/${league}/${year}/${row.team}`}
-                >
-                  {row.team}
-                </Anchor>
-              </TableTh>
-              <TableTd ta="right">
-                <NumberFormatter value={row.points} decimalScale={2} />
-              </TableTd>
-              <TableTd ta="right">
-                <NumberFormatter value={row.pace} decimalScale={2} />
-              </TableTd>
-              <TableTd ta="right">
-                <NumberFormatter
-                  value={row.points - row.pace}
-                  decimalScale={2}
-                />
-              </TableTd>
-              {row.matches.map((match, matchNum) => (
-                <TableTd ta="right" key={matchNum}>
-                  <NumberFormatter value={match.points} decimalScale={2} /> -{" "}
-                  <NumberFormatter
-                    value={match.expectedPoints}
-                    decimalScale={2}
-                  />{" "}
-                  = <NumberFormatter value={match.delta} decimalScale={2} />
-                </TableTd>
-              ))}
-            </TableTr>
-          ))}
-        </TableTbody>
-      </Table>
-    </>
+        ))}
+      </TableTbody>
+    </Table>
   );
 }

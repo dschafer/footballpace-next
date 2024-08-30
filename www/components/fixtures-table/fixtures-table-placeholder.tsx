@@ -6,8 +6,6 @@ import {
   TableTh,
   TableThead,
   TableTr,
-  Text,
-  Title,
 } from "@mantine/core";
 
 export default function FixturesTablePlaceholder({
@@ -17,30 +15,34 @@ export default function FixturesTablePlaceholder({
 }) {
   return (
     <>
-      <Skeleton>
-        <Title order={2}>Arsenal</Title>
-        <Text fs="italic">English Premier League 2023</Text>
-        <Table stickyHeader striped>
-          <TableThead>
-            <TableTr>
-              <TableTh ta="left">Date</TableTh>
-              <TableTh ta="right">Home</TableTh>
-              <TableTh ta="center">Result</TableTh>
-              <TableTh ta="left">Away</TableTh>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="left">Date</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="center">Result</TableTh>
+            <TableTh ta="left">Away</TableTh>
+          </TableTr>
+        </TableThead>
+        <TableTbody>
+          {[...Array(rowCount)].map((_, i) => (
+            <TableTr key={i}>
+              <TableTd ta="left">
+                <Skeleton>Date</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>Home</Skeleton>
+              </TableTd>
+              <TableTd ta="center">
+                <Skeleton>1 - 1</Skeleton>
+              </TableTd>
+              <TableTd ta="left">
+                <Skeleton>Away</Skeleton>
+              </TableTd>
             </TableTr>
-          </TableThead>
-          <TableTbody>
-            {[...Array(rowCount)].map((_, i) => (
-              <TableTr key={i}>
-                <TableTd ta="left">Date</TableTd>
-                <TableTd ta="right">Home</TableTd>
-                <TableTd ta="center">1 - 1</TableTd>
-                <TableTd ta="left">Away</TableTd>
-              </TableTr>
-            ))}
-          </TableTbody>
-        </Table>
-      </Skeleton>
+          ))}
+        </TableTbody>
+      </Table>
     </>
   );
 }

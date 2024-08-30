@@ -1,4 +1,4 @@
-import { Anchor, Stack } from "@mantine/core";
+import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import StandingsTable from "@/components/standings-table/standings-table";
 import leagues from "@/lib/leagues";
@@ -9,6 +9,9 @@ export default function Home() {
     <Stack>
       {Array.from(leagues).map(([league, _]) => (
         <Stack key={league}>
+          <Title order={2}>
+            {leagues.get(league)} {year}
+          </Title>
           <StandingsTable rowCount={5} league={league} year={year} />
           <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
             Full Table »

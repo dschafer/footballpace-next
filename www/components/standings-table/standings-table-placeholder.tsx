@@ -16,9 +16,6 @@ export default function StandingsTablePlaceholder({
 }) {
   return (
     <>
-      <Title order={2}>
-        <Skeleton>English Premier League 2023</Skeleton>
-      </Title>
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
