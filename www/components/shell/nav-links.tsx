@@ -4,9 +4,9 @@ import { IconChartCovariate, IconColumns, IconHome } from "@tabler/icons-react";
 
 import Link from "next/link";
 import { NavLink } from "@mantine/core";
-import leagues from "@/lib/leagues";
+import leagues from "@/lib/const/leagues";
 import { usePathname } from "next/navigation";
-import year from "@/lib/year";
+import year from "@/lib/const/year";
 
 export function NavLinks() {
   const pathname = usePathname();

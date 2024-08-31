@@ -1,6 +1,6 @@
 import StandingsTable from "@/components/standings-table/standings-table";
 import { Title } from "@mantine/core";
-import leagues from "@/lib/leagues";
+import leagues from "@/lib/const/leagues";
 
 export default function TablePage({
   params,

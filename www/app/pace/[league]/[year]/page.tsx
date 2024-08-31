@@ -1,7 +1,7 @@
 import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import PaceTable from "@/components/pace-table/pace-table";
-import leagues from "@/lib/leagues";
+import leagues from "@/lib/const/leagues";
 
 export default function PacePage({
   params,

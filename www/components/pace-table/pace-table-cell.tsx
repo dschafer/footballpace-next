@@ -11,24 +11,9 @@ import {
   Text,
   isLightColor,
 } from "@mantine/core";
+import { PaceMatch } from "@/lib/pace/pace";
 
-export default function PaceTableCell({
-  match,
-}: {
-  match: {
-    delta: number;
-    date: Date;
-    homeTeam: string;
-    awayTeam: string;
-    ftHomeGoals: number;
-    ftAwayGoals: number;
-    points: number;
-    expectedPoints: number;
-    home: boolean;
-    opponent: string;
-    opponentFinish: number;
-  };
-}) {
+export default function PaceTableCell({ match }: { match: PaceMatch }) {
   const {
     delta,
     date,

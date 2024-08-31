@@ -1,8 +1,8 @@
 import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import StandingsTable from "@/components/standings-table/standings-table";
-import leagues from "@/lib/leagues";
-import year from "@/lib/year";
+import leagues from "@/lib/const/leagues";
+import year from "@/lib/const/year";
 
 export default function Home() {
   return (

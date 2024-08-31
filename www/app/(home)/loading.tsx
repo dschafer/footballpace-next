@@ -1,6 +1,6 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
 import StandingsTablePlaceholder from "@/components/standings-table/standings-table-placeholder";
-import leagues from "@/lib/leagues";
+import leagues from "@/lib/const/leagues";
 
 export default function Home() {
   return (

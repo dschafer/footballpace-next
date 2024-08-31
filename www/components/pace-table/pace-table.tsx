@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import PaceTableCell from "./pace-table-cell";
-import prisma from "@/lib/prisma";
+import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function PaceTable({
   rowCount,
@@ -22,99 +22,15 @@ export default async function PaceTable({
   league: string;
   year: number;
 }) {
-  let [allStandings, allMatches, allPaceSheets] = await Promise.all([
-    prisma.standingsRow.findMany({
-      where: { league: league, year: year },
-    }),
-    prisma.match.findMany({
-      where: { league: league, year: year },
-      orderBy: { date: "asc" },
-    }),
-    prisma.paceSheetEntry.findMany({
-      where: { league: league, year: year, teamFinish: 1 },
-    }),
-  ]);
-  allStandings = allStandings.sort(
-    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
-  );
-
-  const teamToFinish = new Map(
-    allStandings.map(({ team }, i) => [team, i + 1]),
-  );
-  const paceSheetMap = new Map(
-    allPaceSheets.map(({ opponentFinish, home, expectedPoints }) => [
-      `${opponentFinish}_${home}`,
-      expectedPoints,
-    ]),
-  );
-
-  let rows = allStandings
-    .map(({ team, points }) => {
-      const teamFinish = teamToFinish.get(team)!;
-      const matches = allMatches
-        .filter(
-          ({ homeTeam, awayTeam }) => homeTeam == team || awayTeam == team,
-        )
-        .map((match) => {
-          return {
-            ...match,
-            opponent: team == match.homeTeam ? match.awayTeam : match.homeTeam,
-            home: team == match.homeTeam,
-          };
-        })
-        .map((match) => {
-          return {
-            ...match,
-            opponentActualFinish: teamToFinish.get(match.opponent)!,
-            points:
-              match.ftResult == "D"
-                ? 1
-                : (match.ftResult == "H" && match.home) ||
-                    (match.ftResult == "A" && !match.home)
-                  ? 3
-                  : 0,
-          };
-        })
-        .map((match) => {
-          return {
-            ...match,
-            // We assume that we will finish first for pace...
-            // so if they're ahead of us in the table, bump them down one
-            opponentFinish:
-              match.opponentActualFinish < teamFinish
-                ? match.opponentActualFinish + 1
-                : match.opponentActualFinish,
-          };
-        })
-        .map((match) => {
-          return {
-            ...match,
-            expectedPoints: paceSheetMap.get(
-              `${match.opponentFinish}_${match.home}`,
-            )!,
-          };
-        })
-        .map((match) => {
-          return {
-            ...match,
-            delta: match.points - match.expectedPoints,
-          };
-        });
-      const delta = matches
-        .map(({ delta }) => delta)
-        .reduce((s, a) => s + a, 0);
-      const pace = matches
-        .map(({ expectedPoints }) => expectedPoints)
-        .reduce((s, a) => s + a, 0);
-      return { team, matches, points, pace, delta };
-    })
-    .sort((a, b) => b.delta - a.delta || b.points - a.points);
+  let paceTeams = await fetchPaceTeams(league, year);
 
   if (rowCount) {
-    rows = rows.slice(0, rowCount);
+    paceTeams = paceTeams.slice(0, rowCount);
   }
 
-  const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
+  const maxMatchday = Math.max(
+    ...paceTeams.map(({ matches }) => matches.length),
+  );
 
   return (
     <TableScrollContainer minWidth={0}>
@@ -134,35 +50,35 @@ export default async function PaceTable({
           </TableTr>
         </TableThead>
         <TableTbody>
-          {rows.map((row, rowNum) => (
-            <TableTr key={row.team}>
+          {paceTeams.map((paceTeam, rowNum) => (
+            <TableTr key={paceTeam.team}>
               <TableTd ta="center">{rowNum + 1}</TableTd>
               <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}
-                  href={`/season/${league}/${year}/${row.team}`}
+                  href={`/season/${league}/${year}/${paceTeam.team}`}
                 >
-                  {row.team}
+                  {paceTeam.team}
                 </Anchor>
               </TableTh>
               <TableTd ta="right">
-                <NumberFormatter value={row.points} decimalScale={0} />
+                <NumberFormatter value={paceTeam.points} decimalScale={0} />
               </TableTd>
               <TableTd ta="right">
                 <NumberFormatter
-                  value={row.pace}
+                  value={paceTeam.pace}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
               <TableTd ta="right">
                 <NumberFormatter
-                  value={row.points - row.pace}
+                  value={paceTeam.points - paceTeam.pace}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
-              {row.matches.map((match, matchNum) => (
+              {paceTeam.matches.map((match, matchNum) => (
                 <PaceTableCell match={match} key={matchNum} />
               ))}
             </TableTr>

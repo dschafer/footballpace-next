@@ -1,7 +1,7 @@
 import { Anchor, Text, Title } from "@mantine/core";
 import FixturesTable from "@/components/fixtures-table/fixtures-table";
 import Link from "next/link";
-import leagues from "@/lib/leagues";
+import leagues from "@/lib/const/leagues";
 
 export default function SeasonPage({
   params,
