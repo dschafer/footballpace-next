@@ -3,6 +3,7 @@ import pandas as pd
 from dagster import (
     AssetExecutionContext,
     AssetIn,
+    Failure,
     MetadataValue,
     MultiPartitionKey,
     Output,
@@ -86,9 +87,22 @@ def match_results_df(
     assert isinstance(context.partition_key, MultiPartitionKey)
     season = int(context.partition_key.keys_by_dimension["season"])
 
-    parsable_string = "\n".join(
-        [str(s, encoding="Windows-1252") for s in match_results_csv.splitlines()]
-    )
+    # The encoding here is weird. Most of them are Windows-1252, but some new ones
+    # are utf-8-sig
+    lines = [str(s, encoding="Windows-1252") for s in match_results_csv.splitlines()]
+    if lines[0][0:3] != "Div":
+        # Okay, this didn't parse. Must be a new file with utf-8-sig encoding
+        context.log.info("Detected utf-8-sig encoding")
+        lines = [str(s, encoding="utf-8-sig") for s in match_results_csv.splitlines()]
+    else:
+        context.log.info("Detected Windows-1252 encoding")
+
+    if lines[0][0:3] != "Div":
+        raise Failure(
+            description=f"CSV file was not valid: could not get first line to start with Div, found {lines[0][0:3]} instead"
+        )
+
+    parsable_string = "\n".join(lines)
     df = pd.read_csv(
         StringIO(parsable_string),
         header=0,

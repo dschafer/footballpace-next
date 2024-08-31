@@ -9,7 +9,7 @@ from dagster import (
     StaticPartitionsDefinition,
 )
 
-ALL_SEASONS = range(1993, 2024)
+ALL_SEASONS = range(1993, 2025)
 all_seasons_partition = StaticPartitionsDefinition([str(s) for s in ALL_SEASONS])
 
 ALL_LEAGUES = ["E0", "D1", "SP1", "I1", "F1"]

@@ -3,3 +3,4 @@ tmp*/
 **/.pytest_cache
 .env
 .venv
+**/.DS_Store
