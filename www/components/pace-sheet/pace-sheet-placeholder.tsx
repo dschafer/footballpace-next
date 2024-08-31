@@ -1,13 +1,12 @@
 import {
   Skeleton,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Text,
-  Title,
 } from "@mantine/core";
 
 export default function PaceSheetPlaceholder({
@@ -16,7 +15,7 @@ export default function PaceSheetPlaceholder({
   teamCount: number;
 }) {
   return (
-    <>
+    <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
@@ -47,6 +46,6 @@ export default function PaceSheetPlaceholder({
           </TableTr>
         </TableTbody>
       </Table>
-    </>
+    </TableScrollContainer>
   );
 }

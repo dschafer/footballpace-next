@@ -1,15 +1,14 @@
 import {
   Anchor,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Title,
 } from "@mantine/core";
 import Link from "next/link";
-import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
 export default async function StandingsTable({
@@ -36,46 +35,48 @@ export default async function StandingsTable({
   }
 
   return (
-    <Table stickyHeader striped>
-      <TableThead>
-        <TableTr>
-          <TableTh ta="center">#</TableTh>
-          <TableTh ta="left">Team</TableTh>
-          <TableTh ta="right">Played</TableTh>
-          <TableTh ta="right">Won</TableTh>
-          <TableTh ta="right">Drawn</TableTh>
-          <TableTh ta="right">Lost</TableTh>
-          <TableTh ta="right">For</TableTh>
-          <TableTh ta="right">Against</TableTh>
-          <TableTh ta="right">GD</TableTh>
-          <TableTh ta="right">Points</TableTh>
-        </TableTr>
-      </TableThead>
-      <TableTbody>
-        {sortedStandings.map((row, i) => (
-          <TableTr key={row.team}>
-            <TableTd ta="center">{i + 1}</TableTd>
-            <TableTh ta="left" scope="row">
-              <Anchor
-                component={Link}
-                href={`/season/${league}/${year}/${row.team}`}
-              >
-                {row.team}
-              </Anchor>
-            </TableTh>
-            <TableTd ta="right">{row.played}</TableTd>
-            <TableTd ta="right">{row.wins}</TableTd>
-            <TableTd ta="right">{row.draws}</TableTd>
-            <TableTd ta="right">{row.losses}</TableTd>
-            <TableTd ta="right">{row.goalsFor}</TableTd>
-            <TableTd ta="right">{row.goalsAgainst}</TableTd>
-            <TableTd ta="right">{row.gd}</TableTd>
-            <TableTd ta="right" fw={700}>
-              {row.points}
-            </TableTd>
+    <TableScrollContainer minWidth={0}>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="center">#</TableTh>
+            <TableTh ta="left">Team</TableTh>
+            <TableTh ta="right">Played</TableTh>
+            <TableTh ta="right">Won</TableTh>
+            <TableTh ta="right">Drawn</TableTh>
+            <TableTh ta="right">Lost</TableTh>
+            <TableTh ta="right">For</TableTh>
+            <TableTh ta="right">Against</TableTh>
+            <TableTh ta="right">GD</TableTh>
+            <TableTh ta="right">Points</TableTh>
           </TableTr>
-        ))}
-      </TableTbody>
-    </Table>
+        </TableThead>
+        <TableTbody>
+          {sortedStandings.map((row, i) => (
+            <TableTr key={row.team}>
+              <TableTd ta="center">{i + 1}</TableTd>
+              <TableTh ta="left" scope="row">
+                <Anchor
+                  component={Link}
+                  href={`/season/${league}/${year}/${row.team}`}
+                >
+                  {row.team}
+                </Anchor>
+              </TableTh>
+              <TableTd ta="right">{row.played}</TableTd>
+              <TableTd ta="right">{row.wins}</TableTd>
+              <TableTd ta="right">{row.draws}</TableTd>
+              <TableTd ta="right">{row.losses}</TableTd>
+              <TableTd ta="right">{row.goalsFor}</TableTd>
+              <TableTd ta="right">{row.goalsAgainst}</TableTd>
+              <TableTd ta="right">{row.gd}</TableTd>
+              <TableTd ta="right" fw={700}>
+                {row.points}
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
+    </TableScrollContainer>
   );
 }

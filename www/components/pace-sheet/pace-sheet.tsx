@@ -1,17 +1,13 @@
 import {
-  Anchor,
   NumberFormatter,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Text,
-  Title,
 } from "@mantine/core";
-import Link from "next/link";
-import leagues from "@/lib/leagues";
 import prisma from "@/lib/prisma";
 
 export default async function PaceSheet({
@@ -39,7 +35,7 @@ export default async function PaceSheet({
   }
 
   return (
-    <>
+    <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
@@ -70,6 +66,6 @@ export default async function PaceSheet({
           </TableTr>
         </TableTbody>
       </Table>
-    </>
+    </TableScrollContainer>
   );
 }

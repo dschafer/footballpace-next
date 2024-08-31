@@ -1,6 +1,7 @@
 import {
   Skeleton,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
@@ -14,7 +15,7 @@ export default function FixturesTablePlaceholder({
   rowCount: number;
 }) {
   return (
-    <>
+    <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
@@ -43,6 +44,6 @@ export default function FixturesTablePlaceholder({
           ))}
         </TableTbody>
       </Table>
-    </>
+    </TableScrollContainer>
   );
 }

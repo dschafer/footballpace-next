@@ -1,6 +1,7 @@
 import {
   Anchor,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
@@ -28,41 +29,43 @@ export default async function FixturesTable({
   });
 
   return (
-    <Table stickyHeader striped>
-      <TableThead>
-        <TableTr>
-          <TableTh ta="left">Date</TableTh>
-          <TableTh ta="right">Home</TableTh>
-          <TableTh ta="center">Result</TableTh>
-          <TableTh ta="left">Away</TableTh>
-        </TableTr>
-      </TableThead>
-      <TableTbody>
-        {matches.map((match, i) => (
-          <TableTr key={i}>
-            <TableTd ta="left">{match.date.toLocaleDateString()}</TableTd>
-            <TableTd ta="right">
-              <Anchor
-                component={Link}
-                href={`/season/${league}/${year}/${match.homeTeam}`}
-              >
-                {match.homeTeam}
-              </Anchor>
-            </TableTd>
-            <TableTd ta="center">
-              {match.ftHomeGoals} - {match.ftAwayGoals}
-            </TableTd>
-            <TableTd ta="left">
-              <Anchor
-                component={Link}
-                href={`${league}/${year}/${match.awayTeam}`}
-              >
-                {match.awayTeam}
-              </Anchor>
-            </TableTd>
+    <TableScrollContainer minWidth={0}>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="left">Date</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="center">Result</TableTh>
+            <TableTh ta="left">Away</TableTh>
           </TableTr>
-        ))}
-      </TableTbody>
-    </Table>
+        </TableThead>
+        <TableTbody>
+          {matches.map((match, i) => (
+            <TableTr key={i}>
+              <TableTd ta="left">{match.date.toLocaleDateString()}</TableTd>
+              <TableTd ta="right">
+                <Anchor
+                  component={Link}
+                  href={`/season/${league}/${year}/${match.homeTeam}`}
+                >
+                  {match.homeTeam}
+                </Anchor>
+              </TableTd>
+              <TableTd ta="center">
+                {match.ftHomeGoals} - {match.ftAwayGoals}
+              </TableTd>
+              <TableTd ta="left">
+                <Anchor
+                  component={Link}
+                  href={`${league}/${year}/${match.awayTeam}`}
+                >
+                  {match.awayTeam}
+                </Anchor>
+              </TableTd>
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
+    </TableScrollContainer>
   );
 }

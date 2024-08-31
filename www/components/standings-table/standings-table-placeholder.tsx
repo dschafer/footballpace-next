@@ -1,12 +1,12 @@
 import {
   Skeleton,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Title,
 } from "@mantine/core";
 
 export default function StandingsTablePlaceholder({
@@ -15,7 +15,7 @@ export default function StandingsTablePlaceholder({
   rowCount: number;
 }) {
   return (
-    <>
+    <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
@@ -66,6 +66,6 @@ export default function StandingsTablePlaceholder({
           ))}
         </TableTbody>
       </Table>
-    </>
+    </TableScrollContainer>
   );
 }

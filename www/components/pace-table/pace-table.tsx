@@ -2,6 +2,7 @@ import {
   Anchor,
   NumberFormatter,
   Table,
+  TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
@@ -116,56 +117,58 @@ export default async function PaceTable({
   const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
 
   return (
-    <Table stickyHeader striped>
-      <TableThead>
-        <TableTr>
-          <TableTh ta="center">#</TableTh>
-          <TableTh ta="left">Team</TableTh>
-          <TableTh ta="right">Points</TableTh>
-          <TableTh ta="right">Pace</TableTh>
-          <TableTh ta="right">Delta</TableTh>
-          {[...Array(maxMatchday)].map((_, i) => (
-            <TableTh ta="right" key={i}>
-              {i + 1}
-            </TableTh>
-          ))}
-        </TableTr>
-      </TableThead>
-      <TableTbody>
-        {rows.map((row, rowNum) => (
-          <TableTr key={row.team}>
-            <TableTd ta="center">{rowNum + 1}</TableTd>
-            <TableTh ta="left" scope="row">
-              <Anchor
-                component={Link}
-                href={`/season/${league}/${year}/${row.team}`}
-              >
-                {row.team}
-              </Anchor>
-            </TableTh>
-            <TableTd ta="right">
-              <NumberFormatter value={row.points} decimalScale={0} />
-            </TableTd>
-            <TableTd ta="right">
-              <NumberFormatter
-                value={row.pace}
-                decimalScale={2}
-                fixedDecimalScale
-              />
-            </TableTd>
-            <TableTd ta="right">
-              <NumberFormatter
-                value={row.points - row.pace}
-                decimalScale={2}
-                fixedDecimalScale
-              />
-            </TableTd>
-            {row.matches.map((match, matchNum) => (
-              <PaceTableCell match={match} key={matchNum} />
+    <TableScrollContainer minWidth={0}>
+      <Table stickyHeader striped>
+        <TableThead>
+          <TableTr>
+            <TableTh ta="center">#</TableTh>
+            <TableTh ta="left">Team</TableTh>
+            <TableTh ta="right">Points</TableTh>
+            <TableTh ta="right">Pace</TableTh>
+            <TableTh ta="right">Delta</TableTh>
+            {[...Array(maxMatchday)].map((_, i) => (
+              <TableTh ta="right" key={i}>
+                {i + 1}
+              </TableTh>
             ))}
           </TableTr>
-        ))}
-      </TableTbody>
-    </Table>
+        </TableThead>
+        <TableTbody>
+          {rows.map((row, rowNum) => (
+            <TableTr key={row.team}>
+              <TableTd ta="center">{rowNum + 1}</TableTd>
+              <TableTh ta="left" scope="row">
+                <Anchor
+                  component={Link}
+                  href={`/season/${league}/${year}/${row.team}`}
+                >
+                  {row.team}
+                </Anchor>
+              </TableTh>
+              <TableTd ta="right">
+                <NumberFormatter value={row.points} decimalScale={0} />
+              </TableTd>
+              <TableTd ta="right">
+                <NumberFormatter
+                  value={row.pace}
+                  decimalScale={2}
+                  fixedDecimalScale
+                />
+              </TableTd>
+              <TableTd ta="right">
+                <NumberFormatter
+                  value={row.points - row.pace}
+                  decimalScale={2}
+                  fixedDecimalScale
+                />
+              </TableTd>
+              {row.matches.map((match, matchNum) => (
+                <PaceTableCell match={match} key={matchNum} />
+              ))}
+            </TableTr>
+          ))}
+        </TableTbody>
+      </Table>
+    </TableScrollContainer>
   );
 }
