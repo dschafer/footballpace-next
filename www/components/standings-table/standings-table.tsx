@@ -70,7 +70,7 @@ export default async function StandingsTable({
             <TableTd ta="right">{row.goalsFor}</TableTd>
             <TableTd ta="right">{row.goalsAgainst}</TableTd>
             <TableTd ta="right">{row.gd}</TableTd>
-            <TableTd ta="right" fw={600}>
+            <TableTd ta="right" fw={700}>
               {row.points}
             </TableTd>
           </TableTr>

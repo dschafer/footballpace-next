@@ -19,9 +19,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   return (
     <AppShell
-      header={{ height: 72 }}
+      header={{ height: "4rem" }}
       navbar={{
-        width: 240,
+        width: "15rem",
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
@@ -33,7 +33,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <Anchor component={Link} size="inherit" href={`/`} c="black">
             <Title order={1}>Football Pace</Title>
           </Anchor>
-          <IconSoccerField size="48" />
+          <IconSoccerField size="2rem" />
         </Group>
       </AppShellHeader>
       <AppShellNavbar p="xs">

@@ -59,7 +59,7 @@ export default function StandingsTablePlaceholder({
               <TableTd ta="right">
                 <Skeleton>+47</Skeleton>
               </TableTd>
-              <TableTd ta="right" fw={600}>
+              <TableTd ta="right" fw={700}>
                 <Skeleton>90</Skeleton>
               </TableTd>
             </TableTr>

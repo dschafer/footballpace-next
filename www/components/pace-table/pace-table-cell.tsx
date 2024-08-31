@@ -70,13 +70,13 @@ export default function PaceTableCell({
             {homeTeam} {ftHomeGoals}:{ftAwayGoals} {awayTeam}
           </Text>
           <Text ta="center">
-            <Text fw={600} span>
+            <Text fw={700} span>
               Points
             </Text>
             : {points}
           </Text>
           <Text ta="center">
-            <Text fw={600} span>
+            <Text fw={700} span>
               Pace
             </Text>
             :{" "}
