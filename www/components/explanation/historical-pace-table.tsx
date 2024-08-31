@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import prisma from "@/lib/prisma";
 
-export default async function PaceSheet({
+export default async function HistoricalPaceTable({
   league,
   year,
 }: {

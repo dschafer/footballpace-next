@@ -3,7 +3,7 @@ import Link from "next/link";
 import PaceTable from "@/components/pace-table/pace-table";
 import leagues from "@/lib/leagues";
 
-export default function TablePage({
+export default function PacePage({
   params,
 }: {
   params: {
@@ -20,10 +20,10 @@ export default function TablePage({
       <PaceTable league={params.league} year={yearInt} />
       <Anchor
         component={Link}
-        href={`/pacesheet/${params.league}/${yearInt}`}
+        href={`/explanation/${params.league}/${yearInt}`}
         ta="right"
       >
-        Pace Sheet »
+        Explanation »
       </Anchor>
     </Stack>
   );

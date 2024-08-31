@@ -9,7 +9,7 @@ import {
   TableTr,
 } from "@mantine/core";
 
-export default function PaceSheetPlaceholder({
+export default function HistoricalPaceTablePlaceholder({
   teamCount,
 }: {
   teamCount: number;
