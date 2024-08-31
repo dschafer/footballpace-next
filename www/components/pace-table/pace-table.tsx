@@ -1,20 +1,15 @@
 import {
   Anchor,
-  Box,
-  Code,
   NumberFormatter,
-  Popover,
-  PopoverDropdown,
-  PopoverTarget,
   Table,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
-  Text,
 } from "@mantine/core";
 import Link from "next/link";
+import PaceTableCell from "./pace-table-cell";
 import prisma from "@/lib/prisma";
 
 export default async function PaceTable({
@@ -119,19 +114,6 @@ export default async function PaceTable({
   }
 
   const maxMatchday = Math.max(...rows.map(({ matches }) => matches.length));
-  const bgColors = [
-    "#762a83",
-    "#af8dc3",
-    "#e7d4e8",
-    "#f7f7f7",
-    "#d9f0d3",
-    "#7fbf7b",
-    "#1b7837",
-  ];
-  const bg = (delta: number) => bgColors[Math.floor(delta + 3.5)];
-  // TODO This should probably use isLightColor() from mantine, and not hardcode white and black
-  const fg = (delta: number) =>
-    Math.floor(delta + 3.5) == 0 ? "white" : "black";
 
   return (
     <Table stickyHeader striped>
@@ -179,57 +161,7 @@ export default async function PaceTable({
               />
             </TableTd>
             {row.matches.map((match, matchNum) => (
-              <TableTd
-                ta="right"
-                key={matchNum}
-                bg={bg(match.delta)}
-                c={fg(match.delta)}
-                p={0}
-              >
-                <Popover>
-                  <PopoverTarget>
-                    <Box
-                      w="100%"
-                      h="100%"
-                      p="0.5rem"
-                      style={{ cursor: "default" }}
-                    >
-                      {match.delta > 0 ? "+" : ""}
-                      <NumberFormatter
-                        value={match.delta}
-                        decimalScale={2}
-                        fixedDecimalScale
-                      />
-                    </Box>
-                  </PopoverTarget>
-                  <PopoverDropdown>
-                    <Text ta="center">{match.date.toLocaleDateString()}</Text>
-                    <Text ta="center">
-                      {match.homeTeam} {match.ftHomeGoals}:{match.ftAwayGoals}{" "}
-                      {match.awayTeam}
-                    </Text>
-                    <Text ta="center">
-                      <Text fw={600} span>
-                        Points
-                      </Text>
-                      : {match.points}
-                    </Text>
-                    <Text ta="center">
-                      <Text fw={600} span>
-                        Pace
-                      </Text>
-                      :{" "}
-                      <NumberFormatter
-                        value={match.expectedPoints}
-                        decimalScale={2}
-                        fixedDecimalScale
-                      />{" "}
-                      ({match.home ? "Home" : "Away"} to {match.opponentFinish})
-                    </Text>
-                    <Code block>{JSON.stringify(match, null, 2)}</Code>
-                  </PopoverDropdown>
-                </Popover>
-              </TableTd>
+              <PaceTableCell match={match} key={matchNum} />
             ))}
           </TableTr>
         ))}

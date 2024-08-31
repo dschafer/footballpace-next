@@ -9,6 +9,8 @@ const inter = Inter({
 
 const theme = createTheme({
   fontFamily: inter.style.fontFamily,
+  white: "#fcfcfc",
+  black: "#161616",
 });
 
 export default theme;
