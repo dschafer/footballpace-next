@@ -1,6 +1,6 @@
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import Shell from "./(shell)/shell";
+import Shell from "../components/shell/shell";
 import theme from "@/lib/theme";
 
 export const metadata = {
