@@ -1,4 +1,3 @@
-"use client";
 import {
   Badge,
   Box,
@@ -7,11 +6,11 @@ import {
   Popover,
   PopoverDropdown,
   PopoverTarget,
-  TableTd,
   Text,
-  isLightColor,
 } from "@mantine/core";
+import ColoredCell from "../pace-display/colored-cell";
 import { PaceMatch } from "@/lib/pace/pace";
+import PaceNumber from "../pace-display/pace-number";
 
 export default function PaceTableCell({ match }: { match: PaceMatch }) {
   const {
@@ -26,25 +25,13 @@ export default function PaceTableCell({ match }: { match: PaceMatch }) {
     home,
     opponentFinish,
   } = match;
-  const bgColors = [
-    "#762a83",
-    "#af8dc3",
-    "#e7d4e8",
-    "#f7f7f7",
-    "#d9f0d3",
-    "#7fbf7b",
-    "#1b7837",
-  ];
-  const bg = (delta: number) => bgColors[Math.floor(delta + 3.5)];
-  const fg = (delta: number) => (isLightColor(bg(delta)) ? "black" : "white");
 
   return (
-    <TableTd ta="right" bg={bg(delta)} c={fg(delta)} p={0}>
+    <ColoredCell val={delta} ta="right">
       <Popover>
         <PopoverTarget>
           <Box w="100%" h="100%" p="0.5rem" style={{ cursor: "default" }}>
-            {delta > 0 ? "+" : ""}
-            <NumberFormatter value={delta} decimalScale={2} fixedDecimalScale />
+            <PaceNumber pace={delta} />
           </Box>
         </PopoverTarget>
         <PopoverDropdown>
@@ -74,6 +61,6 @@ export default function PaceTableCell({ match }: { match: PaceMatch }) {
           </Text>
         </PopoverDropdown>
       </Popover>
-    </TableTd>
+    </ColoredCell>
   );
 }

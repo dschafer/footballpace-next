@@ -1,6 +1,6 @@
-import { Anchor, Stack, Title } from "@mantine/core";
+import { Anchor, Group, Stack, Title } from "@mantine/core";
 import Link from "next/link";
-import StandingsTable from "@/components/standings-table/standings-table";
+import RecentPaceTable from "@/components/pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 
@@ -17,17 +17,28 @@ export default function Home() {
           >
             {leagues.get(league)} {year}
           </Title>
-          <StandingsTable rowCount={5} league={league} year={year} />
-          <Anchor
-            component={Link}
-            href={`/table/${league}/${year}`}
-            ta="right"
+          <RecentPaceTable rowCount={5} league={league} year={year} />
+          <Group
             style={{
               alignSelf: "flex-end",
             }}
           >
-            Full Table »
-          </Anchor>
+            <Anchor
+              component={Link}
+              href={`/pace/${league}/${year}`}
+              ta="right"
+            >
+              Full Pace Table »
+            </Anchor>{" "}
+            &middot;{" "}
+            <Anchor
+              component={Link}
+              href={`/table/${league}/${year}`}
+              ta="right"
+            >
+              Full Table »
+            </Anchor>
+          </Group>
         </Stack>
       ))}
     </Stack>

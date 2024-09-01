@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import StandingsTablePlaceholder from "@/components/standings-table/standings-table-placeholder";
+import RecentPaceTablePlaceholder from "@/components/pace-table/recent-pace-table-placeholder";
 import leagues from "@/lib/const/leagues";
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
           >
             <Skeleton>English Premier League 2023</Skeleton>
           </Title>
-          <StandingsTablePlaceholder rowCount={5} key={league} />
+          <RecentPaceTablePlaceholder rowCount={5} key={league} />
           <Skeleton
             ta="right"
             style={{
