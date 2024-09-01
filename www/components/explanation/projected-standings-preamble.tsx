@@ -16,9 +16,11 @@ export default function ProjectedStandingsPreamble() {
           season.
         </ListItem>
         <ListItem>
-          If a team has not yet played half of its schedule, then we scale down
-          the previous season{"'"}s results to make up the difference to half a
-          season, then scale the result to a full season.
+          If a team has not yet played half of its schedule, then we double
+          their current season results (to make sure we{"'"}re weighting current
+          season performance more than previous season performance), then then
+          we scale down the previous season{"'"}s results to make up the
+          difference to a full season.
         </ListItem>
       </List>
     </>
