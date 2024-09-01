@@ -1,6 +1,7 @@
 import { Stack, Title } from "@mantine/core";
 import HistoricalPacePreamble from "@/components/explanation/historical-pace-preamble";
 import HistoricalPaceTable from "@/components/explanation/historical-pace-table";
+import ProjectedStandingsTable from "@/components/explanation/projected-standings-table";
 
 export default function ExplanationPage({
   params,
@@ -33,6 +34,10 @@ export default function ExplanationPage({
       >
         Estimated Standings
       </Title>
+      <ProjectedStandingsTable
+        league={params.league}
+        year={parseInt(params.year)}
+      />
     </Stack>
   );
 }
