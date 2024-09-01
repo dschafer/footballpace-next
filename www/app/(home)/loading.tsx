@@ -7,13 +7,24 @@ export default function Home() {
     <Stack>
       {Array.from(leagues).map(([league, _]) => (
         <Stack key={league}>
-          <Title order={2}>
+          <Title
+            order={2}
+            style={{
+              alignSelf: "flex-start",
+            }}
+          >
             <Skeleton>English Premier League 2023</Skeleton>
           </Title>
           <StandingsTablePlaceholder rowCount={5} key={league} />
-          <Text ta="right">
-            <Skeleton>Full Table »</Skeleton>
-          </Text>
+          <Skeleton
+            ta="right"
+            style={{
+              alignSelf: "flex-end",
+            }}
+            width={100}
+          >
+            Full Table »
+          </Skeleton>
         </Stack>
       ))}
     </Stack>

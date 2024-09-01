@@ -1,4 +1,4 @@
-import { Anchor, Text, Title } from "@mantine/core";
+import { Anchor, Stack, Text, Title } from "@mantine/core";
 import FixturesTable from "@/components/fixtures-table/fixtures-table";
 import Link from "next/link";
 import leagues from "@/lib/const/leagues";
@@ -14,9 +14,22 @@ export default function SeasonPage({
 }) {
   const yearInt = parseInt(params.year);
   return (
-    <>
-      <Title order={2}>{params.team}</Title>
-      <Anchor component={Link} href={`/table/${params.league}/${yearInt}`}>
+    <Stack>
+      <Title
+        order={2}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        {params.team}
+      </Title>
+      <Anchor
+        component={Link}
+        href={`/table/${params.league}/${yearInt}`}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
         <Text fs="italic">
           {leagues.get(params.league)} {yearInt}
         </Text>
@@ -26,6 +39,6 @@ export default function SeasonPage({
         year={parseInt(params.year)}
         team={params.team}
       />
-    </>
+    </Stack>
   );
 }

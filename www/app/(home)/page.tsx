@@ -9,11 +9,23 @@ export default function Home() {
     <Stack>
       {Array.from(leagues).map(([league, _]) => (
         <Stack key={league}>
-          <Title order={2}>
+          <Title
+            order={2}
+            style={{
+              alignSelf: "flex-start",
+            }}
+          >
             {leagues.get(league)} {year}
           </Title>
           <StandingsTable rowCount={5} league={league} year={year} />
-          <Anchor component={Link} href={`/table/${league}/${year}`} ta="right">
+          <Anchor
+            component={Link}
+            href={`/table/${league}/${year}`}
+            ta="right"
+            style={{
+              alignSelf: "flex-end",
+            }}
+          >
             Full Table »
           </Anchor>
         </Stack>

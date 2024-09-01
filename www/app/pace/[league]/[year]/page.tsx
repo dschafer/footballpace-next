@@ -14,7 +14,12 @@ export default function PacePage({
   const yearInt = parseInt(params.year);
   return (
     <Stack>
-      <Title order={2}>
+      <Title
+        order={2}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
         {leagues.get(params.league)} {yearInt}
       </Title>
       <PaceTable league={params.league} year={yearInt} />
@@ -22,6 +27,9 @@ export default function PacePage({
         component={Link}
         href={`/explanation/${params.league}/${yearInt}`}
         ta="right"
+        style={{
+          alignSelf: "flex-end",
+        }}
       >
         Explanation »
       </Anchor>

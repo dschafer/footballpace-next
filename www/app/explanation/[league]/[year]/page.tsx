@@ -1,6 +1,6 @@
+import { Stack, Title } from "@mantine/core";
 import HistoricalPacePreamble from "@/components/explanation/historical-pace-preamble";
 import HistoricalPaceTable from "@/components/explanation/historical-pace-table";
-import { Title } from "@mantine/core";
 
 export default function ExplanationPage({
   params,
@@ -11,14 +11,28 @@ export default function ExplanationPage({
   };
 }) {
   return (
-    <>
-      <Title order={2}>Historical Pace</Title>
+    <Stack>
+      <Title
+        order={2}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        Historical Pace
+      </Title>
       <HistoricalPacePreamble />
       <HistoricalPaceTable
         league={params.league}
         year={parseInt(params.year)}
       />
-      <Title order={2}>Estimated Standings</Title>
-    </>
+      <Title
+        order={2}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        Estimated Standings
+      </Title>
+    </Stack>
   );
 }

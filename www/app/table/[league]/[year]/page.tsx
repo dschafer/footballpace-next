@@ -1,5 +1,6 @@
+import { Stack, Title } from "@mantine/core";
 import StandingsTable from "@/components/standings-table/standings-table";
-import { Title } from "@mantine/core";
+
 import leagues from "@/lib/const/leagues";
 
 export default function TablePage({
@@ -12,11 +13,16 @@ export default function TablePage({
 }) {
   const yearInt = parseInt(params.year);
   return (
-    <>
-      <Title order={2}>
+    <Stack>
+      <Title
+        order={2}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
         {leagues.get(params.league)} {yearInt}
       </Title>
       <StandingsTable league={params.league} year={yearInt} />
-    </>
+    </Stack>
   );
 }
