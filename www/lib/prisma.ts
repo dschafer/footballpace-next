@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, StandingsRow } from "@prisma/client";
 
 const extendedClient = new PrismaClient().$extends({
   result: {
@@ -24,6 +24,12 @@ const extendedClient = new PrismaClient().$extends({
     },
   },
 });
+
+export type ExtendedStandingsRow = StandingsRow & {
+  played: number;
+  points: number;
+  gd: number;
+};
 
 declare global {
   var prisma: typeof extendedClient | undefined;

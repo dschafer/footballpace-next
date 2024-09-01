@@ -1,3 +1,4 @@
+import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
 
 export type PaceMatch = {
@@ -26,18 +27,20 @@ export async function fetchPaceTeams(
   league: string,
   year: number,
 ): Promise<PaceTeam[]> {
-  let [allStandings, allMatches, allPaceSheets] = await Promise.all([
-    prisma.standingsRow.findMany({
-      where: { league: league, year: year },
-    }),
-    prisma.match.findMany({
-      where: { league: league, year: year },
-      orderBy: { date: "asc" },
-    }),
-    prisma.paceSheetEntry.findMany({
-      where: { league: league, year: year, teamFinish: 1 },
-    }),
-  ]);
+  let [allStandings, projectedStandings, allMatches, allPaceSheets] =
+    await Promise.all([
+      prisma.standingsRow.findMany({
+        where: { league: league, year: year },
+      }),
+      fetchProjectedStandings(league, year),
+      prisma.match.findMany({
+        where: { league: league, year: year },
+        orderBy: { date: "asc" },
+      }),
+      prisma.paceSheetEntry.findMany({
+        where: { league: league, year: year, teamFinish: 1 },
+      }),
+    ]);
   allStandings = allStandings.sort(
     (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
   );

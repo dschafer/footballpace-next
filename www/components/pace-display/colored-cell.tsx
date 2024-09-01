@@ -24,7 +24,6 @@ export default function ColoredCell(
   const bg = (delta: number) => bgColors[Math.floor(delta + 3.5)];
   const fg = (delta: number) => (isLightColor(bg(delta)) ? "black" : "white");
 
-  console.log(props.val);
   return (
     <TableTd p="0" bg={bg(props.val)} c={fg(props.val)} {...props}>
       {props.children}
