@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { sortStandings } from "@/lib/sort";
 
 export default async function StandingsTable({
   rowCount,
@@ -27,9 +28,7 @@ export default async function StandingsTable({
     return null;
   }
 
-  var sortedStandings = standings.sort(
-    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
-  );
+  var sortedStandings = sortStandings(standings);
   if (rowCount) {
     sortedStandings = sortedStandings.slice(0, rowCount);
   }

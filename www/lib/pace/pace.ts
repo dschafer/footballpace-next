@@ -1,5 +1,6 @@
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
+import { sortStandings } from "../sort";
 
 export type PaceMatch = {
   delta: number;
@@ -41,12 +42,10 @@ export async function fetchPaceTeams(
         where: { league: league, year: year, teamFinish: 1 },
       }),
     ]);
-  allStandings = allStandings.sort(
-    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
-  );
+  allStandings = sortStandings(allStandings);
 
   const teamToFinish = new Map(
-    allStandings.map(({ team }, i) => [team, i + 1]),
+    projectedStandings.map(({ team }, i) => [team, i + 1]),
   );
   const paceSheetMap = new Map(
     allPaceSheets.map(({ opponentFinish, home, expectedPoints }) => [
