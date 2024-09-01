@@ -1,12 +1,14 @@
 import {
   NumberFormatter,
   Table,
+  TableCaption,
   TableScrollContainer,
   TableTbody,
   TableTd,
   TableTh,
   TableThead,
   TableTr,
+  Text,
 } from "@mantine/core";
 import prisma from "@/lib/prisma";
 
@@ -37,10 +39,50 @@ export default async function HistoricalPaceTable({
   return (
     <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
+        <TableCaption>
+          <Text fw={700} span>
+            Home
+          </Text>
+          <Text span>
+            :{" "}
+            <NumberFormatter
+              value={homePace.reduce((a, p) => (p ? a + p : a), 0)}
+              decimalScale={2}
+              fixedDecimalScale
+            />{" "}
+            &middot;{" "}
+          </Text>
+          <Text fw={700} span>
+            Away
+          </Text>
+          <Text span>
+            :{" "}
+            <NumberFormatter
+              value={awayPace.reduce((a, p) => (p ? a + p : a), 0)}
+              decimalScale={2}
+              fixedDecimalScale
+            />{" "}
+            &middot;{" "}
+          </Text>
+          <Text fw={700} span>
+            Total
+          </Text>
+          <Text span>
+            :{" "}
+            <NumberFormatter
+              value={
+                homePace.reduce((a, p) => (p ? a + p : a), 0) +
+                awayPace.reduce((a, p) => (p ? a + p : a), 0)
+              }
+              decimalScale={2}
+              fixedDecimalScale
+            />
+          </Text>
+        </TableCaption>
         <TableThead>
           <TableTr>
             <TableTh>Match</TableTh>
-            {[...Array(homePace.length)].map((pace, i) => (
+            {homePace.map((_, i) => (
               <TableTh key={i} ta="right">
                 {i + 1}
               </TableTh>
