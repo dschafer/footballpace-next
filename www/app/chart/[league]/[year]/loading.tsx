@@ -1,7 +1,7 @@
 import { Skeleton, Stack, Title } from "@mantine/core";
-import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
+import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 
-export default function PaceLoading() {
+export default function ChartLoading() {
   return (
     <Stack>
       <Title
@@ -12,7 +12,7 @@ export default function PaceLoading() {
       >
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
-      <PaceTablePlaceholder rowCount={20} matchdayCount={20} />
+      <PaceChartPlaceholder />
       <Skeleton
         ta="right"
         style={{
@@ -20,7 +20,7 @@ export default function PaceLoading() {
         }}
         width={100}
       >
-        Explanation »
+        Pace Table »
       </Skeleton>
     </Stack>
   );

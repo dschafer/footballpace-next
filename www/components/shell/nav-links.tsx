@@ -1,6 +1,11 @@
 "use client";
 
-import { IconChartCovariate, IconColumns, IconHome } from "@tabler/icons-react";
+import {
+  IconChartLine,
+  IconColumns,
+  IconHome,
+  IconRulerMeasure,
+} from "@tabler/icons-react";
 
 import Link from "next/link";
 import { NavLink } from "@mantine/core";
@@ -29,14 +34,21 @@ export function NavLinks() {
           <NavLink
             component={Link}
             href={`/pace/${league}/${year}`}
-            label="Pace"
+            label="Pace Table"
             active={pathname == `/pace/${league}/${year}`}
-            leftSection={<IconChartCovariate />}
+            leftSection={<IconRulerMeasure />}
+          />
+          <NavLink
+            component={Link}
+            href={`/chart/${league}/${year}`}
+            label="Pace Chart"
+            active={pathname == `/chart/${league}/${year}`}
+            leftSection={<IconChartLine />}
           />
           <NavLink
             component={Link}
             href={`/table/${league}/${year}`}
-            label="Table"
+            label="League Table"
             active={pathname == `/table/${league}/${year}`}
             leftSection={<IconColumns />}
           />
