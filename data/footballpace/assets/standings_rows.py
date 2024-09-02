@@ -4,6 +4,8 @@ from dagster import (
     AssetIn,
     MetadataValue,
     Output,
+    TableColumn,
+    TableSchema,
     asset,
 )
 
@@ -27,7 +29,7 @@ StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
         PandasColumn.integer_column("Against", min_value=0),
     ],
     metadata_fn=lambda df: {
-        "num_rows": len(df),
+        "dagster/partition_row_count": len(df),
         "preview": MetadataValue.md(df.head().to_markdown()),
     },
 )
@@ -63,10 +65,24 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     return Output(
         standings_df,
         metadata={
-            "num_rows": len(standings_df),
+            "dagster/partition_row_count": len(standings_df),
             "preview": MetadataValue.md(standings_df.head().to_markdown()),
         },
     )
+
+
+StandingsRowTableSchema = TableSchema(
+    columns=[
+        TableColumn("Div", "string"),
+        TableColumn("Season", "int"),
+        TableColumn("Team", "string"),
+        TableColumn("Wins", "int"),
+        TableColumn("Losses", "int"),
+        TableColumn("Draws", "int"),
+        TableColumn("For", "int"),
+        TableColumn("Against", "int"),
+    ],
+)
 
 
 @asset(
@@ -75,6 +91,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     ins={"standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame)},
+    metadata={"dagster/column_schema": StandingsRowTableSchema},
 )
 def standings_rows_postgres(
     standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
@@ -85,4 +102,4 @@ def standings_rows_postgres(
         for row in standings_rows_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_standings_rows(rows)
-    return Output(None, metadata={"rowcount": rowcount})
+    return Output(None, metadata={"dagster/partition_row_count": rowcount})

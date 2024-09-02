@@ -7,6 +7,8 @@ from dagster import (
     MetadataValue,
     MultiPartitionKey,
     Output,
+    TableColumn,
+    TableSchema,
     asset,
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
@@ -29,7 +31,7 @@ PaceSheetEntryDataFrame = create_dagster_pandas_dataframe_type(
         PandasColumn.float_column("ExpectedPoints", min_value=0, max_value=3),
     ],
     metadata_fn=lambda df: {
-        "num_rows": len(df),
+        "dagster/partition_row_count": len(df),
         "preview": MetadataValue.md(df.head().to_markdown()),
     },
 )
@@ -102,10 +104,22 @@ def pace_sheet_entries_df(
     return Output(
         summarized_results,
         metadata={
-            "num_rows": len(summarized_results),
+            "dagster/partition_row_count": len(summarized_results),
             "preview": MetadataValue.md(summarized_results.head().to_markdown()),
         },
     )
+
+
+PaceSheetEntriesTableSchema = TableSchema(
+    columns=[
+        TableColumn("Div", "string"),
+        TableColumn("Season", "int"),
+        TableColumn("TeamFinish", "int"),
+        TableColumn("OpponentFinish", "int"),
+        TableColumn("Home", "bool"),
+        TableColumn("ExpectedPoints", "float"),
+    ],
+)
 
 
 @asset(
@@ -114,6 +128,7 @@ def pace_sheet_entries_df(
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
     ins={"pace_sheet_entries_df": AssetIn(dagster_type=PaceSheetEntryDataFrame)},
+    metadata={"dagster/column_schema": PaceSheetEntriesTableSchema},
 )
 def pace_sheet_entries_postgres(
     pace_sheet_entries_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
@@ -124,4 +139,4 @@ def pace_sheet_entries_postgres(
         for row in pace_sheet_entries_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_pace_sheet_entries(rows)
-    return Output(None, metadata={"rowcount": rowcount})
+    return Output(None, metadata={"dagster/partition_row_count": rowcount})

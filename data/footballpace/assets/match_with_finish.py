@@ -27,7 +27,7 @@ MatchResultsWithFinishDataFrame = create_dagster_pandas_dataframe_type(
         PandasColumn.integer_column("AwayFinish", min_value=1),
     ],
     metadata_fn=lambda df: {
-        "num_rows": len(df),
+        "dagster/partition_row_count": len(df),
         "preview": MetadataValue.md(df.head().to_markdown()),
     },
 )
@@ -77,7 +77,7 @@ def match_results_with_finish_df(
     return Output(
         match_results_finish_df,
         metadata={
-            "num_rows": len(match_results_finish_df),
+            "dagster/partition_row_count": len(match_results_finish_df),
             "preview": MetadataValue.md(match_results_finish_df.head().to_markdown()),
         },
     )

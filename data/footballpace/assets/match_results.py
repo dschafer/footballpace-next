@@ -7,6 +7,8 @@ from dagster import (
     MetadataValue,
     MultiPartitionKey,
     Output,
+    TableColumn,
+    TableSchema,
     asset,
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
@@ -64,7 +66,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
         PandasColumn.categorical_column("FTR", categories={"H", "A", "D"}),
     ],
     metadata_fn=lambda df: {
-        "num_rows": len(df),
+        "dagster/partition_row_count": len(df),
         "preview": MetadataValue.md(df.head().to_markdown()),
     },
 )
@@ -122,11 +124,25 @@ def match_results_df(
     return Output(
         df,
         metadata={
-            "num_rows": len(df),
+            "dagster/partition_row_count": len(df),
             "preview": MetadataValue.md(df.head().to_markdown()),
             "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
         },
     )
+
+
+MatchResultsTableSchema = TableSchema(
+    columns=[
+        TableColumn("Div", "string"),
+        TableColumn("Season", "int"),
+        TableColumn("Date", "datetime"),
+        TableColumn("HomeTeam", "string"),
+        TableColumn("AwayTeam", "string"),
+        TableColumn("FTHG", "int"),
+        TableColumn("FTAG", "int"),
+        TableColumn("FTR", "enum"),
+    ],
+)
 
 
 @asset(
@@ -135,6 +151,7 @@ def match_results_df(
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
+    metadata={"dagster/column_schema": MatchResultsTableSchema},
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
@@ -145,4 +162,4 @@ def match_results_postgres(
         for row in match_results_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_matches(rows)
-    return Output(None, metadata={"rowcount": rowcount})
+    return Output(None, metadata={"dagster/partition_row_count": rowcount})
