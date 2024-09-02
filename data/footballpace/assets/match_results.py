@@ -124,6 +124,7 @@ def match_results_df(
         metadata={
             "num_rows": len(df),
             "preview": MetadataValue.md(df.head().to_markdown()),
+            "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
         },
     )
 
