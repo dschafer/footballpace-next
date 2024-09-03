@@ -37,7 +37,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </Group>
       </AppShellHeader>
       <AppShellNavbar p="xs">
-        <NavLinks />
+        <NavLinks onNav={toggle} />
       </AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>

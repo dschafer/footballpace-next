@@ -13,7 +13,7 @@ import leagues from "@/lib/const/leagues";
 import { usePathname } from "next/navigation";
 import year from "@/lib/const/year";
 
-export function NavLinks() {
+export function NavLinks({ onNav }: { onNav: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -24,6 +24,7 @@ export function NavLinks() {
         label="Home"
         active={pathname == "/"}
         leftSection={<IconHome />}
+        onClick={onNav}
       />
       {Array.from(leagues).map(([league, name]) => (
         <NavLink
@@ -37,6 +38,7 @@ export function NavLinks() {
             label="Pace Table"
             active={pathname == `/pace/${league}/${year}`}
             leftSection={<IconRulerMeasure />}
+            onClick={onNav}
           />
           <NavLink
             component={Link}
@@ -44,6 +46,7 @@ export function NavLinks() {
             label="Pace Chart"
             active={pathname == `/chart/${league}/${year}`}
             leftSection={<IconChartLine />}
+            onClick={onNav}
           />
           <NavLink
             component={Link}
@@ -51,6 +54,7 @@ export function NavLinks() {
             label="League Table"
             active={pathname == `/table/${league}/${year}`}
             leftSection={<IconColumns />}
+            onClick={onNav}
           />
         </NavLink>
       ))}
