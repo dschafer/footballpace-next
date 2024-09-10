@@ -51,4 +51,4 @@ def test_match_results_postgres():
 
     output = match_results_postgres(df, FakeVercelPostgresResource())
     assert isinstance(output, Output)
-    assert output.metadata["rowcount"].value == (20 * 19)
+    assert output.metadata["dagster/partition_row_count"].value == (20 * 19)
