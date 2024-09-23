@@ -8,7 +8,6 @@ results_job = define_asset_job(
         "match_results_postgres",
         "standings_rows_df",
         "standings_rows_postgres",
-        "match_results_with_finish_df",
     ),
 )
 
