@@ -10,6 +10,12 @@ export const metadata = {
   description: "Tracking the pace of football clubs towards the championship",
 };
 
+// TODO: At some point, we should keep this as "false", and then
+// fire some sort of Next.js data cache invalidation event whenever
+// the data pipeline runs. But for now, this is better than having
+// stale data
+export const revalidate = 10;
+
 export default function RootLayout({
   children,
 }: {
