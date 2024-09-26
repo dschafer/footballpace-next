@@ -8,6 +8,7 @@ from dagster import (
     MultiPartitionKey,
     Output,
     TableColumn,
+    TableColumnConstraints,
     TableSchema,
     asset,
 )
@@ -112,12 +113,26 @@ def pace_sheet_entries_df(
 
 PaceSheetEntriesTableSchema = TableSchema(
     columns=[
-        TableColumn("Div", "string"),
-        TableColumn("Season", "int"),
-        TableColumn("TeamFinish", "int"),
-        TableColumn("OpponentFinish", "int"),
-        TableColumn("Home", "bool"),
-        TableColumn("ExpectedPoints", "float"),
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "team_finish",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+        ),
+        TableColumn(
+            "opponent_finish",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+        ),
+        TableColumn("home", "bool", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "expected_points",
+            "float",
+            constraints=TableColumnConstraints(nullable=False),
+        ),
     ],
 )
 

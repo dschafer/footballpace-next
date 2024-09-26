@@ -8,6 +8,7 @@ from dagster import (
     MultiPartitionKey,
     Output,
     TableColumn,
+    TableColumnConstraints,
     TableSchema,
     asset,
 )
@@ -133,14 +134,36 @@ def match_results_df(
 
 MatchResultsTableSchema = TableSchema(
     columns=[
-        TableColumn("Div", "string"),
-        TableColumn("Season", "int"),
-        TableColumn("Date", "datetime"),
-        TableColumn("HomeTeam", "string"),
-        TableColumn("AwayTeam", "string"),
-        TableColumn("FTHG", "int"),
-        TableColumn("FTAG", "int"),
-        TableColumn("FTR", "enum"),
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "date", "datetime", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "ft_home_goals",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "ft_away_goals",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "ft_result",
+            "enum",
+            constraints=TableColumnConstraints(
+                nullable=False, other=["One of 'H', 'A', 'D'"]
+            ),
+        ),
     ],
 )
 

@@ -5,6 +5,7 @@ from dagster import (
     MetadataValue,
     Output,
     TableColumn,
+    TableColumnConstraints,
     TableSchema,
     asset,
 )
@@ -73,14 +74,38 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
 
 StandingsRowTableSchema = TableSchema(
     columns=[
-        TableColumn("Div", "string"),
-        TableColumn("Season", "int"),
-        TableColumn("Team", "string"),
-        TableColumn("Wins", "int"),
-        TableColumn("Losses", "int"),
-        TableColumn("Draws", "int"),
-        TableColumn("For", "int"),
-        TableColumn("Against", "int"),
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "wins",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "losses",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "draws",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "goals_for",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "goals_against",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
     ],
 )
 
