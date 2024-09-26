@@ -69,12 +69,23 @@ class VercelPostgresResource(ConfigurableResource):
     def upsert_pace_sheet_entries(
         self, pace_sheet_entries: list[dict[str, Any]]
     ) -> int:
-        """Given a list of standings_row, upserts them into the DB."""
+        """Given a list of pace sheet entries, upserts them into the DB."""
         with self._db_connection.cursor() as cur:
             cur.executemany(
                 """INSERT INTO pace_sheet_entries (league, year, team_finish, opponent_finish, home, expected_points)
     VALUES(%(Div)s, %(Season)s, %(TeamFinish)s, %(OpponentFinish)s, %(Home)s, %(ExpectedPoints)s)
     ON CONFLICT (league, year, team_finish, opponent_finish, home) DO UPDATE SET expected_points = EXCLUDED.expected_points;""",
                 pace_sheet_entries,
+            )
+            return cur.rowcount
+
+    def upsert_team_colors(self, team_colors: list[dict[str, Any]]) -> int:
+        """Given a list of team colors, upserts them into the DB."""
+        with self._db_connection.cursor() as cur:
+            cur.executemany(
+                """INSERT INTO team_colors (team, primary_color, secondary_color)
+    VALUES(%(Team)s, %(PrimaryColor)s, %(SecondaryColor)s)
+    ON CONFLICT (team) DO UPDATE SET (primary_color, secondary_color) = (EXCLUDED.primary_color, EXCLUDED.secondary_color);""",
+                team_colors,
             )
             return cur.rowcount
