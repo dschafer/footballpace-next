@@ -34,7 +34,7 @@ MatchResultsWithFinishDataFrame = create_dagster_pandas_dataframe_type(
 
 
 @asset(
-    group_name="PaceSheet",
+    group_name="MatchResults",
     compute_kind="Pandas",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
@@ -48,7 +48,10 @@ def match_results_with_finish_df(
     match_results_df: pd.DataFrame,
     standings_rows_df: pd.DataFrame,
 ) -> Output[pd.DataFrame]:
-    """Annotate match results with each team's finish."""
+    """Annotate match results with each team's finish. Note that this isn't needed
+    for match results themselves, only for pace sheets, but it needs to live in the
+    match results group because it shares a partition structure with that group and
+    not the pace sheet group"""
 
     standings_sorted_df = (
         standings_rows_df.assign(
