@@ -5,6 +5,9 @@ import psycopg
 from dagster import (
     ConfigurableResource,
     InitResourceContext,
+    TableColumn,
+    TableColumnConstraints,
+    TableSchema,
 )
 from typing import Any
 
@@ -89,3 +92,118 @@ class VercelPostgresResource(ConfigurableResource):
                 team_colors,
             )
             return cur.rowcount
+
+
+MatchResultsTableSchema = TableSchema(
+    columns=[
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "date", "datetime", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "ft_home_goals",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "ft_away_goals",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "ft_result",
+            "enum",
+            constraints=TableColumnConstraints(
+                nullable=False, other=["One of 'H', 'A', 'D'"]
+            ),
+        ),
+    ],
+)
+PaceSheetEntriesTableSchema = TableSchema(
+    columns=[
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "team_finish",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+        ),
+        TableColumn(
+            "opponent_finish",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+        ),
+        TableColumn("home", "bool", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "expected_points",
+            "float",
+            constraints=TableColumnConstraints(nullable=False),
+        ),
+    ],
+)
+StandingsRowTableSchema = TableSchema(
+    columns=[
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "wins",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "losses",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "draws",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "goals_for",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+        TableColumn(
+            "goals_against",
+            "int",
+            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+        ),
+    ],
+)
+TeamColorsTableSchema = TableSchema(
+    columns=[
+        TableColumn(
+            "team",
+            "string",
+            constraints=TableColumnConstraints(nullable=False, unique=True),
+        ),
+        TableColumn(
+            "primary_color",
+            "string",
+            constraints=TableColumnConstraints(nullable=False),
+        ),
+        TableColumn(
+            "secondary_color",
+            "string",
+            constraints=TableColumnConstraints(nullable=True),
+        ),
+    ],
+)

@@ -7,9 +7,6 @@ from dagster import (
     MetadataValue,
     MultiPartitionKey,
     Output,
-    TableColumn,
-    TableColumnConstraints,
-    TableSchema,
     asset,
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
@@ -20,6 +17,7 @@ from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     predicted_seasons_of_league_mapping,
 )
+from footballpace.resources import PaceSheetEntriesTableSchema
 
 PaceSheetEntryDataFrame = create_dagster_pandas_dataframe_type(
     name="PaceSheetEntry",
@@ -109,32 +107,6 @@ def pace_sheet_entries_df(
             "preview": MetadataValue.md(summarized_results.head().to_markdown()),
         },
     )
-
-
-PaceSheetEntriesTableSchema = TableSchema(
-    columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
-            "team_finish",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
-        ),
-        TableColumn(
-            "opponent_finish",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
-        ),
-        TableColumn("home", "bool", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
-            "expected_points",
-            "float",
-            constraints=TableColumnConstraints(nullable=False),
-        ),
-    ],
-)
 
 
 @asset(

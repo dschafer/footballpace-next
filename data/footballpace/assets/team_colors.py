@@ -5,9 +5,6 @@ from dagster import (
     AssetIn,
     MetadataValue,
     Output,
-    TableColumn,
-    TableColumnConstraints,
-    TableSchema,
     asset,
 )
 
@@ -16,6 +13,7 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 import requests
 
 from footballpace.resources import VercelPostgresResource
+from footballpace.resources import TeamColorsTableSchema
 
 
 @asset(
@@ -81,27 +79,6 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
             "preview": MetadataValue.md(epl_teams.head().to_markdown()),
         },
     )
-
-
-TeamColorsTableSchema = TableSchema(
-    columns=[
-        TableColumn(
-            "team",
-            "string",
-            constraints=TableColumnConstraints(nullable=False, unique=True),
-        ),
-        TableColumn(
-            "primary_color",
-            "string",
-            constraints=TableColumnConstraints(nullable=False),
-        ),
-        TableColumn(
-            "secondary_color",
-            "string",
-            constraints=TableColumnConstraints(nullable=True),
-        ),
-    ],
-)
 
 
 @asset(

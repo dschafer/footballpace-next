@@ -4,9 +4,6 @@ from dagster import (
     AssetIn,
     MetadataValue,
     Output,
-    TableColumn,
-    TableColumnConstraints,
-    TableSchema,
     asset,
 )
 
@@ -15,6 +12,7 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 from footballpace.assets.match_results import MatchResultsDataFrame
 from footballpace.resources import VercelPostgresResource
 from footballpace.partitions import all_seasons_leagues_partition
+from footballpace.resources import StandingsRowTableSchema
 
 
 StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
@@ -70,44 +68,6 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
             "preview": MetadataValue.md(standings_df.head().to_markdown()),
         },
     )
-
-
-StandingsRowTableSchema = TableSchema(
-    columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
-            "team", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn(
-            "wins",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "losses",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "draws",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "goals_for",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "goals_against",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-    ],
-)
 
 
 @asset(

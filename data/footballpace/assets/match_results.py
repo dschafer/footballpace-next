@@ -7,9 +7,6 @@ from dagster import (
     MetadataValue,
     MultiPartitionKey,
     Output,
-    TableColumn,
-    TableColumnConstraints,
-    TableSchema,
     asset,
 )
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
@@ -17,6 +14,7 @@ from io import StringIO
 
 from footballpace.resources import FootballDataResource, VercelPostgresResource
 from footballpace.partitions import all_seasons_leagues_partition
+from footballpace.resources import MatchResultsTableSchema
 
 
 @asset(
@@ -130,42 +128,6 @@ def match_results_df(
             "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
         },
     )
-
-
-MatchResultsTableSchema = TableSchema(
-    columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
-            "date", "datetime", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn(
-            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn(
-            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn(
-            "ft_home_goals",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "ft_away_goals",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "ft_result",
-            "enum",
-            constraints=TableColumnConstraints(
-                nullable=False, other=["One of 'H', 'A', 'D'"]
-            ),
-        ),
-    ],
-)
 
 
 @asset(
