@@ -40,7 +40,7 @@ AWAY_POINTS = {"A": 3, "D": 1, "H": 0}
 
 
 @asset(
-    group_name="Transform",
+    group_name="PaceSheet",
     compute_kind="Pandas",
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
@@ -110,7 +110,7 @@ def pace_sheet_entries_df(
 
 
 @asset(
-    group_name="Load",
+    group_name="PaceSheet",
     compute_kind="Postgres",
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",

@@ -35,7 +35,7 @@ StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
 
 
 @asset(
-    group_name="Transform",
+    group_name="MatchResults",
     compute_kind="Pandas",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
@@ -71,7 +71,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
 
 
 @asset(
-    group_name="Load",
+    group_name="MatchResults",
     compute_kind="Postgres",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",

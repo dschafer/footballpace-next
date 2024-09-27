@@ -18,7 +18,7 @@ from footballpace.resources import MatchResultsTableSchema
 
 
 @asset(
-    group_name="Extract",
+    group_name="MatchResults",
     compute_kind="API",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
@@ -72,7 +72,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
 
 
 @asset(
-    group_name="Transform",
+    group_name="MatchResults",
     compute_kind="Pandas",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
@@ -131,7 +131,7 @@ def match_results_df(
 
 
 @asset(
-    group_name="Load",
+    group_name="MatchResults",
     compute_kind="Postgres",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
