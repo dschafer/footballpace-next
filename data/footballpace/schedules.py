@@ -1,10 +1,14 @@
-from dagster import MultiPartitionKey, RunRequest, schedule
+from dagster import DefaultScheduleStatus, MultiPartitionKey, RunRequest, schedule
 
 from .jobs import results_job
 from .partitions import ALL_LEAGUES, ALL_SEASONS
 
 
-@schedule(cron_schedule="0 0 * * *", job=results_job)
+@schedule(
+    cron_schedule="0 0 * * *",
+    job=results_job,
+    default_status=DefaultScheduleStatus.RUNNING,
+)
 def current_season_daily_refresh_schedule():
     latest_season = ALL_SEASONS[-1]
 
