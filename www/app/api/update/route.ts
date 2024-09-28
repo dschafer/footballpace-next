@@ -5,7 +5,6 @@ export async function POST(req: Request) {
   const expectedToken = process.env.UPDATE_BEARER_TOKEN;
 
   if (authHeader !== `Bearer ${expectedToken}`) {
-    console.log(`Unauthorized attempt to invalidate cache: ${authHeader}`);
     return Response.json(
       { message: "Unauthorized" },
       {
