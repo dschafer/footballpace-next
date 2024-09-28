@@ -137,6 +137,7 @@ def match_results_df(
     code_version="v1",
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
     metadata={"dagster/column_schema": MatchResultsTableSchema},
+    tags={"db_write": "true"},
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

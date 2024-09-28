@@ -77,6 +77,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     code_version="v1",
     ins={"standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame)},
     metadata={"dagster/column_schema": StandingsRowTableSchema},
+    tags={"db_write": "true"},
 )
 def standings_rows_postgres(
     standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

@@ -116,6 +116,7 @@ def pace_sheet_entries_df(
     code_version="v1",
     ins={"pace_sheet_entries_df": AssetIn(dagster_type=PaceSheetEntryDataFrame)},
     metadata={"dagster/column_schema": PaceSheetEntriesTableSchema},
+    tags={"db_write": "true"},
 )
 def pace_sheet_entries_postgres(
     pace_sheet_entries_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

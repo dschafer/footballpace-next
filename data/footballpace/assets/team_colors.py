@@ -87,6 +87,7 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
     code_version="v1",
     ins={"team_colors_df": AssetIn(dagster_type=TeamColorsDataFrame)},
     metadata={"dagster/column_schema": TeamColorsTableSchema},
+    tags={"db_write": "true"},
 )
 def team_colors_postgres(
     team_colors_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
