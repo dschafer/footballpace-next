@@ -16,7 +16,6 @@ from .jobs import cache_update_job
 )
 def db_write_sensor(context: MultiAssetSensorEvaluationContext):
     asset_events = context.latest_materialization_records_by_key()
-    context.log.info(str(asset_events))
     if any(asset_events.values()):
         context.advance_all_cursors()
         return RunRequest()
