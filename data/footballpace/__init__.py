@@ -15,7 +15,10 @@ from . import assets  # noqa: E402
 from .resources import FootballDataResource, VercelPostgresResource  # noqa: E402
 from .jobs import cache_update_job, pace_sheets_job, results_job  # noqa: E402
 from .sensors import db_write_sensor  # noqa: E402
-from .schedules import current_season_daily_refresh_schedule  # noqa: E402
+from .schedules import (  # noqa: E402
+    current_season_daily_refresh_schedule,
+    pace_sheets_daily_refresh_schedule,
+)
 
 
 defs = Definitions(
@@ -30,6 +33,9 @@ defs = Definitions(
             password=EnvVar("POSTGRES_PASSWORD"),
         ),
     },
-    schedules=[current_season_daily_refresh_schedule],
+    schedules=[
+        current_season_daily_refresh_schedule,
+        pace_sheets_daily_refresh_schedule,
+    ],
     sensors=[db_write_sensor],
 )
