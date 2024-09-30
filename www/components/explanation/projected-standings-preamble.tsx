@@ -22,6 +22,11 @@ export default function ProjectedStandingsPreamble() {
           we scale down the previous season{"'"}s results to make up the
           difference to a full season.
         </ListItem>
+        <ListItem>
+          If a team is newly promoted, then for the previous season{"'"}s
+          performance, we substitute the performance of the worst non-relegated
+          team from the previous season instead.
+        </ListItem>
       </List>
     </>
   );
