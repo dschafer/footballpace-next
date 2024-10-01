@@ -33,13 +33,20 @@ export default async function RecentPaceTable({
   return (
     <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
+        <Box component="colgroup">
+          <Box component="col" width="5%" />
+          <Box component="col" width="40%" />
+          <Box component="col" width="25%" />
+          <Box component="col" width="15%" />
+          <Box component="col" width="15%" />
+        </Box>
         <TableThead>
           <TableTr>
             <TableTh ta="center">#</TableTh>
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="center">Last Result</TableTh>
-            <TableTh ta="right">vs. Pace</TableTh>
-            <TableTh ta="right">Current Pace</TableTh>
+            <TableTh ta="right">Last Result vs. Pace</TableTh>
+            <TableTh ta="right">Season Pace</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>

@@ -17,28 +17,30 @@ export default function Home() {
           >
             {leagues.get(league)} {year}
           </Title>
-          <RecentPaceTable rowCount={5} league={league} year={year} />
-          <Group
-            style={{
-              alignSelf: "flex-end",
-            }}
-          >
-            <Anchor
-              component={Link}
-              href={`/pace/${league}/${year}`}
-              ta="right"
+          <Stack style={{ "max-width": "var(--mantine-breakpoint-md)" }}>
+            <RecentPaceTable rowCount={5} league={league} year={year} />
+            <Group
+              style={{
+                alignSelf: "flex-end",
+              }}
             >
-              Full Pace Table »
-            </Anchor>{" "}
-            &middot;{" "}
-            <Anchor
-              component={Link}
-              href={`/table/${league}/${year}`}
-              ta="right"
-            >
-              Full Table »
-            </Anchor>
-          </Group>
+              <Anchor
+                component={Link}
+                href={`/pace/${league}/${year}`}
+                ta="right"
+              >
+                Full Pace Table »
+              </Anchor>{" "}
+              &middot;{" "}
+              <Anchor
+                component={Link}
+                href={`/table/${league}/${year}`}
+                ta="right"
+              >
+                Full Table »
+              </Anchor>
+            </Group>
+          </Stack>
         </Stack>
       ))}
     </Stack>
