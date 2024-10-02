@@ -1,7 +1,6 @@
 import {
   Anchor,
   Box,
-  NumberFormatter,
   Table,
   TableScrollContainer,
   TableTbody,
@@ -46,7 +45,7 @@ export default async function RecentPaceTable({
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="center">Last Result</TableTh>
             <TableTh ta="right">Last Result vs. Pace</TableTh>
-            <TableTh ta="right">Season Pace</TableTh>
+            <TableTh ta="right">Season vs. Pace</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
@@ -72,7 +71,7 @@ export default async function RecentPaceTable({
                     <PaceNumber pace={lastMatch.delta} />
                   </Box>
                 </ColoredCell>
-                <TableTd ta="right" p="0">
+                <TableTd ta="right" p="0" fw={700}>
                   <Box w="100%" h="100%" p="0.5rem">
                     <PaceNumber pace={paceTeam.delta} />
                   </Box>

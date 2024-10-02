@@ -15,16 +15,18 @@ export default function Home() {
           >
             <Skeleton>English Premier League 2023</Skeleton>
           </Title>
-          <RecentPaceTablePlaceholder rowCount={5} key={league} />
-          <Skeleton
-            ta="right"
-            style={{
-              alignSelf: "flex-end",
-            }}
-            width={100}
-          >
-            Full Table »
-          </Skeleton>
+          <Stack style={{ "max-width": "var(--mantine-breakpoint-md)" }}>
+            <RecentPaceTablePlaceholder rowCount={5} key={league} />
+            <Skeleton
+              ta="right"
+              style={{
+                alignSelf: "flex-end",
+              }}
+              width={100}
+            >
+              Full Table »
+            </Skeleton>
+          </Stack>
         </Stack>
       ))}
     </Stack>

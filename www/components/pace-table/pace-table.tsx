@@ -10,6 +10,7 @@ import {
   TableTr,
 } from "@mantine/core";
 import Link from "next/link";
+import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "./pace-table-cell";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 
@@ -71,12 +72,8 @@ export default async function PaceTable({
                   fixedDecimalScale
                 />
               </TableTd>
-              <TableTd ta="right">
-                <NumberFormatter
-                  value={paceTeam.points - paceTeam.pace}
-                  decimalScale={2}
-                  fixedDecimalScale
-                />
+              <TableTd ta="right" fw={700}>
+                <PaceNumber pace={paceTeam.points - paceTeam.pace} />
               </TableTd>
               {paceTeam.matches.map((match, matchNum) => (
                 <PaceTableCell match={match} key={matchNum} />
