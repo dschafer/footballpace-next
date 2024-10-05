@@ -7,13 +7,14 @@ import {
 
 import { ActiveNavLink } from "./active-nav-link";
 import Link from "next/link";
+import { ScrollArea } from "@mantine/core";
 import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 
 export function NavLinks({ onNav }: { onNav: () => void }) {
   return (
-    <>
+    <ScrollArea>
       <ActiveNavLink
         component={Link}
         href="/"
@@ -52,6 +53,6 @@ export function NavLinks({ onNav }: { onNav: () => void }) {
           <TeamNavLinks league={league} year={year} onNav={onNav} />
         </ActiveNavLink>
       ))}
-    </>
+    </ScrollArea>
   );
 }
