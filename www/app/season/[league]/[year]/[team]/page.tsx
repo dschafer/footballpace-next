@@ -13,6 +13,7 @@ export default function SeasonPage({
   };
 }) {
   const yearInt = parseInt(params.year);
+  const teamDecoded = decodeURIComponent(params.team);
   return (
     <Stack>
       <Title
@@ -21,7 +22,7 @@ export default function SeasonPage({
           alignSelf: "flex-start",
         }}
       >
-        {params.team}
+        {teamDecoded}
       </Title>
       <Anchor
         component={Link}
@@ -37,7 +38,7 @@ export default function SeasonPage({
       <FixturesTable
         league={params.league}
         year={parseInt(params.year)}
-        team={params.team}
+        team={teamDecoded}
       />
     </Stack>
   );
