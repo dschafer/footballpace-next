@@ -17,7 +17,7 @@ export default function Home() {
           >
             {leagues.get(league)} {year}
           </Title>
-          <Stack style={{ "max-width": "var(--mantine-breakpoint-md)" }}>
+          <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
             <RecentPaceTable rowCount={5} league={league} year={year} />
             <Group
               style={{

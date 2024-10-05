@@ -15,7 +15,7 @@ export default function Home() {
           >
             <Skeleton>English Premier League 2023</Skeleton>
           </Title>
-          <Stack style={{ "max-width": "var(--mantine-breakpoint-md)" }}>
+          <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
             <RecentPaceTablePlaceholder rowCount={5} key={league} />
             <Skeleton
               ta="right"
