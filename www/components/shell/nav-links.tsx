@@ -1,5 +1,3 @@
-"use client";
-
 import {
   IconChartLine,
   IconColumns,
@@ -7,56 +5,50 @@ import {
   IconRulerMeasure,
 } from "@tabler/icons-react";
 
+import { ActiveNavLink } from "./active-nav-link";
 import Link from "next/link";
-import { NavLink } from "@mantine/core";
 import leagues from "@/lib/const/leagues";
-import { usePathname } from "next/navigation";
 import year from "@/lib/const/year";
 
 export function NavLinks({ onNav }: { onNav: () => void }) {
-  const pathname = usePathname();
-
   return (
     <>
-      <NavLink
+      <ActiveNavLink
         component={Link}
         href="/"
         label="Home"
-        active={pathname == "/"}
+        isActive={(pathname) => pathname == "/"}
         leftSection={<IconHome />}
         onClick={onNav}
       />
       {Array.from(leagues).map(([league, name]) => (
-        <NavLink
+        <ActiveNavLink
           label={name}
           key={league}
-          active={pathname.includes(`/${league}/${year}`)}
+          isActive={(pathname) => pathname.includes(`/${league}/${year}`)}
         >
-          <NavLink
-            component={Link}
+          <ActiveNavLink
             href={`/pace/${league}/${year}`}
             label="Pace Table"
-            active={pathname == `/pace/${league}/${year}`}
+            isActive={(pathname) => pathname == `/pace/${league}/${year}`}
             leftSection={<IconRulerMeasure />}
             onClick={onNav}
           />
-          <NavLink
-            component={Link}
+          <ActiveNavLink
             href={`/chart/${league}/${year}`}
             label="Pace Chart"
-            active={pathname == `/chart/${league}/${year}`}
+            isActive={(pathname) => pathname == `/chart/${league}/${year}`}
             leftSection={<IconChartLine />}
             onClick={onNav}
           />
-          <NavLink
-            component={Link}
+          <ActiveNavLink
             href={`/table/${league}/${year}`}
             label="League Table"
-            active={pathname == `/table/${league}/${year}`}
+            isActive={(pathname) => pathname == `/table/${league}/${year}`}
             leftSection={<IconColumns />}
             onClick={onNav}
           />
-        </NavLink>
+        </ActiveNavLink>
       ))}
     </>
   );
