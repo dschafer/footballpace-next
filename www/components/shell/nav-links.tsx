@@ -7,6 +7,7 @@ import {
 
 import { ActiveNavLink } from "./active-nav-link";
 import Link from "next/link";
+import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 
@@ -48,6 +49,7 @@ export function NavLinks({ onNav }: { onNav: () => void }) {
             leftSection={<IconColumns />}
             onClick={onNav}
           />
+          <TeamNavLinks league={league} year={year} onNav={onNav} />
         </ActiveNavLink>
       ))}
     </>
