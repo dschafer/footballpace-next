@@ -12,8 +12,8 @@ import {
 } from "@mantine/core";
 
 import ColoredCell from "../pace-display/colored-cell";
-import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
+import Result from "../pace-display/result";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function FixturesTable({
@@ -26,7 +26,7 @@ export default async function FixturesTable({
   team: string;
 }) {
   const paceTeams = await fetchPaceTeams(league, year);
-  const { matches } = paceTeams.filter((pt) => pt.team == team)[0];
+  const { paceMatches } = paceTeams.filter((pt) => pt.team == team)[0];
 
   return (
     <TableScrollContainer minWidth={0}>
@@ -41,24 +41,25 @@ export default async function FixturesTable({
           </TableTr>
         </TableThead>
         <TableTbody>
-          {matches.map((match, i) => (
+          {paceMatches.map((paceMatch, i) => (
             <TableTr key={i}>
-              <TableTd ta="left">{match.date.toLocaleDateString()}</TableTd>
-              <TableTd ta="center">
-                {match.homeTeam} {match.ftHomeGoals}:{match.ftAwayGoals}{" "}
-                {match.awayTeam}
+              <TableTd ta="left">
+                {paceMatch.match.date.toLocaleDateString()}
               </TableTd>
-              <TableTd ta="right">{match.points}</TableTd>
+              <TableTd ta="center">
+                <Result match={paceMatch.match} highlightedTeam={team} />
+              </TableTd>
+              <TableTd ta="right">{paceMatch.points}</TableTd>
               <TableTd ta="right">
                 <NumberFormatter
-                  value={match.expectedPoints}
+                  value={paceMatch.expectedPoints}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
-              <ColoredCell val={match.delta} ta="right" p="0">
+              <ColoredCell val={paceMatch.delta} ta="right" p="0">
                 <Box w="100%" h="100%" p="0.5rem">
-                  <PaceNumber pace={match.delta} />
+                  <PaceNumber pace={paceMatch.delta} />
                 </Box>
               </ColoredCell>
             </TableTr>

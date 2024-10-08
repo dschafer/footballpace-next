@@ -30,7 +30,7 @@ export default async function PaceTable({
   }
 
   const maxMatchday = Math.max(
-    ...paceTeams.map(({ matches }) => matches.length),
+    ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
 
   return (
@@ -75,8 +75,8 @@ export default async function PaceTable({
               <TableTd ta="right" fw={700}>
                 <PaceNumber pace={paceTeam.points - paceTeam.pace} />
               </TableTd>
-              {paceTeam.matches.map((match, matchNum) => (
-                <PaceTableCell match={match} key={matchNum} />
+              {paceTeam.paceMatches.map((paceMatch, matchNum) => (
+                <PaceTableCell paceMatch={paceMatch} key={matchNum} />
               ))}
             </TableTr>
           ))}

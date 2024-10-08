@@ -12,6 +12,7 @@ import {
 import ColoredCell from "../pace-display/colored-cell";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
+import Result from "../pace-display/result";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function RecentPaceTable({
@@ -50,7 +51,8 @@ export default async function RecentPaceTable({
         </TableThead>
         <TableTbody>
           {paceTeams.map((paceTeam, rowNum) => {
-            const lastMatch = paceTeam.matches[paceTeam.matches.length - 1];
+            const lastMatch =
+              paceTeam.paceMatches[paceTeam.paceMatches.length - 1];
             return (
               <TableTr key={paceTeam.team}>
                 <TableTd ta="center">{rowNum + 1}</TableTd>
@@ -63,8 +65,10 @@ export default async function RecentPaceTable({
                   </Anchor>
                 </TableTh>
                 <TableTd ta="center">
-                  {lastMatch.homeTeam} {lastMatch.ftHomeGoals}:
-                  {lastMatch.ftAwayGoals} {lastMatch.awayTeam}
+                  <Result
+                    match={lastMatch.match}
+                    highlightedTeam={paceTeam.team}
+                  />
                 </TableTd>
                 <ColoredCell val={lastMatch.delta} ta="right" p="0">
                   <Box w="100%" h="100%" p="0.5rem">

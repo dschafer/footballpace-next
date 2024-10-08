@@ -1,14 +1,11 @@
+import { Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
 import { sortStandings } from "../sort";
 
 export type PaceMatch = {
+  match: Match;
   delta: number;
-  date: Date;
-  homeTeam: string;
-  awayTeam: string;
-  ftHomeGoals: number;
-  ftAwayGoals: number;
   points: number;
   expectedPoints: number;
   home: boolean;
@@ -18,7 +15,7 @@ export type PaceMatch = {
 
 export type PaceTeam = {
   team: string;
-  matches: PaceMatch[];
+  paceMatches: PaceMatch[];
   points: number;
   pace: number;
   delta: number;
@@ -57,7 +54,7 @@ export async function fetchPaceTeams(
   let paceTeams: Array<PaceTeam> = allStandings
     .map(({ team, points }) => {
       const teamFinish = teamToFinish.get(team)!;
-      const matches = allMatches
+      const paceMatches = allMatches
         .filter(
           ({ homeTeam, awayTeam }) => homeTeam == team || awayTeam == team,
         )
@@ -66,6 +63,7 @@ export async function fetchPaceTeams(
             ...match,
             opponent: team == match.homeTeam ? match.awayTeam : match.homeTeam,
             home: team == match.homeTeam,
+            match: match,
           };
         })
         .map((match) => {
@@ -106,13 +104,13 @@ export async function fetchPaceTeams(
             delta: match.points - match.expectedPoints,
           };
         });
-      const delta = matches
+      const delta = paceMatches
         .map(({ delta }) => delta)
         .reduce((s, a) => s + a, 0);
-      const pace = matches
+      const pace = paceMatches
         .map(({ expectedPoints }) => expectedPoints)
         .reduce((s, a) => s + a, 0);
-      return { team, matches, points, pace, delta };
+      return { team, paceMatches, points, pace, delta };
     })
     .sort((a, b) => b.delta - a.delta || b.points - a.points);
 
