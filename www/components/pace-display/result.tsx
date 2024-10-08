@@ -13,15 +13,15 @@ export default function Result({
 }) {
   const homeFw = highlightedTeam == match.homeTeam ? 600 : 300;
   const awayFw = highlightedTeam == match.awayTeam ? 600 : 300;
-  let homeC = "black";
-  let awayC = "black";
+  let homeC = "var(--mantine-color-text)";
+  let awayC = "var(--mantine-color-text)";
   if (highlightedTeam == match.homeTeam) {
     homeC =
       match.ftResult == "H"
         ? "green.9"
         : match.ftResult == "A"
           ? "red.9"
-          : "black";
+          : "var(--mantine-color-text)";
   }
   if (highlightedTeam == match.awayTeam) {
     awayC =
@@ -29,7 +29,7 @@ export default function Result({
         ? "green.9"
         : match.ftResult == "H"
           ? "red.9"
-          : "black";
+          : "var(--mantine-color-text)";
   }
   let homeTeam = <>{match.homeTeam}</>;
   let awayTeam = <>{match.awayTeam}</>;

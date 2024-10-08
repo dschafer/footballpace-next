@@ -12,6 +12,8 @@ export default function ColoredCell(
       `Invalid value passed to ColoredCell; must be in [-3, 3], got: {props.val}`,
     );
   }
+
+  // TODO: Get this working for dark mode
   const bgColors = [
     "#762a83",
     "#af8dc3",

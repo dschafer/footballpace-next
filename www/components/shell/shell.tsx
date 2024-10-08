@@ -30,7 +30,12 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <AppShellHeader p="xs">
         <Group h="100%">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Anchor component={Link} size="inherit" href={`/`} c="black">
+          <Anchor
+            component={Link}
+            size="inherit"
+            href={`/`}
+            c="var(--mantine-color-text)"
+          >
             <Title order={1}>Football Pace</Title>
           </Anchor>
           <IconSoccerField size="2rem" />
