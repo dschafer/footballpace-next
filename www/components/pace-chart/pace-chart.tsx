@@ -29,7 +29,7 @@ export default async function PaceChart({
   });
 
   const maxMatchday = Math.max(
-    ...paceTeams.map(({ matches }) => matches.length),
+    ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
 
   let mappedData = [...Array(maxMatchday)].map((_, md) => {
@@ -37,10 +37,10 @@ export default async function PaceChart({
   });
 
   paceTeams.forEach((paceTeam, i) => {
-    const { team, matches } = paceTeam;
+    const { team, paceMatches } = paceTeam;
     let cumDelta = 0;
-    matches.forEach((match, md) => {
-      cumDelta += match.delta;
+    paceMatches.forEach((paceMatch, md) => {
+      cumDelta += paceMatch.delta;
       mappedData[md].set(team, Math.round(cumDelta * 100) / 100);
     });
   });
