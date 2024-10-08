@@ -47,7 +47,11 @@ export default async function FixturesTable({
                 {paceMatch.match.date.toLocaleDateString()}
               </TableTd>
               <TableTd ta="center">
-                <Result match={paceMatch.match} highlightedTeam={team} />
+                <Result
+                  match={paceMatch.match}
+                  highlightedTeam={team}
+                  link={true}
+                />
               </TableTd>
               <TableTd ta="right">{paceMatch.points}</TableTd>
               <TableTd ta="right">
