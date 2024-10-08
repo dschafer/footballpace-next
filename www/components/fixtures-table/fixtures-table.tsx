@@ -1,5 +1,7 @@
 import {
   Anchor,
+  Box,
+  NumberFormatter,
   Table,
   TableScrollContainer,
   TableTbody,
@@ -8,8 +10,11 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+
+import ColoredCell from "../pace-display/colored-cell";
 import Link from "next/link";
-import prisma from "@/lib/prisma";
+import PaceNumber from "../pace-display/pace-number";
+import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function FixturesTable({
   league,
@@ -20,13 +25,8 @@ export default async function FixturesTable({
   year: number;
   team: string;
 }) {
-  const matches = await prisma.match.findMany({
-    where: {
-      league: league,
-      year: year,
-      OR: [{ homeTeam: team }, { awayTeam: team }],
-    },
-  });
+  const paceTeams = await fetchPaceTeams(league, year);
+  const { matches } = paceTeams.filter((pt) => pt.team == team)[0];
 
   return (
     <TableScrollContainer minWidth={0}>
@@ -34,34 +34,33 @@ export default async function FixturesTable({
         <TableThead>
           <TableTr>
             <TableTh ta="left">Date</TableTh>
-            <TableTh ta="right">Home</TableTh>
             <TableTh ta="center">Result</TableTh>
-            <TableTh ta="left">Away</TableTh>
+            <TableTh ta="right">Points</TableTh>
+            <TableTh ta="right">Expected Points</TableTh>
+            <TableTh ta="right">Last Result vs. Pace</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
           {matches.map((match, i) => (
             <TableTr key={i}>
               <TableTd ta="left">{match.date.toLocaleDateString()}</TableTd>
-              <TableTd ta="right">
-                <Anchor
-                  component={Link}
-                  href={`/season/${league}/${year}/${match.homeTeam}`}
-                >
-                  {match.homeTeam}
-                </Anchor>
-              </TableTd>
               <TableTd ta="center">
-                {match.ftHomeGoals} - {match.ftAwayGoals}
+                {match.homeTeam} {match.ftHomeGoals}:{match.ftAwayGoals}{" "}
+                {match.awayTeam}
               </TableTd>
-              <TableTd ta="left">
-                <Anchor
-                  component={Link}
-                  href={`${league}/${year}/${match.awayTeam}`}
-                >
-                  {match.awayTeam}
-                </Anchor>
+              <TableTd ta="right">{match.points}</TableTd>
+              <TableTd ta="right">
+                <NumberFormatter
+                  value={match.expectedPoints}
+                  decimalScale={2}
+                  fixedDecimalScale
+                />
               </TableTd>
+              <ColoredCell val={match.delta} ta="right" p="0">
+                <Box w="100%" h="100%" p="0.5rem">
+                  <PaceNumber pace={match.delta} />
+                </Box>
+              </ColoredCell>
             </TableTr>
           ))}
         </TableTbody>

@@ -20,9 +20,10 @@ export default function FixturesTablePlaceholder({
         <TableThead>
           <TableTr>
             <TableTh ta="left">Date</TableTh>
-            <TableTh ta="right">Home</TableTh>
             <TableTh ta="center">Result</TableTh>
-            <TableTh ta="left">Away</TableTh>
+            <TableTh ta="right">Points</TableTh>
+            <TableTh ta="right">Expected Points</TableTh>
+            <TableTh ta="right">Last Result vs. Pace</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
@@ -31,14 +32,17 @@ export default function FixturesTablePlaceholder({
               <TableTd ta="left">
                 <Skeleton>Date</Skeleton>
               </TableTd>
-              <TableTd ta="right">
-                <Skeleton>Home</Skeleton>
-              </TableTd>
               <TableTd ta="center">
-                <Skeleton>1 - 1</Skeleton>
+                <Skeleton>Arsenal 4:2 Leicester</Skeleton>
               </TableTd>
-              <TableTd ta="left">
-                <Skeleton>Away</Skeleton>
+              <TableTd ta="right">
+                <Skeleton>3</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>2.50</Skeleton>
+              </TableTd>
+              <TableTd ta="right">
+                <Skeleton>+0.50</Skeleton>
               </TableTd>
             </TableTr>
           ))}
