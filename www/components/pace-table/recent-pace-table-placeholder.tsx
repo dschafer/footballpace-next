@@ -9,7 +9,6 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
-import ColoredCell from "../pace-display/colored-cell";
 
 export default function RecentPaceTablePlaceholder({
   rowCount,
@@ -46,12 +45,12 @@ export default function RecentPaceTablePlaceholder({
                 <TableTd ta="center">
                   <Skeleton>Arsenal 7:0 Chelsea</Skeleton>
                 </TableTd>
-                <ColoredCell val={0} ta="right" p="0">
+                <TableTd ta="right" p="0">
                   <Skeleton>+3</Skeleton>
-                </ColoredCell>
-                <ColoredCell val={0} ta="right" p="0">
+                </TableTd>
+                <TableTd ta="right" p="0">
                   <Skeleton>+3</Skeleton>
-                </ColoredCell>
+                </TableTd>
               </TableTr>
             );
           })}

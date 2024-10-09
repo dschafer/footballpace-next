@@ -35,9 +35,10 @@ export default async function FixturesTable({
           <TableTr>
             <TableTh ta="left">Date</TableTh>
             <TableTh ta="center">Result</TableTh>
+            <TableTh ta="right">Season vs. Pace</TableTh>
+            <TableTh ta="right">Last Result vs. Pace</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Expected Points</TableTh>
-            <TableTh ta="right">Last Result vs. Pace</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
@@ -53,6 +54,16 @@ export default async function FixturesTable({
                   link={true}
                 />
               </TableTd>
+              <TableTd ta="right" p="0" fw={700}>
+                <Box w="100%" h="100%" p="0.5rem">
+                  <PaceNumber pace={paceMatch.cumulativeDelta} />
+                </Box>
+              </TableTd>
+              <ColoredCell val={paceMatch.delta} ta="right" p="0">
+                <Box w="100%" h="100%" p="0.5rem">
+                  <PaceNumber pace={paceMatch.delta} />
+                </Box>
+              </ColoredCell>
               <TableTd ta="right">{paceMatch.points}</TableTd>
               <TableTd ta="right">
                 <NumberFormatter
@@ -61,11 +72,6 @@ export default async function FixturesTable({
                   fixedDecimalScale
                 />
               </TableTd>
-              <ColoredCell val={paceMatch.delta} ta="right" p="0">
-                <Box w="100%" h="100%" p="0.5rem">
-                  <PaceNumber pace={paceMatch.delta} />
-                </Box>
-              </ColoredCell>
             </TableTr>
           ))}
         </TableTbody>
