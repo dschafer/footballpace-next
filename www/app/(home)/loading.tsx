@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import RecentPaceTablePlaceholder from "@/components/pace-table/recent-pace-table-placeholder";
+import RecentPaceTablePlaceholder from "@/components/recent-pace-table/recent-pace-table-placeholder";
 import leagues from "@/lib/const/leagues";
 
 export default function Home() {

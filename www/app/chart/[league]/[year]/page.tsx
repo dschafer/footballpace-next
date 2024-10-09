@@ -1,6 +1,6 @@
 import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
-import PaceChart from "@/components/pace-chart/pace-chart";
+import StandingsPaceChart from "@/components/pace-chart/standings-pace-chart";
 import leagues from "@/lib/const/leagues";
 
 export default function ChartPage({
@@ -22,7 +22,7 @@ export default function ChartPage({
       >
         {leagues.get(params.league)} {yearInt}
       </Title>
-      <PaceChart league={params.league} year={yearInt} />
+      <StandingsPaceChart league={params.league} year={yearInt} />
       <Anchor
         component={Link}
         href={`/pace/${params.league}/${yearInt}`}

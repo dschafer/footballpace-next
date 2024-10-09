@@ -1,6 +1,6 @@
 import { Anchor, Group, Stack, Title } from "@mantine/core";
 import Link from "next/link";
-import RecentPaceTable from "@/components/pace-table/recent-pace-table";
+import RecentPaceTable from "@/components/recent-pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 

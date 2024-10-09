@@ -21,6 +21,8 @@ export type PaceTeam = {
   points: number;
   pace: number;
   delta: number;
+  league: string;
+  year: number;
 };
 
 export async function fetchPaceTeams(
@@ -98,7 +100,7 @@ export async function fetchPaceTeams(
 
       const delta = paceMatches[paceMatches.length - 1].cumulativeDelta;
       const pace = paceMatches[paceMatches.length - 1].cumulativeExpectedPoints;
-      return { team, paceMatches, points, pace, delta };
+      return { team, paceMatches, points, pace, delta, league, year };
     })
     .sort((a, b) => b.delta - a.delta || b.points - a.points);
 

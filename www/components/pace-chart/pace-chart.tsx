@@ -1,22 +1,16 @@
 import { LineChart, LineChartSeries } from "@mantine/charts";
-import { fetchPaceTeams } from "@/lib/pace/pace";
+import { PaceTeam } from "@/lib/pace/pace";
+import { TeamColor } from "@prisma/client";
 
-import prisma from "@/lib/prisma";
 import teamColor from "@/lib/color";
 
 export default async function PaceChart({
-  league,
-  year,
+  paceTeams,
+  allColors,
 }: {
-  league: string;
-  year: number;
+  paceTeams: PaceTeam[];
+  allColors: TeamColor[];
 }) {
-  let [paceTeams, allColors] = await Promise.all([
-    fetchPaceTeams(league, year),
-    prisma.teamColor.findMany(),
-  ]);
-  paceTeams = paceTeams.slice(0, 5);
-
   // https://colorbrewer2.org/#type=qualitative&scheme=Pastel1&n=5
   const colors = ["7fc97f", "beaed4", "fdc086", "ffff99", "386cb0"];
   let series: LineChartSeries[] = paceTeams.map((paceTeam, i) => {

@@ -11,24 +11,14 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
-import PaceTableCell from "./pace-table-cell";
-import { fetchPaceTeams } from "@/lib/pace/pace";
+import PaceTableCell from "../pace-table-cell/pace-table-cell";
+import { PaceTeam } from "@/lib/pace/pace";
 
 export default async function PaceTable({
-  rowCount,
-  league,
-  year,
+  paceTeams,
 }: {
-  rowCount?: number;
-  league: string;
-  year: number;
+  paceTeams: PaceTeam[];
 }) {
-  let paceTeams = await fetchPaceTeams(league, year);
-
-  if (rowCount) {
-    paceTeams = paceTeams.slice(0, rowCount);
-  }
-
   const maxMatchday = Math.max(
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
@@ -57,7 +47,7 @@ export default async function PaceTable({
               <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}
-                  href={`/season/${league}/${year}/${paceTeam.team}`}
+                  href={`/season/${paceTeam.league}/${paceTeam.year}/${paceTeam.team}`}
                 >
                   {paceTeam.team}
                 </Anchor>
