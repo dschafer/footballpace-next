@@ -1,5 +1,6 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
 import FixturesTablePlaceholder from "@/components/fixtures-table/fixtures-table-placeholder";
+import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 
 export default function SeasonLoading() {
   return (
@@ -29,6 +30,15 @@ export default function SeasonLoading() {
         <Skeleton>Recent Matches</Skeleton>
       </Title>
       <FixturesTablePlaceholder rowCount={3} />
+      <Title
+        order={3}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        <Skeleton>Pace Chart</Skeleton>
+      </Title>
+      <PaceChartPlaceholder />
       <Title
         order={3}
         style={{

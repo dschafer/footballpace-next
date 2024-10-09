@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Title } from "@mantine/core";
-import StandingsPaceChartPlaceholder from "@/components/pace-chart/standings-pace-chart-placeholder";
+import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 
 export default function ChartLoading() {
   return (
@@ -12,7 +12,7 @@ export default function ChartLoading() {
       >
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
-      <StandingsPaceChartPlaceholder />
+      <PaceChartPlaceholder />
       <Skeleton
         ta="right"
         style={{
