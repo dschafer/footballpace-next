@@ -16,12 +16,17 @@ import { PaceTeam } from "@/lib/pace/pace";
 
 export default async function PaceTable({
   paceTeams,
+  startPlace,
 }: {
   paceTeams: PaceTeam[];
+  startPlace?: number;
 }) {
   const maxMatchday = Math.max(
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
+  if (!startPlace) {
+    startPlace = 0;
+  }
 
   return (
     <TableScrollContainer minWidth={0}>
@@ -43,7 +48,7 @@ export default async function PaceTable({
         <TableTbody>
           {paceTeams.map((paceTeam, rowNum) => (
             <TableTr key={paceTeam.team}>
-              <TableTd ta="center">{rowNum + 1}</TableTd>
+              <TableTd ta="center">{rowNum + startPlace + 1}</TableTd>
               <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}

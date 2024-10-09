@@ -36,7 +36,9 @@ export default function PaceTablePlaceholder({
         <TableTbody>
           {[...Array(rowCount)].map((_, i) => (
             <TableTr key={i}>
-              <TableTd ta="center">{i + 1}</TableTd>
+              <TableTd ta="center">
+                <Skeleton>{i + 1}</Skeleton>
+              </TableTd>
               <TableTh ta="left">
                 <Skeleton>Arsenal</Skeleton>
               </TableTh>

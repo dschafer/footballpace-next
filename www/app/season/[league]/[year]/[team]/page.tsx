@@ -2,6 +2,7 @@ import { Anchor, Stack, Text, Title } from "@mantine/core";
 import FixturesTable from "@/components/fixtures-table/fixtures-table";
 import Link from "next/link";
 import PaceChart from "@/components/pace-chart/pace-chart";
+import PaceTable from "@/components/pace-table/pace-table";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
@@ -23,6 +24,7 @@ export default async function SeasonPage({
     prisma.teamColor.findMany(),
   ]);
   const paceTeam = paceTeams.filter((pt) => pt.team == teamDecoded)[0];
+  const pacePlace = paceTeams.findIndex((pt) => pt.team == teamDecoded);
 
   return (
     <Stack>
@@ -56,6 +58,21 @@ export default async function SeasonPage({
       <FixturesTable
         paceMatches={paceTeam.paceMatches.toReversed().slice(0, 3)}
         team={teamDecoded}
+      />
+      <Title
+        order={3}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        Table
+      </Title>
+      <PaceTable
+        paceTeams={paceTeams.slice(
+          Math.max(pacePlace - 2, 0),
+          Math.min(pacePlace + 3, paceTeams.length),
+        )}
+        startPlace={Math.max(pacePlace - 2, 0)}
       />
       <Title
         order={3}
