@@ -12,22 +12,17 @@ import {
 } from "@mantine/core";
 
 import ColoredCell from "../pace-display/colored-cell";
+import { PaceMatch } from "@/lib/pace/pace";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
-import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function FixturesTable({
-  league,
-  year,
+  paceMatches,
   team,
 }: {
-  league: string;
-  year: number;
+  paceMatches: PaceMatch[];
   team: string;
 }) {
-  const paceTeams = await fetchPaceTeams(league, year);
-  const { paceMatches } = paceTeams.filter((pt) => pt.team == team)[0];
-
   return (
     <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>

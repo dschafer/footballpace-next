@@ -20,6 +20,23 @@ export default function SeasonLoading() {
       >
         <Skeleton>English Premier League 2023</Skeleton>
       </Text>
+      <Title
+        order={3}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        <Skeleton>Recent Matches</Skeleton>
+      </Title>
+      <FixturesTablePlaceholder rowCount={3} />
+      <Title
+        order={3}
+        style={{
+          alignSelf: "flex-start",
+        }}
+      >
+        <Skeleton>Full Schedule</Skeleton>
+      </Title>
       <FixturesTablePlaceholder rowCount={38} />
     </Stack>
   );
