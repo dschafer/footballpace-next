@@ -43,13 +43,6 @@ export function NavLinks({ onNav }: { onNav: () => void }) {
             leftSection={<IconChartLine />}
             onClick={onNav}
           />
-          <ActiveNavLink
-            href={`/table/${league}/${year}`}
-            label="League Table"
-            isActive={(pathname) => pathname == `/table/${league}/${year}`}
-            leftSection={<IconColumns />}
-            onClick={onNav}
-          />
           <TeamNavLinks league={league} year={year} onNav={onNav} />
         </ActiveNavLink>
       ))}

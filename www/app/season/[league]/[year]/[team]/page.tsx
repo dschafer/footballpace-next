@@ -38,7 +38,7 @@ export default async function SeasonPage({
       </Title>
       <Anchor
         component={Link}
-        href={`/table/${params.league}/${yearInt}`}
+        href={`/pace/${params.league}/${yearInt}`}
         style={{
           alignSelf: "flex-start",
         }}

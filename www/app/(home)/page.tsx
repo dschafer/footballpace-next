@@ -30,14 +30,6 @@ export default function Home() {
                 ta="right"
               >
                 Full Pace Table »
-              </Anchor>{" "}
-              &middot;{" "}
-              <Anchor
-                component={Link}
-                href={`/table/${league}/${year}`}
-                ta="right"
-              >
-                Full Table »
               </Anchor>
             </Group>
           </Stack>
