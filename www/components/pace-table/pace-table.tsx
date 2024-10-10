@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
-import PaceTableCell from "../pace-table-cell/pace-table-cell";
+import PaceTableCell from "../pace-display/pace-table-cell";
 import { PaceTeam } from "@/lib/pace/pace";
 
 export default async function PaceTable({
