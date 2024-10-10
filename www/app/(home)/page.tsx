@@ -1,4 +1,4 @@
-import { Anchor, Group, Stack, Title, Text } from "@mantine/core";
+import { Anchor, Group, Stack, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import RecentPaceTable from "@/components/recent-pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
