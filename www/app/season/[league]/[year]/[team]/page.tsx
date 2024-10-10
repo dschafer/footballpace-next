@@ -56,7 +56,7 @@ export default async function SeasonPage({
         Recent Matches
       </Title>
       <FixturesTable
-        paceMatches={paceTeam.paceMatches.toReversed().slice(0, 3)}
+        paceMatches={paceTeam.paceMatches.reverse().slice(0, 3)}
         team={teamDecoded}
       />
       <Title
