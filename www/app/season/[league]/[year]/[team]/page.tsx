@@ -25,6 +25,7 @@ export default async function SeasonPage({
   ]);
   const paceTeam = paceTeams.filter((pt) => pt.team == teamDecoded)[0];
   const pacePlace = paceTeams.findIndex((pt) => pt.team == teamDecoded);
+  const previewMatches = Array.from(paceTeam.paceMatches).reverse().slice(0, 3);
 
   return (
     <Stack>
@@ -55,10 +56,7 @@ export default async function SeasonPage({
       >
         Recent Matches
       </Title>
-      <FixturesTable
-        paceMatches={paceTeam.paceMatches.reverse().slice(0, 3)}
-        team={teamDecoded}
-      />
+      <FixturesTable paceMatches={previewMatches} team={teamDecoded} />
       <Title
         order={3}
         style={{
