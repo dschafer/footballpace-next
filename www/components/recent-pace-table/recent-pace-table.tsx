@@ -9,9 +9,9 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
-import ColoredCell from "../pace-display/colored-cell";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
+import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 
@@ -70,11 +70,7 @@ export default async function RecentPaceTable({
                     highlightedTeam={paceTeam.team}
                   />
                 </TableTd>
-                <ColoredCell val={lastMatch.delta} ta="right" p="0">
-                  <Box w="100%" h="100%" p="0.5rem">
-                    <PaceNumber pace={lastMatch.delta} />
-                  </Box>
-                </ColoredCell>
+                <PaceTableCell paceMatch={lastMatch} />
                 <TableTd ta="right" p="0" fw={700}>
                   <Box w="100%" h="100%" p="0.5rem">
                     <PaceNumber pace={paceTeam.delta} />

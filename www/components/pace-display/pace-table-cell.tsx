@@ -21,7 +21,7 @@ export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
     <ColoredCell val={delta} ta="right">
       <Popover>
         <PopoverTarget>
-          <Box w="100%" h="100%" p="0.5rem" style={{ cursor: "default" }}>
+          <Box w="100%" h="100%" p="0.5rem" style={{ cursor: "pointer" }}>
             <PaceNumber pace={delta} />
           </Box>
         </PopoverTarget>
