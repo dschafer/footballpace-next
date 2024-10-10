@@ -68,6 +68,7 @@ export default async function RecentPaceTable({
                   <Result
                     match={lastMatch.match}
                     highlightedTeam={paceTeam.team}
+                    link={true}
                   />
                 </TableTd>
                 <PaceTableCell paceMatch={lastMatch} />
