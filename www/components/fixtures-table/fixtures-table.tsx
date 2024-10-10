@@ -10,9 +10,9 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import { PaceMatch, matchDescription } from "@/lib/pace/pace";
 
 import ColoredCell from "../pace-display/colored-cell";
-import { PaceMatch } from "@/lib/pace/pace";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
 
@@ -68,10 +68,7 @@ export default async function FixturesTable({
                   fixedDecimalScale
                 />
               </TableTd>
-              <TableTd ta="center">
-                {paceMatch.home ? "Home vs " : "Away to "}
-                {paceMatch.opponentFinish}
-              </TableTd>
+              <TableTd ta="center">{matchDescription(paceMatch)}</TableTd>
             </TableTr>
           ))}
         </TableTbody>

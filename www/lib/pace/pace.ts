@@ -106,3 +106,7 @@ export async function fetchPaceTeams(
 
   return paceTeams;
 }
+
+export function matchDescription({ home, opponentFinish }: PaceMatch): string {
+  return (home ? "Home vs " : "Away to ") + opponentFinish;
+}
