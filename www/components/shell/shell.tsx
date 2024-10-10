@@ -41,6 +41,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             component={Link}
             size="inherit"
             href={`/`}
+            underline="never"
             c="var(--mantine-color-text)"
           >
             <Title order={1}>Football Pace</Title>
