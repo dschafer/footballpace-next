@@ -34,6 +34,7 @@ export default async function FixturesTable({
             <TableTh ta="right">Last Result vs. Pace</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Expected Points</TableTh>
+            <TableTh ta="center">Match Description</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
@@ -66,6 +67,10 @@ export default async function FixturesTable({
                   decimalScale={2}
                   fixedDecimalScale
                 />
+              </TableTd>
+              <TableTd ta="center">
+                {paceMatch.home ? "Home vs " : "Away to "}
+                {paceMatch.opponentFinish}
               </TableTd>
             </TableTr>
           ))}

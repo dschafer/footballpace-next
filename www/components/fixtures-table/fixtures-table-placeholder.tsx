@@ -25,6 +25,7 @@ export default function FixturesTablePlaceholder({
             <TableTh ta="right">Last Result vs. Pace</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Expected Points</TableTh>
+            <TableTh ta="center">Match Description</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
@@ -47,6 +48,9 @@ export default function FixturesTablePlaceholder({
               </TableTd>
               <TableTd ta="right">
                 <Skeleton>2.50</Skeleton>
+              </TableTd>
+              <TableTd ta="center">
+                <Skeleton>Away to 18</Skeleton>
               </TableTd>
             </TableTr>
           ))}
