@@ -17,17 +17,11 @@ export default function Home() {
       </Title>
       <Text>
         Football Pace is a version of the standings table that accounts for
-        strength of schedule. Fans intuitively know that some matches are harder
-        than others. A championship contender expects to win against the worst
-        team in the league at home. They{"'"}re probably content with a draw to
-        a championship rival.
-      </Text>
-      <Text>
-        Football Pace looks at historical data for a league to see how many
-        points a typical champion takes from each match, based on home/away and
-        finishing position. Using that, it then creates a new version of the
-        standings table, that shows how each team is doing compared to
-        {' "'}championship pace{'"'}, given their schedule so far.
+        strength of schedule. It looks at historical data to see how a typical
+        champion performs in each match, based on home/away and the opponent
+        {"'"}s finishing position. It then presents a new version of the
+        standings table, that shows how each team is doing compared to typical
+        championship pace, given their schedule so far.
       </Text>
       {Array.from(leagues).map(([league, _]) => (
         <Stack key={league}>
