@@ -5,11 +5,9 @@ import useSWR from "swr";
 export function TeamNavLinks({
   league,
   year,
-  onNav,
 }: {
   league: string;
   year: number;
-  onNav: () => void;
 }) {
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data, error, isLoading } = useSWR(
@@ -25,7 +23,6 @@ export function TeamNavLinks({
         label={team}
         isActive={(pathname) => pathname == `/season/${league}/${year}/${team}`}
         leftSection={<IconUsers />}
-        onClick={onNav}
       />
     ));
   }

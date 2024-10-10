@@ -14,9 +14,16 @@ import { IconSoccerField } from "@tabler/icons-react";
 import Link from "next/link";
 import { NavLinks } from "./nav-links";
 import { useDisclosure } from "@mantine/hooks";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Shell({ children }: { children: React.ReactNode }) {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { close, toggle }] = useDisclosure();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    close();
+  }, [close, pathname]);
   return (
     <AppShell
       header={{ height: "4rem" }}
@@ -42,7 +49,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </Group>
       </AppShellHeader>
       <AppShellNavbar p="xs">
-        <NavLinks onNav={toggle} />
+        <NavLinks />
       </AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>

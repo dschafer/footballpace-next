@@ -12,7 +12,7 @@ import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 
-export function NavLinks({ onNav }: { onNav: () => void }) {
+export function NavLinks() {
   return (
     <ScrollArea>
       <ActiveNavLink
@@ -21,7 +21,6 @@ export function NavLinks({ onNav }: { onNav: () => void }) {
         label="Home"
         isActive={(pathname) => pathname == "/"}
         leftSection={<IconHome />}
-        onClick={onNav}
       />
       {Array.from(leagues).map(([league, name]) => (
         <ActiveNavLink
@@ -34,16 +33,14 @@ export function NavLinks({ onNav }: { onNav: () => void }) {
             label="Pace Table"
             isActive={(pathname) => pathname == `/pace/${league}/${year}`}
             leftSection={<IconRulerMeasure />}
-            onClick={onNav}
           />
           <ActiveNavLink
             href={`/chart/${league}/${year}`}
             label="Pace Chart"
             isActive={(pathname) => pathname == `/chart/${league}/${year}`}
             leftSection={<IconChartLine />}
-            onClick={onNav}
           />
-          <TeamNavLinks league={league} year={year} onNav={onNav} />
+          <TeamNavLinks league={league} year={year} />
         </ActiveNavLink>
       ))}
     </ScrollArea>
