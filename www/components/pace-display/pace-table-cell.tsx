@@ -14,7 +14,7 @@ import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
 
 export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
-  const { delta, match, points, expectedPoints } = paceMatch;
+  const { delta, match, points, expectedPoints, team } = paceMatch;
 
   return (
     <ColoredCell val={delta} ta="right">
@@ -29,7 +29,7 @@ export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
             <Badge ta="center">{match.date.toLocaleDateString()}</Badge>
           </Center>
           <Text ta="center">
-            <Result match={match} />
+            <Result match={match} highlightedTeam={team} />
           </Text>
           <Text ta="center">
             <Text fw={700} span>

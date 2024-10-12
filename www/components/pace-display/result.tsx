@@ -11,8 +11,10 @@ export default function Result({
   highlightedTeam?: string;
   link?: boolean;
 }) {
-  const homeFw = highlightedTeam == match.homeTeam ? 600 : 300;
-  const awayFw = highlightedTeam == match.awayTeam ? 600 : 300;
+  const homeFw =
+    highlightedTeam == match.homeTeam ? 600 : highlightedTeam ? 300 : 400;
+  const awayFw =
+    highlightedTeam == match.awayTeam ? 600 : highlightedTeam ? 300 : 400;
   let homeC = "var(--mantine-color-text)";
   let awayC = "var(--mantine-color-text)";
   if (highlightedTeam == match.homeTeam) {

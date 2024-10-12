@@ -11,6 +11,7 @@ export type PaceMatch = {
   expectedPoints: number;
   cumulativeExpectedPoints: number;
   home: boolean;
+  team: string;
   opponent: string;
   opponentFinish: number;
 };
@@ -86,6 +87,7 @@ export async function fetchPaceTeams(
         cumulativeDelta += delta;
         paceMatches.push({
           match,
+          team,
           opponent,
           home,
           opponentActualFinish,
