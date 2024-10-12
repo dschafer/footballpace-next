@@ -1,4 +1,4 @@
-import { Anchor, Group, Stack, Text, Title } from "@mantine/core";
+import { Anchor, Breadcrumbs, Group, Stack, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import RecentPaceTable from "@/components/recent-pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
@@ -40,13 +40,22 @@ export default function Home() {
                 alignSelf: "flex-end",
               }}
             >
-              <Anchor
-                component={Link}
-                href={`/pace/${league}/${year}`}
-                ta="right"
-              >
-                Full Pace Table »
-              </Anchor>
+              <Breadcrumbs separator=" · ">
+                <Anchor
+                  component={Link}
+                  href={`/chart/${league}/${year}`}
+                  ta="right"
+                >
+                  Pace Chart »
+                </Anchor>
+                <Anchor
+                  component={Link}
+                  href={`/pace/${league}/${year}`}
+                  ta="right"
+                >
+                  Full Pace Table »
+                </Anchor>
+              </Breadcrumbs>
             </Group>
           </Stack>
         </Stack>

@@ -1,4 +1,4 @@
-import { Anchor, Stack, Title } from "@mantine/core";
+import { Anchor, Breadcrumbs, Group, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
 import leagues from "@/lib/const/leagues";
@@ -23,16 +23,31 @@ export default function PacePage({
         {leagues.get(params.league)} {yearInt}
       </Title>
       <StandingsPaceTable league={params.league} year={yearInt} />
-      <Anchor
-        component={Link}
-        href={`/explanation/${params.league}/${yearInt}`}
-        ta="right"
+      <Group
         style={{
           alignSelf: "flex-end",
         }}
       >
-        Explanation »
-      </Anchor>
+        <Breadcrumbs separator=" · ">
+          <Anchor
+            component={Link}
+            href={`/chart/${params.league}/${params.year}`}
+            ta="right"
+          >
+            Pace Chart »
+          </Anchor>
+          <Anchor
+            component={Link}
+            href={`/explanation/${params.league}/${yearInt}`}
+            ta="right"
+            style={{
+              alignSelf: "flex-end",
+            }}
+          >
+            Explanation »
+          </Anchor>
+        </Breadcrumbs>
+      </Group>
     </Stack>
   );
 }
