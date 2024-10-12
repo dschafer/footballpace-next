@@ -27,10 +27,10 @@ defs = Definitions(
     resources={
         "football_data": FootballDataResource(),
         "vercel_postgres": VercelPostgresResource(
-            host=EnvVar("POSTGRES_HOST"),
-            dbname=EnvVar("POSTGRES_DATABASE"),
-            user=EnvVar("POSTGRES_USER"),
-            password=EnvVar("POSTGRES_PASSWORD"),
+            host=EnvVar("VERCEL_POSTGRES_HOST"),
+            dbname=EnvVar("VERCEL_POSTGRES_DATABASE"),
+            user=EnvVar("VERCEL_POSTGRES_USER"),
+            password=EnvVar("VERCEL_POSTGRES_PASSWORD"),
         ),
     },
     schedules=[
