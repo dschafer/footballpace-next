@@ -98,4 +98,4 @@ def team_colors_postgres(
         for row in team_colors_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_team_colors(rows)
-    return Output(None, metadata={"dagster/partition_row_count": rowcount})
+    return Output(None, metadata={"dagster/row_count": rowcount})
