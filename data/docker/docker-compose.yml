@@ -1,0 +1,104 @@
+version: "3.7"
+
+services:
+  # This service runs the postgres DB used by dagster for run storage, schedule storage,
+  # and event log storage.
+  dagster-postgresql:
+    image: postgres:11
+    container_name: dagster-postgresql
+    environment:
+      POSTGRES_USER: "${DAGSTER_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${DAGSTER_POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${DAGSTER_POSTGRES_DB}"
+    networks:
+      - dagster-network
+    volumes:
+      - dagster-data:/var/lib/postgresql/data
+
+  # This service runs the gRPC server that loads your user code, in both dagster-webserver
+  # and dagster-daemon. By setting DAGSTER_CURRENT_IMAGE to its own image, we tell the
+  # run launcher to use this same image when launching runs in a new container as well.
+  # Multiple containers like this can be deployed separately - each just needs to run on
+  # its own port, and have its own entry in the workspace.yaml file that's loaded by the
+      # webserver.
+  dagster-footballpace-data:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_footballpace_data
+    container_name: dagster-footballpace-data
+    image: dagster-footballpace-data-image
+    restart: always
+    environment:
+      DAGSTER_CURRENT_IMAGE: "dagster-footballpace-data-image"
+    env_file: "../.env"
+    networks:
+      - dagster-network
+
+  # This service runs dagster-webserver, which loads your user code from the user code container.
+  # Since our instance uses the QueuedRunCoordinator, any runs submitted from the webserver will be put on
+  # a queue and later dequeued and launched by dagster-daemon.
+  dagster-webserver:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_dagster
+    entrypoint:
+      - dagster-webserver
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3000"
+      - -w
+      - workspace.yaml
+    healthcheck:
+      test: [CMD, curl, -f, http://dagster-webserver:3000/server_info]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    container_name: dagster-webserver
+    image: dagster
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    env_file: "../.env"
+    volumes: # Make docker client accessible so we can terminate containers from the webserver
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dagster-local:/opt/dagster/local/
+    networks:
+      - dagster-network
+    depends_on:
+      - dagster-postgresql
+      - dagster-footballpace-data
+
+  # This service runs the dagster-daemon process, which is responsible for taking runs
+  # off of the queue and launching them, as well as creating runs from schedules or sensors.
+  dagster-daemon:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile_dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster-daemon
+    image: dagster
+    restart: on-failure
+    env_file: "../.env"
+    volumes: # Make docker client accessible so we can launch containers using host docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dagster-local:/opt/dagster/local/
+    networks:
+      - dagster-network
+    depends_on:
+      - dagster-postgresql
+      - dagster-footballpace-data
+
+networks:
+  dagster-network:
+    driver: bridge
+    name: dagster-network
+
+volumes:
+  dagster-data:
+    name: dagster-data
+  dagster-local:
+    name: dagster-local
