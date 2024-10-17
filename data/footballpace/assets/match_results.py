@@ -1,8 +1,10 @@
+from hashlib import sha256
 import pandas as pd
 
 from dagster import (
     AssetExecutionContext,
     AssetIn,
+    DataVersion,
     Failure,
     MetadataValue,
     MultiPartitionKey,
@@ -39,7 +41,11 @@ def match_results_csv(
 
     results_data = football_data.request(season, league).content
 
-    return Output(results_data, metadata={"size": len(results_data)})
+    return Output(
+        results_data,
+        metadata={"size": len(results_data)},
+        data_version=DataVersion(sha256(results_data).hexdigest()),
+    )
 
 
 csv_dtypes = {

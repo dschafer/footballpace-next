@@ -1,8 +1,10 @@
+from hashlib import sha256
 from typing import Optional
 import pandas as pd
 
 from dagster import (
     AssetIn,
+    DataVersion,
     MetadataValue,
     Output,
     asset,
@@ -31,7 +33,11 @@ def team_colors_json() -> Output[bytes]:
         "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     ).content
 
-    return Output(teams_json, metadata={"size": len(teams_json)})
+    return Output(
+        teams_json,
+        metadata={"size": len(teams_json)},
+        data_version=DataVersion(sha256(teams_json).hexdigest()),
+    )
 
 
 TeamColorsDataFrame = create_dagster_pandas_dataframe_type(
