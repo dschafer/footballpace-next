@@ -13,17 +13,14 @@ warnings.filterwarnings("ignore", category=ExperimentalWarning)
 # above before doing the imports
 from . import assets  # noqa: E402
 from .resources import FootballDataResource, VercelPostgresResource  # noqa: E402
-from .jobs import cache_update_job, pace_sheets_job, results_job  # noqa: E402
+from .jobs import cache_update_job, pace_sheets_job  # noqa: E402
 from .sensors import db_write_sensor  # noqa: E402
-from .schedules import (  # noqa: E402
-    current_season_daily_refresh_schedule,
-    pace_sheets_daily_refresh_schedule,
-)
+from .schedules import pace_sheets_daily_refresh_schedule  # noqa: E402
 
 
 defs = Definitions(
     assets=load_assets_from_package_module(assets),
-    jobs=[results_job, pace_sheets_job, cache_update_job],
+    jobs=[pace_sheets_job, cache_update_job],
     resources={
         "football_data": FootballDataResource(),
         "vercel_postgres": VercelPostgresResource(
@@ -34,7 +31,6 @@ defs = Definitions(
         ),
     },
     schedules=[
-        current_season_daily_refresh_schedule,
         pace_sheets_daily_refresh_schedule,
     ],
     sensors=[db_write_sensor],

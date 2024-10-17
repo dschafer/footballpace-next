@@ -4,6 +4,7 @@ import pandas as pd
 from dagster import (
     AssetExecutionContext,
     AssetIn,
+    AutomationCondition,
     DataVersion,
     Failure,
     MetadataValue,
@@ -24,6 +25,7 @@ from footballpace.resources import MatchResultsTableSchema
     compute_kind="API",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
+    automation_condition=AutomationCondition.on_cron("0 0 * * *"),
 )
 def match_results_csv(
     context: AssetExecutionContext, football_data: FootballDataResource
@@ -83,6 +85,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     dagster_type=MatchResultsDataFrame,
+    automation_condition=AutomationCondition.on_missing(),
 )
 def match_results_df(
     context: AssetExecutionContext, match_results_csv: bytes
@@ -144,6 +147,7 @@ def match_results_df(
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
     metadata={"dagster/column_schema": MatchResultsTableSchema},
     tags={"db_write": "true"},
+    automation_condition=AutomationCondition.on_missing(),
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

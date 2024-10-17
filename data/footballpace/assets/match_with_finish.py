@@ -2,6 +2,7 @@ import pandas as pd
 
 from dagster import (
     AssetIn,
+    AutomationCondition,
     MetadataValue,
     Output,
     asset,
@@ -43,6 +44,7 @@ MatchResultsWithFinishDataFrame = create_dagster_pandas_dataframe_type(
         "standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame),
         "match_results_df": AssetIn(dagster_type=MatchResultsDataFrame),
     },
+    automation_condition=AutomationCondition.on_missing(),
 )
 def match_results_with_finish_df(
     match_results_df: pd.DataFrame,

@@ -2,6 +2,7 @@ import pandas as pd
 
 from dagster import (
     AssetIn,
+    AutomationCondition,
     MetadataValue,
     Output,
     asset,
@@ -41,6 +42,7 @@ StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
     code_version="v1",
     dagster_type=StandingsRowsDataFrame,
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
+    automation_condition=AutomationCondition.on_missing(),
 )
 def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     """Transform the Match Results data frame into a Standings Table."""
@@ -78,6 +80,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
     ins={"standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame)},
     metadata={"dagster/column_schema": StandingsRowTableSchema},
     tags={"db_write": "true"},
+    automation_condition=AutomationCondition.on_missing(),
 )
 def standings_rows_postgres(
     standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

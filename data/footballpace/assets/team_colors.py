@@ -4,6 +4,7 @@ import pandas as pd
 
 from dagster import (
     AssetIn,
+    AutomationCondition,
     DataVersion,
     MetadataValue,
     Output,
@@ -68,6 +69,7 @@ def team_colors_dict(team) -> dict[str, Optional[str]]:
     compute_kind="Pandas",
     code_version="v1",
     dagster_type=TeamColorsDataFrame,
+    automation_condition=AutomationCondition.on_missing(),
 )
 def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
     """Convert the JSON from jimniels/teamcolors into a Pandas DataFrame."""
@@ -94,6 +96,7 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
     ins={"team_colors_df": AssetIn(dagster_type=TeamColorsDataFrame)},
     metadata={"dagster/column_schema": TeamColorsTableSchema},
     tags={"db_write": "true"},
+    automation_condition=AutomationCondition.on_missing(),
 )
 def team_colors_postgres(
     team_colors_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
