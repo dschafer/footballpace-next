@@ -7,9 +7,9 @@ import {
 } from "@mantine/core";
 import { forwardRef } from "react";
 import { usePathname } from "next/navigation";
-
 interface ActiveNavLinkProps extends NavLinkProps {
-  isActive: (pathname: string) => boolean;
+  pageUrl?: string;
+  prefixUrl?: string;
 }
 
 export const ActiveNavLink = createPolymorphicComponent<
@@ -17,13 +17,20 @@ export const ActiveNavLink = createPolymorphicComponent<
   ActiveNavLinkProps
 >(
   forwardRef<HTMLButtonElement, ActiveNavLinkProps>(function ActiveNavLink(
-    { isActive, ...others },
+    { pageUrl, prefixUrl, ...others },
     ref,
   ) {
     const pathname = usePathname();
+    let active = false;
+    if (pageUrl) {
+      active = pathname == pageUrl;
+    }
+    if (prefixUrl) {
+      active = pathname.includes(prefixUrl);
+    }
 
     return (
-      <NavLink active={isActive(pathname)} {...others}>
+      <NavLink active={active} {...others}>
         {others.children}
       </NavLink>
     );

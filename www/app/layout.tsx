@@ -1,7 +1,8 @@
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import Shell from "../components/shell/shell";
+import NavLinks from "@/components/shell/nav-links";
+import Shell from "@/components/shell/shell";
 import theme from "@/lib/theme";
 
 export const metadata = {
@@ -22,7 +23,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Shell>{children}</Shell>
+          <Shell navLinks={<NavLinks />}>{children}</Shell>
         </MantineProvider>
       </body>
     </html>

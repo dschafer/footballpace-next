@@ -1,40 +1,34 @@
 import { IconUsers, IconUsersGroup } from "@tabler/icons-react";
 import { ActiveNavLink } from "./active-nav-link";
-import useSWR from "swr";
+import prisma from "@/lib/prisma";
 
-export function TeamNavLinks({
+export async function TeamNavLinks({
   league,
   year,
 }: {
   league: string;
   year: number;
 }) {
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR(
-    `/api/teams?league=${league}&year=${year}`,
-    fetcher,
-  );
-  let teamLinks = null;
-  if (!error && !isLoading) {
-    teamLinks = data.data.map((team: string) => (
-      <ActiveNavLink
-        key={team}
-        href={`/season/${league}/${year}/${team}`}
-        label={team}
-        isActive={(pathname) => pathname == `/season/${league}/${year}/${team}`}
-        leftSection={<IconUsers />}
-      />
-    ));
-  }
+  const standings = await prisma.standingsRow.findMany({
+    where: { league: league, year: year },
+    orderBy: { team: "asc" },
+  });
+  const teams = standings.map((r) => r.team);
   return (
-    <>
-      <ActiveNavLink
-        label="Teams"
-        isActive={(pathname) => pathname.includes(`/season/${league}/${year}`)}
-        leftSection={<IconUsersGroup />}
-      >
-        {teamLinks}
-      </ActiveNavLink>
-    </>
+    <ActiveNavLink
+      label="Teams"
+      prefixUrl={`/season/${league}/${year}`}
+      leftSection={<IconUsersGroup />}
+    >
+      {teams.map((team: string) => (
+        <ActiveNavLink
+          key={team}
+          href={`/season/${league}/${year}/${team}`}
+          label={team}
+          pageUrl={`/season/${league}/${year}/${team}`}
+          leftSection={<IconUsers />}
+        />
+      ))}
+    </ActiveNavLink>
   );
 }

@@ -12,12 +12,17 @@ import {
 } from "@mantine/core";
 import { IconSoccerField } from "@tabler/icons-react";
 import Link from "next/link";
-import { NavLinks } from "./nav-links";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-export default function Shell({ children }: { children: React.ReactNode }) {
+export default function Shell({
+  navLinks,
+  children,
+}: {
+  navLinks: React.ReactNode;
+  children: React.ReactNode;
+}) {
   const [opened, { close, toggle }] = useDisclosure();
   const pathname = usePathname();
 
@@ -49,9 +54,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <IconSoccerField size="2rem" />
         </Group>
       </AppShellHeader>
-      <AppShellNavbar p="xs">
-        <NavLinks />
-      </AppShellNavbar>
+      <AppShellNavbar p="xs">{navLinks}</AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>
   );
