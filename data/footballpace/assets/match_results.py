@@ -130,6 +130,9 @@ def match_results_df(
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
 
     df["Season"] = season
+    metadata_teams = (
+        pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
+    )
 
     return Output(
         df,
@@ -137,6 +140,7 @@ def match_results_df(
             "dagster/partition_row_count": len(df),
             "preview": MetadataValue.md(df.head().to_markdown()),
             "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
+            "teams": metadata_teams,
         },
     )
 

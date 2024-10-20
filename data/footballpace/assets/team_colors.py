@@ -79,11 +79,14 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
         [team_colors_dict(team) for team in epl_teams_obj]
     )
 
+    metadata_teams = epl_teams["Team"].sort_values().unique().tolist()
+
     return Output(
         epl_teams,
         metadata={
             "dagster/row_count": len(epl_teams),
             "preview": MetadataValue.md(epl_teams.head().to_markdown()),
+            "teams": metadata_teams,
         },
     )
 

@@ -132,11 +132,15 @@ def fpl_match_results_df(
     )
     df["Date"] = pd.to_datetime(df["Date"], format="ISO8601")
 
+    metadata_teams = (
+        pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
+    )
     return Output(
         df,
         metadata={
             "dagster/row_count": len(df),
             "preview": MetadataValue.md(df.head().to_markdown()),
             "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
+            "teams": metadata_teams,
         },
     )
