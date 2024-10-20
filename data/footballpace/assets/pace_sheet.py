@@ -12,12 +12,14 @@ from dagster import (
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
 from footballpace.assets.match_with_finish import MatchResultsWithFinishDataFrame
-from footballpace.resources import VercelPostgresResource
 from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     predicted_seasons_of_league_mapping,
 )
-from footballpace.resources import PaceSheetEntriesTableSchema
+from footballpace.resources.vercel import (
+    PaceSheetEntriesTableSchema,
+    VercelPostgresResource,
+)
 
 PaceSheetEntryDataFrame = create_dagster_pandas_dataframe_type(
     name="PaceSheetEntry",

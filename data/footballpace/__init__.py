@@ -12,7 +12,8 @@ warnings.filterwarnings("ignore", category=ExperimentalWarning)
 # These are all noqa: E402 so that we can call warnings.filterwarnings
 # above before doing the imports
 from . import assets  # noqa: E402
-from .resources import FootballDataResource, VercelPostgresResource  # noqa: E402
+from .resources.footballdata import FootballDataResource  # noqa: E402
+from .resources.vercel import VercelPostgresResource  # noqa: E402
 from .jobs import cache_update_job, pace_sheets_job, results_job  # noqa: E402
 from .sensors import db_write_sensor  # noqa: E402
 from .schedules import (  # noqa: E402

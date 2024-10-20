@@ -15,8 +15,7 @@ import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 import requests
 
-from footballpace.resources import VercelPostgresResource
-from footballpace.resources import TeamColorsTableSchema
+from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresResource
 
 
 @asset(
