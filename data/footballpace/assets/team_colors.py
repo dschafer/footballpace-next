@@ -13,8 +13,8 @@ from dagster import (
 
 import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
-import requests
 
+from footballpace.resources.http import HTTPResource
 from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresResource
 
 
@@ -23,13 +23,13 @@ from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresR
     compute_kind="API",
     code_version="v1",
 )
-def team_colors_json() -> Output[bytes]:
+def team_colors_json(http_resource: HTTPResource) -> Output[bytes]:
     """Scrapes the latest JSON colors from jimniels/teamcolors.
 
     Business logic here should be kept to an absolute minimum, so that the
     results of this stage of the pipeline can be cached.
     """
-    teams_json = requests.get(
+    teams_json = http_resource.get(
         "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     ).content
 

@@ -7,6 +7,8 @@ from dagster import (
 
 import warnings
 
+from footballpace.resources.http import HTTPResource
+
 warnings.filterwarnings("ignore", category=ExperimentalWarning)
 
 # These are all noqa: E402 so that we can call warnings.filterwarnings
@@ -21,12 +23,13 @@ from .schedules import (  # noqa: E402
     pace_sheets_refresh_schedule,
 )
 
-
+http_resource = HTTPResource()
 defs = Definitions(
     assets=load_assets_from_package_module(assets),
     jobs=[results_job, pace_sheets_job, cache_update_job],
     resources={
-        "football_data": FootballDataResource(),
+        "football_data": FootballDataResource(http_resource=http_resource),
+        "http_resource": http_resource,
         "vercel_postgres": VercelPostgresResource(
             host=EnvVar("VERCEL_POSTGRES_HOST"),
             dbname=EnvVar("VERCEL_POSTGRES_DATABASE"),

@@ -1,18 +1,20 @@
 import requests
 from dagster import ConfigurableResource
 
+from footballpace.resources.http import HTTPResource
+
 
 class FootballDataResource(ConfigurableResource):
     """Resource to fetch data from https://www.football-data.co.uk."""
+
+    http_resource: HTTPResource
 
     def request(self, season: int, league: str) -> requests.Response:
         """Get the CSV for a given season (as an int representing the starting
         year, so for the the 2023-2024, one would pass 2023) and league.
 
         Raises an exception on failure."""
-        response = requests.get(self._url(season, league))
-        response.raise_for_status()
-        return response
+        return self.http_resource.get(self._url(season, league))
 
     def _url(self, season: int, league: str) -> str:
         """Helper method to construct the correct URL."""
