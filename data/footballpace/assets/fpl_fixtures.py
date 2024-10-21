@@ -138,7 +138,9 @@ def fpl_fixtures_df(
     )
     df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
     df["AwayTeam"] = df["AwayTeam"].map(canonical_name)
-    df["Date"] = pd.to_datetime(df["Date"], format="ISO8601")
+    df["Date"] = (
+        pd.to_datetime(df["Date"], format="ISO8601").dt.tz_convert(None).dt.normalize()
+    )
 
     metadata_teams = (
         pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
