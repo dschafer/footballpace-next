@@ -3,6 +3,7 @@ from hashlib import sha256
 import pandas as pd
 
 from dagster import (
+    AssetIn,
     AutomationCondition,
     DataVersion,
     MetadataValue,
@@ -15,6 +16,10 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
 from footballpace.canonical import canonical_name
 from footballpace.resources.http import HTTPResource
+from footballpace.resources.vercel import (
+    MatchResultsTableSchema,
+    VercelPostgresResource,
+)
 
 
 @asset(
@@ -114,7 +119,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     code_version="v2",
     automation_condition=AutomationCondition.on_missing(),
 )
-def fpl_match_results_df(
+def fpl_fixtures_df(
     fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
 ) -> Output[pd.DataFrame]:
     """Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame."""
@@ -147,3 +152,24 @@ def fpl_match_results_df(
             "teams": metadata_teams,
         },
     )
+
+
+@asset(
+    group_name="FPL",
+    compute_kind="Postgres",
+    code_version="v1",
+    ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
+    metadata={"dagster/column_schema": MatchResultsTableSchema},
+    tags={"db_write": "true"},
+    automation_condition=AutomationCondition.on_missing(),
+)
+def fpl_fixtures_postgres(
+    fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+) -> Output[None]:
+    """Ensure all rows from the football-data.co.uk DataFrame are in Postgres."""
+    rows = [
+        {str(col): val for col, val in row.items()}
+        for row in fpl_fixtures_df.to_dict("records")
+    ]
+    rowcount = vercel_postgres.upsert_matches(rows)
+    return Output(None, metadata={"dagster/partition_row_count": rowcount})
