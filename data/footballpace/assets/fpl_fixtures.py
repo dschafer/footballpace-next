@@ -13,6 +13,7 @@ from dagster import (
 import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
+from footballpace.canonical import canonical_name
 from footballpace.resources.http import HTTPResource
 
 
@@ -110,7 +111,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
 @asset(
     group_name="FPL",
     compute_kind="Pandas",
-    code_version="v1",
+    code_version="v2",
     automation_condition=AutomationCondition.on_missing(),
 )
 def fpl_match_results_df(
@@ -130,6 +131,8 @@ def fpl_match_results_df(
             if fixture["finished"]
         ]
     )
+    df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
+    df["AwayTeam"] = df["AwayTeam"].map(canonical_name)
     df["Date"] = pd.to_datetime(df["Date"], format="ISO8601")
 
     metadata_teams = (

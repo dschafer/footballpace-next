@@ -15,6 +15,7 @@ from dagster import (
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 from io import StringIO
 
+from footballpace.canonical import canonical_name
 from footballpace.partitions import all_seasons_leagues_partition
 from footballpace.resources.footballdata import FootballDataResource
 from footballpace.resources.vercel import (
@@ -85,7 +86,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
     group_name="MatchResults",
     compute_kind="Pandas",
     partitions_def=all_seasons_leagues_partition,
-    code_version="v1",
+    code_version="v2",
     dagster_type=MatchResultsDataFrame,
     automation_condition=AutomationCondition.on_missing(),
 )
@@ -121,6 +122,9 @@ def match_results_df(
         usecols=list(csv_dtypes.keys()),
         dtype=csv_dtypes,
     ).dropna(how="all")
+
+    df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
+    df["AwayTeam"] = df["AwayTeam"].map(canonical_name)
 
     if len(df["Date"][0]) == 8:
         # Dates like 31/08/99

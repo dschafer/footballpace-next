@@ -14,6 +14,7 @@ from dagster import (
 import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
+from footballpace.canonical import canonical_name
 from footballpace.resources.http import HTTPResource
 from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresResource
 
@@ -66,7 +67,7 @@ def team_colors_dict(team) -> dict[str, Optional[str]]:
 @asset(
     group_name="TeamColors",
     compute_kind="Pandas",
-    code_version="v1",
+    code_version="v2",
     dagster_type=TeamColorsDataFrame,
     automation_condition=AutomationCondition.on_missing(),
 )
@@ -79,6 +80,7 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
         [team_colors_dict(team) for team in epl_teams_obj]
     )
 
+    epl_teams["Team"] = epl_teams["Team"].map(canonical_name)
     metadata_teams = epl_teams["Team"].sort_values().unique().tolist()
 
     return Output(
