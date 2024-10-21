@@ -8,6 +8,11 @@ results_job = define_asset_job(
     selection=AssetSelection.assets("match_results_csv"),
 )
 
+fpl_job = define_asset_job(
+    name="fpl_job",
+    selection=AssetSelection.assets("fpl_bootstrap_json", "fpl_fixtures_json"),
+)
+
 pace_sheets_job = define_asset_job(
     name="pace_sheets_job",
     selection=AssetSelection.groups("PaceSheet"),

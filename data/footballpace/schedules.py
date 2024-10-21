@@ -1,6 +1,12 @@
-from dagster import DefaultScheduleStatus, MultiPartitionKey, RunRequest, schedule
+from dagster import (
+    DefaultScheduleStatus,
+    MultiPartitionKey,
+    RunRequest,
+    ScheduleDefinition,
+    schedule,
+)
 
-from .jobs import pace_sheets_job, results_job
+from .jobs import fpl_job, pace_sheets_job, results_job
 from .partitions import ALL_LEAGUES, ALL_SEASONS
 
 
@@ -24,6 +30,13 @@ def current_season_refresh_schedule():
         )
 
     return [run_request(league) for league in ALL_LEAGUES]
+
+
+fpl_refresh_schedule = ScheduleDefinition(
+    cron_schedule="0 * * * *",
+    job=fpl_job,
+    default_status=DefaultScheduleStatus.RUNNING,
+)
 
 
 @schedule(
