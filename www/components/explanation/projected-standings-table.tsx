@@ -9,6 +9,7 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import ErrorAlert from "../error/error-alert";
 import Link from "next/link";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 
@@ -20,6 +21,9 @@ export default async function ProjectedStandingsTable({
   year: number;
 }) {
   const projectedStandings = await fetchProjectedStandings(league, year);
+  if (projectedStandings.length == 0) {
+    return <ErrorAlert />;
+  }
 
   return (
     <TableScrollContainer minWidth={0}>

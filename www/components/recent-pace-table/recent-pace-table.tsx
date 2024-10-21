@@ -1,4 +1,5 @@
 import {
+  Alert,
   Anchor,
   Box,
   Table,
@@ -9,6 +10,7 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import ErrorAlert from "../error/error-alert";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "../pace-display/pace-table-cell";
@@ -28,6 +30,10 @@ export default async function RecentPaceTable({
 
   if (rowCount) {
     paceTeams = paceTeams.slice(0, rowCount);
+  }
+
+  if (paceTeams.length == 0) {
+    return <ErrorAlert />;
   }
 
   return (

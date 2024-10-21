@@ -9,6 +9,7 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import ErrorAlert from "../error/error-alert";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "../pace-display/pace-table-cell";
@@ -21,6 +22,9 @@ export default async function PaceTable({
   paceTeams: PaceTeam[];
   startPlace?: number;
 }) {
+  if (paceTeams.length == 0) {
+    return <ErrorAlert />;
+  }
   const maxMatchday = Math.max(
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );

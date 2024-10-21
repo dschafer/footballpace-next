@@ -10,6 +10,7 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import ErrorAlert from "../error/error-alert";
 import prisma from "@/lib/prisma";
 
 export default async function HistoricalPaceTable({
@@ -23,7 +24,7 @@ export default async function HistoricalPaceTable({
     where: { league: league, year: year, teamFinish: 1 },
   });
   if (paceSheetEntries.length == 0) {
-    return null;
+    return <ErrorAlert />;
   }
 
   const homePace = [...Array(paceSheetEntries.length / 2)];
