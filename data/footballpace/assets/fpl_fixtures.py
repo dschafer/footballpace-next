@@ -117,7 +117,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     group_name="FPL",
     compute_kind="Pandas",
     code_version="v2",
-    automation_condition=AutomationCondition.on_missing(),
+    automation_condition=AutomationCondition.eager(),
 )
 def fpl_fixtures_df(
     fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
@@ -161,7 +161,7 @@ def fpl_fixtures_df(
     ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
     metadata={"dagster/column_schema": MatchResultsTableSchema},
     tags={"db_write": "true"},
-    automation_condition=AutomationCondition.on_missing(),
+    automation_condition=AutomationCondition.eager(),
 )
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
