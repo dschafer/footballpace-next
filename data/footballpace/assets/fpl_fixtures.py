@@ -1,8 +1,9 @@
 from datetime import datetime
-from hashlib import sha256
+from typing import Iterator
 import pandas as pd
 
 from dagster import (
+    AssetExecutionContext,
     AssetIn,
     AutomationCondition,
     DataVersion,
@@ -15,6 +16,11 @@ import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
 from footballpace.canonical import canonical_name
+from footballpace.dataversion import (
+    bytes_data_version,
+    df_data_version,
+    previous_data_version,
+)
 from footballpace.resources.http import HTTPResource
 from footballpace.resources.vercel import (
     MatchResultsTableSchema,
@@ -22,12 +28,10 @@ from footballpace.resources.vercel import (
 )
 
 
-@asset(
-    group_name="FPL",
-    compute_kind="API",
-    code_version="v1",
-)
-def fpl_bootstrap_json(http_resource: HTTPResource) -> Output[bytes]:
+@asset(group_name="FPL", compute_kind="API", code_version="v1", output_required=False)
+def fpl_bootstrap_json(
+    context: AssetExecutionContext, http_resource: HTTPResource
+) -> Iterator[Output[bytes]]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/bootstrap-static/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -37,19 +41,23 @@ def fpl_bootstrap_json(http_resource: HTTPResource) -> Output[bytes]:
         "https://fantasy.premierleague.com/api/bootstrap-static/"
     ).content
 
-    return Output(
+    data_version = bytes_data_version(bootstrap_json)
+
+    if data_version == previous_data_version(context):
+        context.log.debug("Skipping materializations; data versions match")
+        return
+
+    yield Output(
         bootstrap_json,
         metadata={"size": len(bootstrap_json)},
-        data_version=DataVersion(sha256(bootstrap_json).hexdigest()),
+        data_version=DataVersion(data_version),
     )
 
 
-@asset(
-    group_name="FPL",
-    compute_kind="API",
-    code_version="v1",
-)
-def fpl_fixtures_json(http_resource: HTTPResource) -> Output[bytes]:
+@asset(group_name="FPL", compute_kind="API", code_version="v1", output_required=False)
+def fpl_fixtures_json(
+    context: AssetExecutionContext, http_resource: HTTPResource
+) -> Iterator[Output[bytes]]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/fixtures/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -59,10 +67,16 @@ def fpl_fixtures_json(http_resource: HTTPResource) -> Output[bytes]:
         "https://fantasy.premierleague.com/api/fixtures/"
     ).content
 
-    return Output(
+    data_version = bytes_data_version(fixtures_json)
+
+    if data_version == previous_data_version(context):
+        context.log.debug("Skipping materializations; data versions match")
+        return
+
+    yield Output(
         fixtures_json,
         metadata={"size": len(fixtures_json)},
-        data_version=DataVersion(sha256(fixtures_json).hexdigest()),
+        data_version=DataVersion(data_version),
     )
 
 
@@ -117,11 +131,12 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     group_name="FPL",
     compute_kind="Pandas",
     code_version="v2",
+    output_required=False,
     automation_condition=AutomationCondition.eager(),
 )
 def fpl_fixtures_df(
-    fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
-) -> Output[pd.DataFrame]:
+    context: AssetExecutionContext, fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
+) -> Iterator[Output[pd.DataFrame]]:
     """Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame."""
 
     fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
@@ -142,10 +157,16 @@ def fpl_fixtures_df(
         pd.to_datetime(df["Date"], format="ISO8601").dt.tz_convert(None).dt.normalize()
     )
 
+    data_version = df_data_version(df)
+
+    if data_version == previous_data_version(context):
+        context.log.debug("Skipping materializations; data versions match")
+        return
+
     metadata_teams = (
         pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
     )
-    return Output(
+    yield Output(
         df,
         metadata={
             "dagster/row_count": len(df),
@@ -153,6 +174,7 @@ def fpl_fixtures_df(
             "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
             "teams": metadata_teams,
         },
+        data_version=DataVersion(data_version),
     )
 
 

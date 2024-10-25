@@ -1,4 +1,4 @@
-from hashlib import sha256
+from typing import Iterator
 import pandas as pd
 
 from dagster import (
@@ -16,6 +16,7 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 from io import StringIO
 
 from footballpace.canonical import canonical_name
+from footballpace.dataversion import bytes_data_version, previous_data_version
 from footballpace.partitions import all_seasons_leagues_partition
 from footballpace.resources.footballdata import FootballDataResource
 from footballpace.resources.vercel import (
@@ -32,7 +33,7 @@ from footballpace.resources.vercel import (
 )
 def match_results_csv(
     context: AssetExecutionContext, football_data: FootballDataResource
-) -> Output[bytes]:
+) -> Iterator[Output[bytes]]:
     """Scrapes the latest CSV results from football-data.co.uk.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -46,10 +47,15 @@ def match_results_csv(
 
     results_data = football_data.request(season, league).content
 
-    return Output(
+    data_version = bytes_data_version(results_data)
+    if data_version == previous_data_version(context):
+        context.log.debug("Skipping materializations; data versions match")
+        return
+
+    yield Output(
         results_data,
         metadata={"size": len(results_data)},
-        data_version=DataVersion(sha256(results_data).hexdigest()),
+        data_version=DataVersion(data_version),
     )
 
 
