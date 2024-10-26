@@ -169,7 +169,7 @@ def match_results_df(
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Ensure all rows from the football-data.co.uk DataFrame are in Postgres."""
+    """Writes the match rseutls from football-data.co.uk into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in match_results_df.to_dict("records")

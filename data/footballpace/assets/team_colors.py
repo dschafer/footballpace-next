@@ -105,7 +105,7 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
 def team_colors_postgres(
     team_colors_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Ensure all rows from the standings DataFrame are in Postgres."""
+    """Writes the team colors into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in team_colors_df.to_dict("records")

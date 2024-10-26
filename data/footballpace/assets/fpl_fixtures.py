@@ -137,7 +137,16 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
 def fpl_fixtures_df(
     context: AssetExecutionContext, fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
 ) -> Iterator[Output[pd.DataFrame]]:
-    """Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame."""
+    """
+    Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame.
+
+    This also uses DataVersions to detect if changes have been made (and will opt not
+    to materialize if not). This is because the bootstrap_json changes constantly
+    with additional fantasy-specific info, but we have to fetch it for the team IDs.
+
+    So this asset is our primary "short-circuit" to prevent us from writing data over
+    and over again from FPL.
+    """
 
     fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
     fpl_fixtures_obj = json.loads(fpl_fixtures_json)
@@ -190,7 +199,7 @@ def fpl_fixtures_df(
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Ensure all rows from the football-data.co.uk DataFrame are in Postgres."""
+    """Writes the fixtures from FPL into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in fpl_fixtures_df.to_dict("records")

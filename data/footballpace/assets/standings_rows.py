@@ -87,7 +87,7 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
 def standings_rows_postgres(
     standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Ensure all rows from the standings DataFrame are in Postgres."""
+    """Writes the standings DataFrame into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in standings_rows_df.to_dict("records")

@@ -123,7 +123,7 @@ def pace_sheet_entries_df(
 def pace_sheet_entries_postgres(
     pace_sheet_entries_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Ensure all rows from the standings DataFrame are in Postgres."""
+    """Writes the pace sheet entires into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in pace_sheet_entries_df.to_dict("records")
