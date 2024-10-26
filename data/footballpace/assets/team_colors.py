@@ -1,8 +1,9 @@
 from hashlib import sha256
-from typing import Optional
+from typing import Iterator, Optional
 import pandas as pd
 
 from dagster import (
+    AssetExecutionContext,
     AssetIn,
     AutomationCondition,
     DataVersion,
@@ -15,6 +16,7 @@ import json
 from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
 from footballpace.canonical import canonical_name
+from footballpace.dataversion import bytes_data_version, previous_data_version
 from footballpace.resources.http import HTTPResource
 from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresResource
 
@@ -23,8 +25,11 @@ from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresR
     group_name="TeamColors",
     compute_kind="API",
     code_version="v1",
+    output_required=False,
 )
-def team_colors_json(http_resource: HTTPResource) -> Output[bytes]:
+def team_colors_json(
+    context: AssetExecutionContext, http_resource: HTTPResource
+) -> Iterator[Output[bytes]]:
     """Scrapes the latest JSON colors from jimniels/teamcolors.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -34,7 +39,12 @@ def team_colors_json(http_resource: HTTPResource) -> Output[bytes]:
         "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     ).content
 
-    return Output(
+    data_version = bytes_data_version(teams_json)
+    if data_version == previous_data_version(context):
+        context.log.debug("Skipping materializations; data versions match")
+        return
+
+    yield Output(
         teams_json,
         metadata={"size": len(teams_json)},
         data_version=DataVersion(sha256(teams_json).hexdigest()),
