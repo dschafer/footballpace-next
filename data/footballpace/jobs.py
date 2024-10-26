@@ -10,7 +10,9 @@ results_job = define_asset_job(
 
 fpl_job = define_asset_job(
     name="fpl_job",
-    selection=AssetSelection.assets("fpl_bootstrap_json", "fpl_fixtures_json"),
+    selection=AssetSelection.assets(
+        "fpl_bootstrap_json", "fpl_fixtures_json", "fpl_fixtures_df"
+    ),
 )
 
 pace_sheets_job = define_asset_job(
