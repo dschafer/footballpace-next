@@ -1,4 +1,14 @@
-import { Anchor, Breadcrumbs, Group, Stack, Text, Title } from "@mantine/core";
+import {
+  Anchor,
+  Breadcrumbs,
+  Group,
+  Paper,
+  SimpleGrid,
+  Spoiler,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import Link from "next/link";
 import RecentPaceTable from "@/components/recent-pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
@@ -16,24 +26,26 @@ export default function Home() {
         What is Football Pace?
       </Title>
       <Text>
-        Football Pace is a version of the standings table that accounts for
-        strength of schedule. It looks at historical data to see how a typical
-        champion performs in each match, based on home/away and the opponent
-        {"'"}s finishing position. It then presents a new version of the
-        standings table, that shows how each team is doing compared to typical
-        championship pace, given their schedule so far.
+        <Spoiler maxHeight={80} showLabel="Read more" hideLabel="Hide">
+          Football Pace is a version of the standings table that accounts for
+          strength of schedule. It looks at historical data to see how a typical
+          champion performs in each match, based on home/away and the opponent
+          {"'"}s finishing position. It then presents a new version of the
+          standings table, that shows how each team is doing compared to typical
+          championship pace, given their schedule so far.
+        </Spoiler>
       </Text>
-      {Array.from(leagues).map(([league, _]) => (
-        <Stack key={league}>
-          <Title
-            order={2}
-            style={{
-              alignSelf: "flex-start",
-            }}
-          >
-            {leagues.get(league)} {year}
-          </Title>
-          <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
+      <SimpleGrid cols={{ base: 1, lg: 2 }}>
+        {Array.from(leagues).map(([league, _]) => (
+          <Stack key={league} p={{ base: 0, lg: "xs" }}>
+            <Title
+              order={2}
+              style={{
+                alignSelf: "flex-start",
+              }}
+            >
+              {leagues.get(league)} {year}
+            </Title>
             <RecentPaceTable rowCount={5} league={league} year={year} />
             <Group
               style={{
@@ -58,8 +70,8 @@ export default function Home() {
               </Breadcrumbs>
             </Group>
           </Stack>
-        </Stack>
-      ))}
+        ))}
+      </SimpleGrid>
     </Stack>
   );
 }
