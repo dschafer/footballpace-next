@@ -1,6 +1,6 @@
 from typing import Optional
 
-from dagster import AssetExecutionContext
+from dagster import AssetExecutionContext, AssetRecordsFilter
 import pandas as pd
 from hashlib import sha256
 
@@ -11,14 +11,24 @@ def previous_data_version(context: AssetExecutionContext) -> Optional[str]:
     was no materialization or it doesn't have a data version.
     """
 
-    lm = context.instance.get_latest_materialization_event(asset_key=context.asset_key)
-    if lm is None:
+    if context.has_partition_key:
+        materializations = context.instance.fetch_materializations(
+            AssetRecordsFilter(
+                asset_key=context.asset_key, asset_partitions=[context.partition_key]
+            ),
+            limit=1,
+        ).records
+    else:
+        materializations = context.instance.fetch_materializations(
+            AssetRecordsFilter(asset_key=context.asset_key),
+            limit=1,
+        ).records
+
+    if (lm := next(iter(materializations), None)) is None:
         return
-    am = lm.asset_materialization
-    if am is None:
+    if (am := lm.asset_materialization) is None:
         return
-    tags = am.tags
-    if tags is None:
+    if (tags := am.tags) is None:
         return
     return tags.get("dagster/data_version")
 
