@@ -30,6 +30,7 @@ from footballpace.resources.vercel import (
     compute_kind="API",
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
+    output_required=False,
 )
 def match_results_csv(
     context: AssetExecutionContext, football_data: FootballDataResource
