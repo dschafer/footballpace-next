@@ -128,11 +128,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
 
 
 @asset(
-    group_name="FPL",
-    compute_kind="Pandas",
-    code_version="v2",
-    output_required=False,
-    automation_condition=AutomationCondition.eager(),
+    group_name="FPL", compute_kind="Pandas", code_version="v2", output_required=False
 )
 def fpl_fixtures_df(
     context: AssetExecutionContext, fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
