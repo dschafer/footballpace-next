@@ -3,7 +3,7 @@ from dagster import asset
 
 import requests
 
-API_UPDATE_URL = "https://footballpace-next.vercel.app/api/update"
+API_UPDATE_URL = "https://footballpace.com/api/update"
 
 
 @asset(
