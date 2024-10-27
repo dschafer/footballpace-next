@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Title } from "@mantine/core";
+import { Breadcrumbs, Group, Skeleton, Stack, Title } from "@mantine/core";
 import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
 
 export default function PaceLoading() {
@@ -13,15 +13,16 @@ export default function PaceLoading() {
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
       <PaceTablePlaceholder rowCount={20} matchdayCount={20} />
-      <Skeleton
-        ta="right"
+      <Group
         style={{
           alignSelf: "flex-end",
         }}
-        width={100}
       >
-        Explanation »
-      </Skeleton>
+        <Breadcrumbs separator=" · ">
+          <Skeleton ta="right">Pace Chart »</Skeleton>
+          <Skeleton ta="right">Explanation »</Skeleton>
+        </Breadcrumbs>
+      </Group>
     </Stack>
   );
 }

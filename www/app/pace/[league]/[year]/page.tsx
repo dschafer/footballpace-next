@@ -40,9 +40,6 @@ export default function PacePage({
             component={Link}
             href={`/explanation/${params.league}/${yearInt}`}
             ta="right"
-            style={{
-              alignSelf: "flex-end",
-            }}
           >
             Explanation »
           </Anchor>
