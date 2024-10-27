@@ -1,6 +1,7 @@
 import { List, ListItem } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
 import Result from "../pace-display/result";
+import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
 
 export default async function RecentPaceTable({
@@ -17,7 +18,9 @@ export default async function RecentPaceTable({
   if (matches.length == 0) {
     return <ErrorAlert />;
   }
-  const matchesByDay = Map.groupBy(matches, ({ date }) => date.toDateString());
+  const matchesByDay = Map.groupBy(matches, ({ date }) =>
+    date.toLocaleDateString([], { timeZone: leagues.get(league)?.tz }),
+  );
 
   return (
     <List>

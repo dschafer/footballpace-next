@@ -1,10 +1,12 @@
 import { Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
+import leagues from "../const/leagues";
 import prisma from "@/lib/prisma";
 import { sortStandings } from "../sort";
 
 export type PaceMatch = {
   match: Match;
+  dateString: string;
   delta: number;
   cumulativeDelta: number;
   points: number;
@@ -85,8 +87,12 @@ export async function fetchPaceTeams(
         const delta = points - expectedPoints;
         cumulativeExpectedPoints += expectedPoints;
         cumulativeDelta += delta;
+        const dateString = match.date.toLocaleDateString([], {
+          timeZone: leagues.get(league)?.tz,
+        });
         paceMatches.push({
           match,
+          dateString,
           team,
           opponent,
           home,

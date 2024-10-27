@@ -40,9 +40,7 @@ export default async function FixturesTable({
         <TableTbody>
           {paceMatches.map((paceMatch, i) => (
             <TableTr key={i}>
-              <TableTd ta="left">
-                {paceMatch.match.date.toLocaleDateString()}
-              </TableTd>
+              <TableTd ta="left">{paceMatch.dateString}</TableTd>
               <TableTd ta="center">
                 <Result
                   match={paceMatch.match}
