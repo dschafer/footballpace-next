@@ -25,16 +25,17 @@ export default function Home() {
       >
         What is Football Pace?
       </Title>
-      <Text>
-        <Spoiler maxHeight={80} showLabel="Read more" hideLabel="Hide">
+
+      <Spoiler maxHeight={80} showLabel="Read more" hideLabel="Hide">
+        <Text>
           Football Pace is a version of the standings table that accounts for
           strength of schedule. It looks at historical data to see how a typical
           champion performs in each match, based on home/away and the opponent
           {"'"}s finishing position. It then presents a new version of the
           standings table, that shows how each team is doing compared to typical
           championship pace, given their schedule so far.
-        </Spoiler>
-      </Text>
+        </Text>
+      </Spoiler>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
         {Array.from(leagues).map(([leagueCode, _]) => (
           <Stack key={leagueCode} p={{ base: 0, lg: "xs" }}>
