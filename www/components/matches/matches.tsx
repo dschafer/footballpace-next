@@ -18,24 +18,26 @@ export default async function RecentPaceTable({
   if (matches.length == 0) {
     return <ErrorAlert />;
   }
-  const matchesByDay = Map.groupBy(matches, ({ date }) =>
+  const matchesByDay = Object.groupBy(matches, ({ date }) =>
     date.toLocaleDateString([], { timeZone: leagues.get(league)?.tz }),
   );
 
   return (
     <List>
-      {Array.from(matchesByDay).map(([date, matches]) => (
-        <ListItem key={date}>
-          {date}
-          <List withPadding>
-            {matches.map((match, j) => (
-              <ListItem key={j}>
-                <Result match={match} link={true} />
-              </ListItem>
-            ))}
-          </List>
-        </ListItem>
-      ))}
+      {Array.from(new Map(Object.entries(matchesByDay))).map(
+        ([date, matches]) => (
+          <ListItem key={date}>
+            {date}
+            <List withPadding>
+              {matches!.map((match, j) => (
+                <ListItem key={j}>
+                  <Result match={match} link={true} />
+                </ListItem>
+              ))}
+            </List>
+          </ListItem>
+        ),
+      )}
     </List>
   );
 }
