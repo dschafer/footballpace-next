@@ -19,7 +19,7 @@ export default function MatchesPage({
           alignSelf: "flex-start",
         }}
       >
-        {leagues.get(params.league)} {yearInt}
+        {leagues.get(params.league)?.name} {yearInt}
       </Title>
       <Matches league={params.league} year={yearInt} />
     </Stack>

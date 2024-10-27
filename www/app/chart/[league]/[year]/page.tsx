@@ -20,7 +20,7 @@ export default function ChartPage({
           alignSelf: "flex-start",
         }}
       >
-        {leagues.get(params.league)} {yearInt}
+        {leagues.get(params.league)?.name} {yearInt}
       </Title>
       <StandingsPaceChart league={params.league} year={yearInt} />
       <Anchor

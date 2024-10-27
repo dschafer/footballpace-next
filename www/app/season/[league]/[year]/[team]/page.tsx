@@ -45,7 +45,7 @@ export default async function SeasonPage({
         }}
       >
         <Text fs="italic">
-          {leagues.get(params.league)} {yearInt}
+          {leagues.get(params.league)?.name} {yearInt}
         </Text>
       </Anchor>
       <Title

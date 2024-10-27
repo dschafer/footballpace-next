@@ -1,8 +1,8 @@
 const leagues = new Map([
-  ["E0", "English Premier League"],
-  ["SP1", "La Liga 1"],
-  ["D1", "Bundesliga 1"],
-  ["F1", "Ligue 1"],
-  ["I1", "Serie A"],
+  ["E0", { name: "English Premier League", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" }],
+  ["SP1", { name: "La Liga 1", flag: "🇪🇸" }],
+  ["D1", { name: "Bundesliga 1", flag: "🇩🇪" }],
+  ["F1", { name: "Ligue 1", flag: "🇫🇷" }],
+  ["I1", { name: "Serie A", flag: "🇮🇹" }],
 ]);
 export default leagues;

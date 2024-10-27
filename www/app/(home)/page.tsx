@@ -36,17 +36,17 @@ export default function Home() {
         </Spoiler>
       </Text>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
-        {Array.from(leagues).map(([league, _]) => (
-          <Stack key={league} p={{ base: 0, lg: "xs" }}>
+        {Array.from(leagues).map(([leagueCode, _]) => (
+          <Stack key={leagueCode} p={{ base: 0, lg: "xs" }}>
             <Title
               order={2}
               style={{
                 alignSelf: "flex-start",
               }}
             >
-              {leagues.get(league)} {year}
+              {leagues.get(leagueCode)?.name} {year}
             </Title>
-            <RecentPaceTable rowCount={5} league={league} year={year} />
+            <RecentPaceTable rowCount={5} league={leagueCode} year={year} />
             <Group
               style={{
                 alignSelf: "flex-end",
@@ -55,14 +55,14 @@ export default function Home() {
               <Breadcrumbs separator=" · ">
                 <Anchor
                   component={Link}
-                  href={`/chart/${league}/${year}`}
+                  href={`/chart/${leagueCode}/${year}`}
                   ta="right"
                 >
                   Pace Chart »
                 </Anchor>
                 <Anchor
                   component={Link}
-                  href={`/pace/${league}/${year}`}
+                  href={`/pace/${leagueCode}/${year}`}
                   ta="right"
                 >
                   Full Pace Table »

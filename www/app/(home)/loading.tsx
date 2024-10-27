@@ -21,8 +21,8 @@ export default function Home() {
         standings table, that shows how each team is doing compared to typical
         championship pace, given their schedule so far.
       </Text>
-      {Array.from(leagues).map(([league, _]) => (
-        <Stack key={league}>
+      {Array.from(leagues).map(([leagueCode, _]) => (
+        <Stack key={leagueCode}>
           <Title
             order={2}
             style={{
@@ -32,7 +32,7 @@ export default function Home() {
             <Skeleton>English Premier League 2023</Skeleton>
           </Title>
           <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
-            <RecentPaceTablePlaceholder rowCount={5} key={league} />
+            <RecentPaceTablePlaceholder rowCount={5} key={leagueCode} />
             <Skeleton
               ta="right"
               style={{

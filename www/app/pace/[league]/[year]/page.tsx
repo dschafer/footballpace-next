@@ -20,7 +20,7 @@ export default function PacePage({
           alignSelf: "flex-start",
         }}
       >
-        {leagues.get(params.league)} {yearInt}
+        {leagues.get(params.league)?.name} {yearInt}
       </Title>
       <StandingsPaceTable league={params.league} year={yearInt} />
       <Group

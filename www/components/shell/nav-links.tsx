@@ -22,31 +22,32 @@ export default function NavLinks() {
         pageUrl="/"
         leftSection={<IconHome />}
       />
-      {Array.from(leagues).map(([league, name]) => (
+      {Array.from(leagues).map(([leagueCode, league]) => (
         <ActiveNavLink
-          label={name}
-          key={league}
-          prefixUrl={`/${league}/${year}`}
+          label={league.name}
+          key={leagueCode}
+          prefixUrl={`/${leagueCode}/${year}`}
+          leftSection={<>{league.flag}</>}
         >
           <ActiveNavLink
-            href={`/pace/${league}/${year}`}
+            href={`/pace/${leagueCode}/${year}`}
             label="Pace Table"
-            pageUrl={`/pace/${league}/${year}`}
+            pageUrl={`/pace/${leagueCode}/${year}`}
             leftSection={<IconRulerMeasure />}
           />
           <ActiveNavLink
-            href={`/chart/${league}/${year}`}
+            href={`/chart/${leagueCode}/${year}`}
             label="Pace Chart"
-            pageUrl={`/chart/${league}/${year}`}
+            pageUrl={`/chart/${leagueCode}/${year}`}
             leftSection={<IconChartLine />}
           />
           <ActiveNavLink
-            href={`/matches/${league}/${year}`}
+            href={`/matches/${leagueCode}/${year}`}
             label="Results"
-            pageUrl={`/matches/${league}/${year}`}
+            pageUrl={`/matches/${leagueCode}/${year}`}
             leftSection={<IconList />}
           />
-          <TeamNavLinks league={league} year={year} />
+          <TeamNavLinks league={leagueCode} year={year} />
         </ActiveNavLink>
       ))}
     </ScrollArea>
