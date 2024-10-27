@@ -1,4 +1,9 @@
-import { IconChartLine, IconHome, IconRulerMeasure } from "@tabler/icons-react";
+import {
+  IconChartLine,
+  IconHome,
+  IconList,
+  IconRulerMeasure,
+} from "@tabler/icons-react";
 
 import { ActiveNavLink } from "./active-nav-link";
 import Link from "next/link";
@@ -34,6 +39,12 @@ export default function NavLinks() {
             label="Pace Chart"
             pageUrl={`/chart/${league}/${year}`}
             leftSection={<IconChartLine />}
+          />
+          <ActiveNavLink
+            href={`/matches/${league}/${year}`}
+            label="Results"
+            pageUrl={`/matches/${league}/${year}`}
+            leftSection={<IconList />}
           />
           <TeamNavLinks league={league} year={year} />
         </ActiveNavLink>
