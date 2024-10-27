@@ -1,6 +1,7 @@
 import {
   IconChartLine,
   IconHome,
+  IconInfoCircle,
   IconList,
   IconRulerMeasure,
 } from "@tabler/icons-react";
@@ -50,6 +51,13 @@ export default function NavLinks() {
           <TeamNavLinks league={leagueCode} year={year} />
         </ActiveNavLink>
       ))}
+      <ActiveNavLink
+        component={Link}
+        href="/about"
+        label="About"
+        pageUrl="/about"
+        leftSection={<IconInfoCircle />}
+      />
     </ScrollArea>
   );
 }
