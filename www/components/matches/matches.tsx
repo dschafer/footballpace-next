@@ -3,6 +3,7 @@ import ErrorAlert from "../error/error-alert";
 import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
+import { Match } from "@prisma/client";
 
 export default async function RecentPaceTable({
   league,
@@ -18,26 +19,33 @@ export default async function RecentPaceTable({
   if (matches.length == 0) {
     return <ErrorAlert />;
   }
-  const matchesByDay = Object.groupBy(matches, ({ date }) =>
-    date.toLocaleDateString([], { timeZone: leagues.get(league)?.tz }),
-  );
+  // This is just Map.groupBy but that's not available in Node 20.
+  const matchesByDay: Map<string, Array<Match>> = new Map();
+  for (const match of matches) {
+    const key = match.date.toLocaleDateString([], {
+      timeZone: leagues.get(league)?.tz,
+    });
+    if (matchesByDay.has(key)) {
+      matchesByDay.get(key)!.push(match);
+    } else {
+      matchesByDay.set(key, [match]);
+    }
+  }
 
   return (
     <List>
-      {Array.from(new Map(Object.entries(matchesByDay))).map(
-        ([date, matches]) => (
-          <ListItem key={date}>
-            {date}
-            <List withPadding>
-              {matches!.map((match, j) => (
-                <ListItem key={j}>
-                  <Result match={match} link={true} />
-                </ListItem>
-              ))}
-            </List>
-          </ListItem>
-        ),
-      )}
+      {Array.from(matchesByDay).map(([date, matches]) => (
+        <ListItem key={date}>
+          {date}
+          <List withPadding>
+            {matches!.map((match, j) => (
+              <ListItem key={j}>
+                <Result match={match} link={true} />
+              </ListItem>
+            ))}
+          </List>
+        </ListItem>
+      ))}
     </List>
   );
 }
