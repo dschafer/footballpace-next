@@ -1,9 +1,9 @@
 import { List, ListItem } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
+import { Match } from "@prisma/client";
 import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
-import { Match } from "@prisma/client";
 
 export default async function RecentPaceTable({
   league,
