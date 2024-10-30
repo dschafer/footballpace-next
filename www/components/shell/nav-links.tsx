@@ -1,3 +1,4 @@
+import { Center, ScrollArea } from "@mantine/core";
 import {
   IconChartLine,
   IconHome,
@@ -8,7 +9,6 @@ import {
 
 import { ActiveNavLink } from "./active-nav-link";
 import Link from "next/link";
-import { ScrollArea } from "@mantine/core";
 import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
@@ -28,7 +28,11 @@ export default function NavLinks() {
           label={league.name}
           key={leagueCode}
           prefixUrl={`/${leagueCode}/${year}`}
-          leftSection={<>{league.flag}</>}
+          leftSection={
+            <Center inline w={24}>
+              {league.flag}
+            </Center>
+          }
         >
           <ActiveNavLink
             href={`/pace/${leagueCode}/${year}`}
