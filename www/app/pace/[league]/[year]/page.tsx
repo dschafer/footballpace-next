@@ -1,7 +1,12 @@
 import { Anchor, Breadcrumbs, Group, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
+import currentSeasons from "@/lib/const/current";
 import leagues from "@/lib/const/leagues";
+
+export function generateStaticParams() {
+  return currentSeasons;
+}
 
 export default function PacePage({
   params,

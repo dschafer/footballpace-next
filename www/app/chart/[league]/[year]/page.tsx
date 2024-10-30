@@ -1,7 +1,12 @@
 import { Anchor, Stack, Title } from "@mantine/core";
 import Link from "next/link";
 import StandingsPaceChart from "@/components/pace-chart/standings-pace-chart";
+import currentSeasons from "@/lib/const/current";
 import leagues from "@/lib/const/leagues";
+
+export function generateStaticParams() {
+  return currentSeasons;
+}
 
 export default function ChartPage({
   params,

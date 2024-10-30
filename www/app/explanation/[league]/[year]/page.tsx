@@ -3,6 +3,11 @@ import HistoricalPacePreamble from "@/components/explanation/historical-pace-pre
 import HistoricalPaceTable from "@/components/explanation/historical-pace-table";
 import ProjectedStandingsPreamble from "@/components/explanation/projected-standings-preamble";
 import ProjectedStandingsTable from "@/components/explanation/projected-standings-table";
+import currentSeasons from "@/lib/const/current";
+
+export function generateStaticParams() {
+  return currentSeasons;
+}
 
 export default function ExplanationPage({
   params,

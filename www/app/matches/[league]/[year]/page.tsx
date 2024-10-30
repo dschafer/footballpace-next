@@ -1,6 +1,11 @@
 import { Stack, Title } from "@mantine/core";
 import Matches from "@/components/matches/matches";
+import currentSeasons from "@/lib/const/current";
 import leagues from "@/lib/const/leagues";
+
+export function generateStaticParams() {
+  return currentSeasons;
+}
 
 export default function MatchesPage({
   params,
