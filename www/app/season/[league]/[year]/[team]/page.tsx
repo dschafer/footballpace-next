@@ -6,15 +6,38 @@ import PaceTable from "@/components/pace-table/pace-table";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
+import year from "@/lib/const/year";
+
+export async function generateStaticParams(): Promise<SeasonPageParams[]> {
+  const matches = await prisma.match.findMany({
+    where: { year: year },
+  });
+  const params: Set<SeasonPageParams> = new Set();
+  for (const m of matches) {
+    params.add({
+      league: m.league,
+      year: "" + m.year,
+      team: m.homeTeam,
+    });
+    params.add({
+      league: m.league,
+      year: "" + m.year,
+      team: m.awayTeam,
+    });
+  }
+  return Array.from(params);
+}
+
+type SeasonPageParams = {
+  league: string;
+  year: string;
+  team: string;
+};
 
 export default async function SeasonPage({
   params,
 }: {
-  params: {
-    league: string;
-    year: string;
-    team: string;
-  };
+  params: SeasonPageParams;
 }) {
   const yearInt = parseInt(params.year);
   const teamDecoded = decodeURIComponent(params.team);
