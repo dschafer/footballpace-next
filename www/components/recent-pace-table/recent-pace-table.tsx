@@ -65,7 +65,7 @@ export default async function RecentPaceTable({
                 <TableTh ta="left" scope="row">
                   <Anchor
                     component={Link}
-                    href={`/season/${league}/${year}/${paceTeam.team}`}
+                    href={`/${league}/${year}/team/${paceTeam.team}`}
                   >
                     {paceTeam.team}
                   </Anchor>

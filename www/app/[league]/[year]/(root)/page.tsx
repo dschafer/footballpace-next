@@ -30,14 +30,14 @@ export default function PacePage({ params }: { params: LeagueYearParam }) {
         <Breadcrumbs separator=" · ">
           <Anchor
             component={Link}
-            href={`/chart/${params.league}/${params.year}`}
+            href={`/${params.league}/${params.year}/chart`}
             ta="right"
           >
             Pace Chart »
           </Anchor>
           <Anchor
             component={Link}
-            href={`/explanation/${params.league}/${yearInt}`}
+            href={`/${params.league}/${yearInt}/explanation`}
             ta="right"
           >
             Explanation »

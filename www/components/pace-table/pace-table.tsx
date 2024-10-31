@@ -56,7 +56,7 @@ export default async function PaceTable({
               <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}
-                  href={`/season/${paceTeam.league}/${paceTeam.year}/${paceTeam.team}`}
+                  href={`/${paceTeam.league}/${paceTeam.year}/team/${paceTeam.team}`}
                 >
                   {paceTeam.team}
                 </Anchor>

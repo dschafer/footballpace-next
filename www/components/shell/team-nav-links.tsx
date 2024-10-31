@@ -17,15 +17,15 @@ export async function TeamNavLinks({
   return (
     <ActiveNavLink
       label="Teams"
-      prefixUrl={`/season/${league}/${year}`}
+      prefixUrl={`/${league}/${year}/team`}
       leftSection={<IconUsersGroup />}
     >
       {teams.map((team: string) => (
         <ActiveNavLink
           key={team}
-          href={`/season/${league}/${year}/${team}`}
+          href={`/${league}/${year}/team/${team}`}
           label={team}
-          pageUrl={`/season/${league}/${year}/${team}`}
+          pageUrl={`/${league}/${year}/team/${team}`}
           leftSection={<IconUsers />}
         />
       ))}

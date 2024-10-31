@@ -56,14 +56,14 @@ export default function Home() {
               <Breadcrumbs separator=" · ">
                 <Anchor
                   component={Link}
-                  href={`/chart/${leagueCode}/${year}`}
+                  href={`/${leagueCode}/${year}/chart`}
                   ta="right"
                 >
                   Pace Chart »
                 </Anchor>
                 <Anchor
                   component={Link}
-                  href={`/pace/${leagueCode}/${year}`}
+                  href={`/${leagueCode}/${year}`}
                   ta="right"
                 >
                   Full Pace Table »

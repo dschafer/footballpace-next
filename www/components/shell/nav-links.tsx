@@ -35,21 +35,21 @@ export default function NavLinks() {
           }
         >
           <ActiveNavLink
-            href={`/pace/${leagueCode}/${year}`}
+            href={`/${leagueCode}/${year}`}
             label="Pace Table"
-            pageUrl={`/pace/${leagueCode}/${year}`}
+            pageUrl={`/${leagueCode}/${year}`}
             leftSection={<IconRulerMeasure />}
           />
           <ActiveNavLink
-            href={`/chart/${leagueCode}/${year}`}
+            href={`/${leagueCode}/${year}/chart`}
             label="Pace Chart"
-            pageUrl={`/chart/${leagueCode}/${year}`}
+            pageUrl={`/${leagueCode}/${year}/chart`}
             leftSection={<IconChartLine />}
           />
           <ActiveNavLink
-            href={`/matches/${leagueCode}/${year}`}
+            href={`/${leagueCode}/${year}/matches`}
             label="Results"
-            pageUrl={`/matches/${leagueCode}/${year}`}
+            pageUrl={`/${leagueCode}/${year}/matches`}
             leftSection={<IconList />}
           />
           <TeamNavLinks league={leagueCode} year={year} />

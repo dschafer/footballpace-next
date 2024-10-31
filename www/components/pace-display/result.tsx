@@ -39,7 +39,7 @@ export default function Result({
     homeTeam = (
       <Anchor
         component={Link}
-        href={`/season/${match.league}/${match.year}/${match.homeTeam}`}
+        href={`/${match.league}/${match.year}/team/${match.homeTeam}`}
         underline="never"
         c={homeC}
         fw={homeFw}
@@ -50,7 +50,7 @@ export default function Result({
     awayTeam = (
       <Anchor
         component={Link}
-        href={`/season/${match.league}/${match.year}/${match.awayTeam}`}
+        href={`/${match.league}/${match.year}/team/${match.awayTeam}`}
         underline="never"
         c={awayC}
         fw={awayFw}

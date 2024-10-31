@@ -62,7 +62,7 @@ export default async function SeasonPage({
       </Title>
       <Anchor
         component={Link}
-        href={`/pace/${params.league}/${yearInt}`}
+        href={`/${params.league}/${yearInt}`}
         style={{
           alignSelf: "flex-start",
         }}

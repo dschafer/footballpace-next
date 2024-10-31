@@ -64,7 +64,7 @@ export default async function ProjectedStandingsTable({
               <TableTh ta="left" scope="row">
                 <Anchor
                   component={Link}
-                  href={`/season/${league}/${year}/${row.team}`}
+                  href={`/${league}/${year}/team/${row.team}`}
                 >
                   {row.team}
                 </Anchor>
