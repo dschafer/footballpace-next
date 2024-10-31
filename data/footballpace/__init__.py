@@ -20,7 +20,6 @@ from footballpace.resources.http import HTTPResource
 from . import assets
 from .resources.footballdata import FootballDataResource
 from .resources.vercel import VercelPostgresResource
-from .jobs import cache_update_job, fpl_job, pace_sheets_job, results_job
 from .sensors import db_write_sensor
 from .schedules import (
     current_season_refresh_schedule,
@@ -31,12 +30,6 @@ from .schedules import (
 http_resource = HTTPResource()
 defs = Definitions(
     assets=load_assets_from_package_module(assets),
-    jobs=[
-        cache_update_job,
-        fpl_job,
-        pace_sheets_job,
-        results_job,
-    ],
     resources={
         "football_data": FootballDataResource(http_resource=http_resource),
         "http_resource": http_resource,

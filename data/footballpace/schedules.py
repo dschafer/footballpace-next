@@ -1,4 +1,5 @@
 from dagster import (
+    AssetSelection,
     DefaultScheduleStatus,
     MultiPartitionKey,
     RunRequest,
@@ -6,13 +7,13 @@ from dagster import (
     schedule,
 )
 
-from .jobs import fpl_job, pace_sheets_job, results_job
 from .partitions import ALL_LEAGUES, ALL_SEASONS
 
 
 @schedule(
+    name="current_season_refresh_schedule",
     cron_schedule="0 * * * *",
-    job=results_job,
+    target=AssetSelection.assets("match_results_csv"),
     default_status=DefaultScheduleStatus.RUNNING,
 )
 def current_season_refresh_schedule():
@@ -33,15 +34,19 @@ def current_season_refresh_schedule():
 
 
 fpl_refresh_schedule = ScheduleDefinition(
+    name="fpl_refresh_schedule",
     cron_schedule="0 * * * *",
-    job=fpl_job,
+    target=AssetSelection.assets(
+        "fpl_bootstrap_json", "fpl_fixtures_json", "fpl_fixtures_df"
+    ),
     default_status=DefaultScheduleStatus.RUNNING,
 )
 
 
 @schedule(
+    name="pace_sheets_refresh_schedule",
     cron_schedule="0 3 1 8 *",
-    job=pace_sheets_job,
+    target=AssetSelection.groups("PaceSheet"),
     default_status=DefaultScheduleStatus.RUNNING,
 )
 def pace_sheets_refresh_schedule():

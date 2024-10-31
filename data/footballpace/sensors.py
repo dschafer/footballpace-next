@@ -9,8 +9,6 @@ from dagster import (
     multi_asset_sensor,
 )
 
-from .jobs import cache_update_job
-
 
 def metadata_int(m: AssetMaterialization, key: str) -> int:
     metadata = m.metadata
@@ -31,8 +29,9 @@ def row_count(m: AssetMaterialization) -> int:
 
 
 @multi_asset_sensor(
+    name="db_write_sensor",
     monitored_assets=AssetSelection.tag("db_write", "true"),
-    job=cache_update_job,
+    request_assets=AssetSelection.groups("CacheUpdate"),
     default_status=DefaultSensorStatus.RUNNING,
 )
 def db_write_sensor(
