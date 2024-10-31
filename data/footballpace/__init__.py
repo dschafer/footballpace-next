@@ -1,3 +1,4 @@
+from pathlib import Path
 from dagster import ExperimentalWarning
 
 import warnings
@@ -9,9 +10,12 @@ warnings.filterwarnings("ignore", category=ExperimentalWarning)
 # ruff: noqa: E402
 
 from dagster import (
+    AnchorBasedFilePathMapping,
     Definitions,
     EnvVar,
+    link_code_references_to_git,
     load_assets_from_package_module,
+    with_source_code_references,
 )
 
 from footballpace.resources.http import HTTPResource
@@ -29,7 +33,15 @@ from .schedules import (
 
 http_resource = HTTPResource()
 defs = Definitions(
-    assets=load_assets_from_package_module(assets),
+    assets=link_code_references_to_git(
+        with_source_code_references(load_assets_from_package_module(assets)),
+        git_url="https://github.com/dschafer/footballpace-next",
+        git_branch="main",
+        file_path_mapping=AnchorBasedFilePathMapping(
+            local_file_anchor=Path(__file__),
+            file_anchor_path_in_repository="data/footballpace/__init__.py",
+        ),
+    ),
     resources={
         "football_data": FootballDataResource(http_resource=http_resource),
         "http_resource": http_resource,
