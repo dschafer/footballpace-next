@@ -1,21 +1,18 @@
+import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
 import { Stack, Title } from "@mantine/core";
 import HistoricalPacePreamble from "@/components/explanation/historical-pace-preamble";
 import HistoricalPaceTable from "@/components/explanation/historical-pace-table";
 import ProjectedStandingsPreamble from "@/components/explanation/projected-standings-preamble";
 import ProjectedStandingsTable from "@/components/explanation/projected-standings-table";
-import currentSeasons from "@/lib/const/current";
 
-export function generateStaticParams() {
+export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
 export default function ExplanationPage({
   params,
 }: {
-  params: {
-    league: string;
-    year: string;
-  };
+  params: LeagueYearParam;
 }) {
   return (
     <Stack>

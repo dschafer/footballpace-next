@@ -1,21 +1,15 @@
 import { Anchor, Breadcrumbs, Group, Stack, Title } from "@mantine/core";
+import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
 import Link from "next/link";
 import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
-import currentSeasons from "@/lib/const/current";
+
 import leagues from "@/lib/const/leagues";
 
-export function generateStaticParams() {
+export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default function PacePage({
-  params,
-}: {
-  params: {
-    league: string;
-    year: string;
-  };
-}) {
+export default function PacePage({ params }: { params: LeagueYearParam }) {
   const yearInt = parseInt(params.year);
   return (
     <Stack>
