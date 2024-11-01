@@ -43,7 +43,7 @@ AWAY_POINTS = {"A": 3, "D": 1, "H": 0}
 
 @asset(
     group_name="PaceSheet",
-    compute_kind="Pandas",
+    kinds={"Pandas"},
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
     dagster_type=PaceSheetEntryDataFrame,
@@ -113,7 +113,7 @@ def pace_sheet_entries_df(
 
 @asset(
     group_name="PaceSheet",
-    compute_kind="Postgres",
+    kinds={"Postgres"},
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
     ins={"pace_sheet_entries_df": AssetIn(dagster_type=PaceSheetEntryDataFrame)},

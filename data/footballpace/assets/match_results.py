@@ -27,7 +27,7 @@ from footballpace.resources.vercel import (
 
 @asset(
     group_name="MatchResults",
-    compute_kind="API",
+    kinds={"CSV"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     output_required=False,
@@ -91,7 +91,7 @@ MatchResultsDataFrame = create_dagster_pandas_dataframe_type(
 
 @asset(
     group_name="MatchResults",
-    compute_kind="Pandas",
+    kinds={"Pandas"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v2",
     dagster_type=MatchResultsDataFrame,
@@ -158,7 +158,7 @@ def match_results_df(
 
 @asset(
     group_name="MatchResults",
-    compute_kind="Postgres",
+    kinds={"Postgres"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},

@@ -36,7 +36,7 @@ MatchResultsWithFinishDataFrame = create_dagster_pandas_dataframe_type(
 
 @asset(
     group_name="MatchResults",
-    compute_kind="Pandas",
+    kinds={"Pandas"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     dagster_type=MatchResultsWithFinishDataFrame,

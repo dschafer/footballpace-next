@@ -23,7 +23,7 @@ from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresR
 
 @asset(
     group_name="TeamColors",
-    compute_kind="API",
+    kinds={"API"},
     code_version="v1",
     output_required=False,
 )
@@ -76,7 +76,7 @@ def team_colors_dict(team) -> dict[str, Optional[str]]:
 
 @asset(
     group_name="TeamColors",
-    compute_kind="Pandas",
+    kinds={"Pandas"},
     code_version="v2",
     dagster_type=TeamColorsDataFrame,
     automation_condition=AutomationCondition.eager(),
@@ -105,7 +105,7 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
 
 @asset(
     group_name="TeamColors",
-    compute_kind="Postgres",
+    kinds={"Postgres"},
     code_version="v1",
     ins={"team_colors_df": AssetIn(dagster_type=TeamColorsDataFrame)},
     metadata={"dagster/column_schema": TeamColorsTableSchema},

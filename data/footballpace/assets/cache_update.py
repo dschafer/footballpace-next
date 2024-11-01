@@ -8,7 +8,7 @@ API_UPDATE_URL = "https://footballpace.com/api/update"
 
 @asset(
     group_name="CacheUpdate",
-    compute_kind="vercel",
+    kinds={"vercel"},
 )
 def cache_update() -> None:
     """

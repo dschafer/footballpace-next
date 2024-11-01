@@ -28,7 +28,7 @@ from footballpace.resources.vercel import (
 )
 
 
-@asset(group_name="FPL", compute_kind="API", code_version="v1", output_required=False)
+@asset(group_name="FPL", kinds={"API"}, code_version="v1", output_required=False)
 def fpl_bootstrap_json(
     context: AssetExecutionContext, http_resource: HTTPResource
 ) -> Iterator[Output[bytes]]:
@@ -54,7 +54,7 @@ def fpl_bootstrap_json(
     )
 
 
-@asset(group_name="FPL", compute_kind="API", code_version="v1", output_required=False)
+@asset(group_name="FPL", kinds={"API"}, code_version="v1", output_required=False)
 def fpl_fixtures_json(
     context: AssetExecutionContext, http_resource: HTTPResource
 ) -> Iterator[Output[bytes]]:
@@ -127,9 +127,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     return dict([(team["id"], team["name"]) for team in bootstrap_obj["teams"]])
 
 
-@asset(
-    group_name="FPL", compute_kind="Pandas", code_version="v2", output_required=False
-)
+@asset(group_name="FPL", kinds={"Pandas"}, code_version="v2", output_required=False)
 def fpl_fixtures_df(
     context: AssetExecutionContext, fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
 ) -> Iterator[Output[pd.DataFrame]]:
@@ -185,7 +183,7 @@ def fpl_fixtures_df(
 
 @asset(
     group_name="FPL",
-    compute_kind="Postgres",
+    kinds={"Postgres"},
     code_version="v1",
     ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
     metadata={"dagster/column_schema": MatchResultsTableSchema},
