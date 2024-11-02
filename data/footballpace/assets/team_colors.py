@@ -111,7 +111,10 @@ def team_colors_df(team_colors_json: bytes) -> Output[pd.DataFrame]:
     kinds={"Postgres"},
     code_version="v1",
     ins={"team_colors_df": AssetIn(dagster_type=TeamColorsDataFrame)},
-    metadata={"dagster/column_schema": TeamColorsTableSchema},
+    metadata={
+        "dagster/column_schema": TeamColorsTableSchema,
+        "dagster/table_name": "team_colors",
+    },
     tags={"db_write": "true"},
     automation_condition=AutomationCondition.eager(),
 )

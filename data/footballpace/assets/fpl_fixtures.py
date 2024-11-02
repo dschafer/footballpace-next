@@ -198,7 +198,10 @@ def fpl_fixtures_df(
     kinds={"Postgres"},
     code_version="v1",
     ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
-    metadata={"dagster/column_schema": MatchResultsTableSchema},
+    metadata={
+        "dagster/column_schema": MatchResultsTableSchema,
+        "dagster/table_name": "matches",
+    },
     tags={"db_write": "true"},
     automation_condition=AutomationCondition.eager(),
 )

@@ -165,14 +165,17 @@ def match_results_df(
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
     ins={"match_results_df": AssetIn(dagster_type=MatchResultsDataFrame)},
-    metadata={"dagster/column_schema": MatchResultsTableSchema},
+    metadata={
+        "dagster/column_schema": MatchResultsTableSchema,
+        "dagster/table_name": "matches",
+    },
     tags={"db_write": "true"},
     automation_condition=AutomationCondition.eager(),
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Writes the match rseutls from football-data.co.uk into Postgres."""
+    """Writes the match results from football-data.co.uk into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in match_results_df.to_dict("records")

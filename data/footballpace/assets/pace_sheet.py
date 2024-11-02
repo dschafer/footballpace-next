@@ -117,7 +117,10 @@ def pace_sheet_entries_df(
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
     ins={"pace_sheet_entries_df": AssetIn(dagster_type=PaceSheetEntryDataFrame)},
-    metadata={"dagster/column_schema": PaceSheetEntriesTableSchema},
+    metadata={
+        "dagster/column_schema": PaceSheetEntriesTableSchema,
+        "dagster/table_name": "pace_sheet_entries",
+    },
     tags={"db_write": "true"},
 )
 def pace_sheet_entries_postgres(
