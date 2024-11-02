@@ -12,10 +12,6 @@ from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
 
 from footballpace.assets.match_results import MatchResultsDataFrame
 from footballpace.partitions import all_seasons_leagues_partition
-from footballpace.resources.vercel import (
-    StandingsRowTableSchema,
-    VercelPostgresResource,
-)
 
 
 StandingsRowsDataFrame = create_dagster_pandas_dataframe_type(
@@ -72,25 +68,3 @@ def standings_rows_df(match_results_df: pd.DataFrame) -> Output[pd.DataFrame]:
             "preview": MetadataValue.md(standings_df.head().to_markdown()),
         },
     )
-
-
-@asset(
-    group_name="MatchResults",
-    kinds={"Postgres"},
-    partitions_def=all_seasons_leagues_partition,
-    code_version="v1",
-    ins={"standings_rows_df": AssetIn(dagster_type=StandingsRowsDataFrame)},
-    metadata={"dagster/column_schema": StandingsRowTableSchema},
-    tags={"db_write": "true"},
-    automation_condition=AutomationCondition.eager(),
-)
-def standings_rows_postgres(
-    standings_rows_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
-) -> Output[None]:
-    """Writes the standings DataFrame into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in standings_rows_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_standings_rows(rows)
-    return Output(None, metadata={"dagster/partition_row_count": rowcount})

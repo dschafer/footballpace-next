@@ -43,17 +43,6 @@ class VercelPostgresResource(ConfigurableResource):
             )
             return cur.rowcount
 
-    def upsert_standings_rows(self, standings_rows: list[dict[str, Any]]) -> int:
-        """Given a list of standings_row, upserts them into the DB."""
-        with self._db_connection.cursor() as cur:
-            cur.executemany(
-                """INSERT INTO standings_rows (league, year, team, wins, losses, draws, goals_for, goals_against)
-    VALUES(%(Div)s, %(Season)s, %(Team)s, %(Wins)s, %(Losses)s, %(Draws)s, %(For)s, %(Against)s)
-    ON CONFLICT (league, year, team) DO UPDATE SET (wins, losses, draws, goals_for, goals_against) = (EXCLUDED.wins, EXCLUDED.losses, EXCLUDED.draws, EXCLUDED.goals_for, EXCLUDED.goals_against);""",
-                standings_rows,
-            )
-            return cur.rowcount
-
     def upsert_pace_sheet_entries(
         self, pace_sheet_entries: list[dict[str, Any]]
     ) -> int:
@@ -113,6 +102,7 @@ MatchResultsTableSchema = TableSchema(
         ),
     ],
 )
+
 PaceSheetEntriesTableSchema = TableSchema(
     columns=[
         TableColumn(
@@ -137,42 +127,7 @@ PaceSheetEntriesTableSchema = TableSchema(
         ),
     ],
 )
-StandingsRowTableSchema = TableSchema(
-    columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
-            "team", "string", constraints=TableColumnConstraints(nullable=False)
-        ),
-        TableColumn(
-            "wins",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "losses",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "draws",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "goals_for",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-        TableColumn(
-            "goals_against",
-            "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
-        ),
-    ],
-)
+
 TeamColorsTableSchema = TableSchema(
     columns=[
         TableColumn(
