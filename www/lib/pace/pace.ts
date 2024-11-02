@@ -1,8 +1,8 @@
 import { Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
+import { fetchStandings } from "./standings";
 import leagues from "../const/leagues";
 import prisma from "@/lib/prisma";
-import { sortStandings } from "../sort";
 
 export type PaceMatch = {
   match: Match;
@@ -33,11 +33,9 @@ export async function fetchPaceTeams(
   league: string,
   year: number,
 ): Promise<PaceTeam[]> {
-  let [allStandings, projectedStandings, allMatches, allPaceSheets] =
+  const [allStandings, projectedStandings, allMatches, allPaceSheets] =
     await Promise.all([
-      prisma.standingsRow.findMany({
-        where: { league: league, year: year },
-      }),
+      fetchStandings(league, year),
       fetchProjectedStandings(league, year),
       prisma.match.findMany({
         where: { league: league, year: year },
@@ -47,7 +45,6 @@ export async function fetchPaceTeams(
         where: { league: league, year: year, teamFinish: 1 },
       }),
     ]);
-  allStandings = sortStandings(allStandings);
 
   const teamToFinish = new Map(
     projectedStandings.map(({ team }, i) => [team, i + 1]),

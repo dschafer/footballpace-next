@@ -1,6 +1,6 @@
 import { IconUsers, IconUsersGroup } from "@tabler/icons-react";
 import { ActiveNavLink } from "./active-nav-link";
-import prisma from "@/lib/prisma";
+import { fetchStandings } from "@/lib/pace/standings";
 
 export async function TeamNavLinks({
   league,
@@ -9,10 +9,7 @@ export async function TeamNavLinks({
   league: string;
   year: number;
 }) {
-  const standings = await prisma.standingsRow.findMany({
-    where: { league: league, year: year },
-    orderBy: { team: "asc" },
-  });
+  const standings = await fetchStandings(league, year);
   const teams = standings.map((r) => r.team);
   return (
     <ActiveNavLink

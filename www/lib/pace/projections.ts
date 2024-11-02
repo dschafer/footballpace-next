@@ -1,5 +1,5 @@
-import prisma, { ExtendedStandingsRow } from "@/lib/prisma";
-import { sortStandings } from "../sort";
+import { ExtendedStandingsRow } from "@/lib/prisma";
+import { fetchStandings } from "./standings";
 
 export type ProjectedStandingsRow = {
   team: string;
@@ -52,17 +52,10 @@ export async function fetchProjectedStandings(
   league: string,
   year: number,
 ): Promise<ProjectedStandingsRow[]> {
-  let [currentStandings, prevStandings] = await Promise.all([
-    prisma.standingsRow.findMany({
-      where: { league: league, year: year },
-    }),
-    prisma.standingsRow.findMany({
-      where: { league: league, year: year - 1 },
-    }),
+  const [currentStandings, prevStandings] = await Promise.all([
+    fetchStandings(league, year),
+    fetchStandings(league, year - 1),
   ]);
-
-  currentStandings = sortStandings(currentStandings);
-  prevStandings = sortStandings(prevStandings);
 
   const projectedStandings = currentStandings
     .map((currentYear) => {
