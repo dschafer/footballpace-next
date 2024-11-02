@@ -10,6 +10,7 @@ export type PaceMatch = {
   delta: number;
   cumulativeDelta: number;
   points: number;
+  cumulativePoints: number;
   expectedPoints: number;
   cumulativeExpectedPoints: number;
   home: boolean;
@@ -59,11 +60,12 @@ export async function fetchPaceTeams(
   );
 
   let paceTeams: Array<PaceTeam> = allStandings
-    .map(({ team, points }) => {
+    .map(({ team }) => {
       const teamFinish = teamToFinish.get(team)!;
       let paceMatches = [];
       let cumulativeExpectedPoints = 0;
       let cumulativeDelta = 0;
+      let cumulativePoints = 0;
       for (const match of allMatches) {
         if (match.homeTeam != team && match.awayTeam != team) {
           continue;
@@ -85,6 +87,7 @@ export async function fetchPaceTeams(
             : opponentActualFinish;
         const expectedPoints = paceSheetMap.get(`${opponentFinish}_${home}`)!;
         const delta = points - expectedPoints;
+        cumulativePoints += points;
         cumulativeExpectedPoints += expectedPoints;
         cumulativeDelta += delta;
         const dateString = match.date.toLocaleDateString([], {
@@ -96,18 +99,20 @@ export async function fetchPaceTeams(
           team,
           opponent,
           home,
+          opponentFinish,
           opponentActualFinish,
           points,
-          opponentFinish,
+          cumulativePoints,
           expectedPoints,
-          delta,
           cumulativeExpectedPoints,
+          delta,
           cumulativeDelta,
         });
       }
 
       const delta = paceMatches[paceMatches.length - 1].cumulativeDelta;
       const pace = paceMatches[paceMatches.length - 1].cumulativeExpectedPoints;
+      const points = paceMatches[paceMatches.length - 1].cumulativePoints;
       return { team, paceMatches, points, pace, delta, league, year };
     })
     .sort((a, b) => b.delta - a.delta || b.points - a.points);
