@@ -1,5 +1,4 @@
-import { ExtendedStandingsRow } from "@/lib/prisma";
-import { fetchStandings } from "./standings";
+import { ExtendedStandingsRow, fetchStandings } from "./standings";
 
 export type ProjectedStandingsRow = {
   team: string;

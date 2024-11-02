@@ -1,5 +1,19 @@
-import prisma, { ExtendedStandingsRow } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { sortStandings } from "../sort";
+
+export type ExtendedStandingsRow = {
+  league: string;
+  year: number;
+  team: string;
+  played: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  points: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  gd: number;
+};
 
 export async function fetchStandings(
   league: string,

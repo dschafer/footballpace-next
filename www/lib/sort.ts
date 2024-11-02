@@ -1,4 +1,4 @@
-import { ExtendedStandingsRow } from "./prisma";
+import { ExtendedStandingsRow } from "./pace/standings";
 
 export function sortStandings(
   standings: ExtendedStandingsRow[],
