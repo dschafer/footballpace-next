@@ -151,7 +151,7 @@ def fpl_fixtures_df(
         [
             fixture_dict(team_idents_dict, fixture)
             for fixture in fpl_fixtures_obj
-            if fixture["finished"]
+            if fixture["finished_provisional"]
         ]
     )
     df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
