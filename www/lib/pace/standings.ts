@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { sortStandings } from "../sort";
 
 export type ExtendedStandingsRow = {
   league: string;
@@ -14,6 +13,14 @@ export type ExtendedStandingsRow = {
   goalsAgainst: number;
   gd: number;
 };
+
+function sortStandings(
+  standings: ExtendedStandingsRow[],
+): ExtendedStandingsRow[] {
+  return standings.sort(
+    (a, b) => b.points - a.points || b.gd - a.gd || b.goalsFor - a.goalsFor,
+  );
+}
 
 export async function fetchStandings(
   league: string,
