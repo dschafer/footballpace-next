@@ -55,7 +55,10 @@ def match_results_csv(
 
     yield Output(
         results_data,
-        metadata={"size": len(results_data)},
+        metadata={
+            "size": len(results_data),
+            "dagster/uri": football_data.url(season, league),
+        },
         data_version=DataVersion(data_version),
     )
 

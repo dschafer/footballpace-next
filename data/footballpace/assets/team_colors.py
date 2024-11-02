@@ -26,6 +26,9 @@ from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresR
     kinds={"API"},
     code_version="v1",
     output_required=False,
+    metadata={
+        "dagster/uri": "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
+    },
 )
 def team_colors_json(
     context: AssetExecutionContext, http_resource: HTTPResource

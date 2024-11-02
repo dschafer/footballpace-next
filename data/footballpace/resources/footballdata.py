@@ -14,9 +14,9 @@ class FootballDataResource(ConfigurableResource):
         year, so for the the 2023-2024, one would pass 2023) and league.
 
         Raises an exception on failure."""
-        return self.http_resource.get(self._url(season, league))
+        return self.http_resource.get(self.url(season, league))
 
-    def _url(self, season: int, league: str) -> str:
+    def url(self, season: int, league: str) -> str:
         """Helper method to construct the correct URL."""
         season_str = "{0:02d}{1:02d}".format(season % 100, (season + 1) % 100)
         return f"https://www.football-data.co.uk/mmz4281/{season_str}/{league}.csv"

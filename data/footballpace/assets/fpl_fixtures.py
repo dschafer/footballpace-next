@@ -28,7 +28,13 @@ from footballpace.resources.vercel import (
 )
 
 
-@asset(group_name="FPL", kinds={"API"}, code_version="v1", output_required=False)
+@asset(
+    group_name="FPL",
+    kinds={"API"},
+    code_version="v1",
+    output_required=False,
+    metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
+)
 def fpl_bootstrap_json(
     context: AssetExecutionContext, http_resource: HTTPResource
 ) -> Iterator[Output[bytes]]:
@@ -54,7 +60,13 @@ def fpl_bootstrap_json(
     )
 
 
-@asset(group_name="FPL", kinds={"API"}, code_version="v1", output_required=False)
+@asset(
+    group_name="FPL",
+    kinds={"API"},
+    code_version="v1",
+    output_required=False,
+    metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},
+)
 def fpl_fixtures_json(
     context: AssetExecutionContext, http_resource: HTTPResource
 ) -> Iterator[Output[bytes]]:
