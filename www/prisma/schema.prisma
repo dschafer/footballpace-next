@@ -31,20 +31,6 @@ model Match {
   @@map("matches")
 }
 
-model StandingsRow {
-  league       String
-  year         Int
-  team         String
-  wins         Int
-  losses       Int
-  draws        Int
-  goalsFor     Int    @map("goals_for")
-  goalsAgainst Int    @map("goals_against")
-
-  @@id([league, year, team])
-  @@map("standings_rows")
-}
-
 model PaceSheetEntry {
   league         String
   year           Int
