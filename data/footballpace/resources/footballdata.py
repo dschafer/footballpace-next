@@ -1,4 +1,4 @@
-import requests
+import httpx
 from dagster import ConfigurableResource
 
 from footballpace.resources.http import HTTPResource
@@ -9,7 +9,7 @@ class FootballDataResource(ConfigurableResource):
 
     http_resource: HTTPResource
 
-    def request(self, season: int, league: str) -> requests.Response:
+    def request(self, season: int, league: str) -> httpx.Response:
         """Get the CSV for a given season (as an int representing the starting
         year, so for the the 2023-2024, one would pass 2023) and league.
 

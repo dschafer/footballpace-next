@@ -1,7 +1,7 @@
 import os
 from dagster import asset
 
-import requests
+import httpx
 
 API_UPDATE_URL = "https://footballpace.com/api/update"
 
@@ -21,4 +21,4 @@ def cache_update() -> None:
     bearer_token = os.getenv("UPDATE_BEARER_TOKEN")
     headers = {"Authorization": f"Bearer {bearer_token}"}
 
-    requests.post(API_UPDATE_URL, headers=headers).raise_for_status()
+    httpx.post(API_UPDATE_URL, headers=headers).raise_for_status()

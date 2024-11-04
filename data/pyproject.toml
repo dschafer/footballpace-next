@@ -15,9 +15,11 @@ dependencies = [
   "dagster",
   "dagster-cloud",
   "dagster-pandas",
+  "dagster-webserver",
+  "httpx",
   "pandas",
   "psycopg[binary]",
-  "requests",
+
 ]
 
 [project.optional-dependencies]
