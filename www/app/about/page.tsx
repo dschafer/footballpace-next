@@ -98,7 +98,7 @@ export default function AboutPage() {
               have observed that Leicester was top of the table, and would now
               have assessed Leicester as the best team in the league. And
               indeed, if you look at FootballPace for{" "}
-              <Link href="/season/E0/2015/Sunderland">
+              <Link href="/E0/2015/team/Sunderland">
                 that completed season for Sunderland
               </Link>
               , you will see MD1 listed as {'"'}Away to 2{'"'}.
