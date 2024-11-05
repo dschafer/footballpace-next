@@ -1,4 +1,4 @@
-import { List, ListItem, Skeleton } from "@mantine/core";
+import { List, ListItem, Skeleton, Stack, Title } from "@mantine/core";
 
 export default function MatchesPlaceholder({
   dayCount,
@@ -8,19 +8,21 @@ export default function MatchesPlaceholder({
   matchCount: number;
 }) {
   return (
-    <List>
+    <Stack>
       {[...Array(dayCount)].map((_, i) => (
-        <ListItem key={i}>
-          <Skeleton>2024-10-23</Skeleton>
-          <List withPadding>
+        <Stack key={i}>
+          <Title order={3}>
+            <Skeleton>2024-10-23</Skeleton>
+          </Title>
+          <List listStyleType="none">
             {[...Array(matchCount)].map((_, j) => (
               <ListItem key={j}>
                 <Skeleton>Arsenal 2-0 Tottenham</Skeleton>
               </ListItem>
             ))}
           </List>
-        </ListItem>
+        </Stack>
       ))}
-    </List>
+    </Stack>
   );
 }

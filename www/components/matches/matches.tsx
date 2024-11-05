@@ -1,4 +1,4 @@
-import { List, ListItem } from "@mantine/core";
+import { List, ListItem, Stack, Title } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
 import { Match } from "@prisma/client";
 import Result from "../pace-display/result";
@@ -33,19 +33,19 @@ export default async function RecentPaceTable({
   }
 
   return (
-    <List>
+    <Stack>
       {Array.from(matchesByDay).map(([date, matches]) => (
-        <ListItem key={date}>
-          {date}
-          <List withPadding>
+        <Stack key={date}>
+          <Title order={3}>{date}</Title>
+          <List listStyleType="none">
             {matches!.map((match, j) => (
               <ListItem key={j}>
                 <Result match={match} link={true} />
               </ListItem>
             ))}
           </List>
-        </ListItem>
+        </Stack>
       ))}
-    </List>
+    </Stack>
   );
 }
