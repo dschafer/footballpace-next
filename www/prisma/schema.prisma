@@ -31,6 +31,17 @@ model Match {
   @@map("matches")
 }
 
+model Fixture {
+  league      String
+  year        Int
+  kickoffTime DateTime @map("kickoff_time")
+  homeTeam    String   @map("home_team")
+  awayTeam    String   @map("away_team")
+
+  @@id([league, year, homeTeam, awayTeam])
+  @@map("fixtures")
+}
+
 model PaceSheetEntry {
   league         String
   year           Int
