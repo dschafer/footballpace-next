@@ -10,7 +10,7 @@ export async function TeamNavLinks({
   year: number;
 }) {
   const standings = await fetchStandings(league, year);
-  const teams = standings.map((r) => r.team);
+  const teams = standings.map((r) => r.team).sort();
   return (
     <ActiveNavLink
       label="Teams"
