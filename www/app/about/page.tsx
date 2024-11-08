@@ -4,6 +4,40 @@ import Link from "next/link";
 export default function AboutPage() {
   return (
     <Stack>
+      <Title order={2}>What is FootballPace?</Title>
+      <Text>
+        Football Pace is a version of the standings table that accounts for
+        strength of schedule. It looks at historical data to see how a typical
+        champion performs in each match, based on home/away and the opponent
+        {"'"}s finishing position. It then presents a new version of the
+        standings table, that shows how each team is doing compared to typical
+        championship pace, given their schedule so far.
+      </Text>
+      <Text>Most specifically, for each match, we determine:</Text>
+      <List>
+        <ListItem>
+          The opponent{"'"}s{" "}
+          <Text fw={700} span>
+            Projected Finishing Position
+          </Text>
+          , based on the opponent{"'"}s finish this year and last year.
+        </ListItem>
+        <ListItem>
+          The match{"'"}s{" "}
+          <Text fw={700} span>
+            Expected Points
+          </Text>
+          , based on how historical league champions perform in matches against
+          opponents who finished in that position.
+        </ListItem>
+        <ListItem>
+          The cumulative{" "}
+          <Text fw={700} span>
+            Championship Pace
+          </Text>
+          , based on the sum of all expected points for the season so far.
+        </ListItem>
+      </List>
       <Title order={2}>About FootballPace</Title>
       <Stack gap="xs">
         <Text>

@@ -51,7 +51,7 @@ export default async function RecentPaceTable({
             <TableTh ta="center">#</TableTh>
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="center">Last Result</TableTh>
-            <TableTh ta="right">Last Result vs. Pace</TableTh>
+            <TableTh ta="right">vs. Expected</TableTh>
             <TableTh ta="right">Season vs. Pace</TableTh>
           </TableTr>
         </TableThead>

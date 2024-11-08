@@ -41,7 +41,7 @@ export default async function PaceTable({
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Pace</TableTh>
-            <TableTh ta="right">Delta</TableTh>
+            <TableTh ta="right">Season vs. Pace</TableTh>
             {[...Array(maxMatchday)].map((_, i) => (
               <TableTh ta="right" key={i}>
                 {i + 1}

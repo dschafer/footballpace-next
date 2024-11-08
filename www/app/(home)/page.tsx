@@ -25,7 +25,7 @@ export default function Home() {
         What is Football Pace?
       </Title>
 
-      <Spoiler maxHeight={80} showLabel="Read more" hideLabel="Hide">
+      <Spoiler maxHeight={75} showLabel="Read more" hideLabel="Hide">
         <Text>
           Football Pace is a version of the standings table that accounts for
           strength of schedule. It looks at historical data to see how a typical

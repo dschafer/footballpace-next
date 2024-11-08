@@ -25,7 +25,7 @@ export default function PaceTablePlaceholder({
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Pace</TableTh>
-            <TableTh ta="right">Delta</TableTh>
+            <TableTh ta="right">Season vs. Pace</TableTh>
             {[...Array(matchdayCount)].map((_, i) => (
               <TableTh ta="right" key={i}>
                 <Skeleton>{i + 1}</Skeleton>
