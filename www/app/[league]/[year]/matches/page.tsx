@@ -1,11 +1,7 @@
-import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
 import { Stack, Title } from "@mantine/core";
+import { LeagueYearParam } from "@/lib/const/current";
 import Matches from "@/components/matches/matches";
 import leagues from "@/lib/const/leagues";
-
-export function generateStaticParams(): LeagueYearParam[] {
-  return currentSeasons;
-}
 
 export default function MatchesPage({ params }: { params: LeagueYearParam }) {
   const yearInt = parseInt(params.year);
