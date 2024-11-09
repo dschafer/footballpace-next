@@ -67,6 +67,17 @@ class VercelPostgresResource(ConfigurableResource):
             )
             return cur.rowcount
 
+    def upsert_fixtures(self, fixtures: list[dict[str, Any]]) -> int:
+        """Given a list of team colors, upserts them into the DB."""
+        with self._db_connection.cursor() as cur:
+            cur.executemany(
+                """INSERT INTO fixtures (league, year, home_team, away_team, kickoff_time)
+    VALUES(%(Div)s, %(Season)s, %(TeamH)s, %(TeamA)s, %(KickoffTime)s)
+    ON CONFLICT (league, year, home_team, away_team) DO UPDATE SET kickoff_time = EXCLUDED.kickoff_time;""",
+                fixtures,
+            )
+            return cur.rowcount
+
 
 MatchResultsTableSchema = TableSchema(
     columns=[
@@ -75,7 +86,10 @@ MatchResultsTableSchema = TableSchema(
         ),
         TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
         TableColumn(
-            "date", "datetime", constraints=TableColumnConstraints(nullable=False)
+            "date",
+            "datetime",
+            description="The date of the match, with no time included",
+            constraints=TableColumnConstraints(nullable=False),
         ),
         TableColumn(
             "home_team", "string", constraints=TableColumnConstraints(nullable=False)
@@ -144,6 +158,27 @@ TeamColorsTableSchema = TableSchema(
             "secondary_color",
             "string",
             constraints=TableColumnConstraints(nullable=True),
+        ),
+    ],
+)
+
+FixturesTableSchema = TableSchema(
+    columns=[
+        TableColumn(
+            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
+        TableColumn(
+            "kickoff_time",
+            "datetime",
+            description="The date and time of match kickoff, specified without a time zone (and hence assumed to be in local time for the league)",
+            constraints=TableColumnConstraints(nullable=False),
+        ),
+        TableColumn(
+            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
+        ),
+        TableColumn(
+            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
         ),
     ],
 )

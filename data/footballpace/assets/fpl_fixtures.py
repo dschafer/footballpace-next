@@ -23,6 +23,7 @@ from footballpace.dataversion import (
 )
 from footballpace.resources.http import HTTPResource
 from footballpace.resources.vercel import (
+    FixturesTableSchema,
     MatchResultsTableSchema,
     VercelPostgresResource,
 )
@@ -101,6 +102,8 @@ FPLFixturesDataFrame = create_dagster_pandas_dataframe_type(
         PandasColumn.integer_column("TeamAScore", min_value=0),
         PandasColumn.string_column("TeamH"),
         PandasColumn.integer_column("TeamHScore", min_value=0),
+        PandasColumn.string_column("Div"),
+        PandasColumn.integer_column("Season"),
     ],
     metadata_fn=lambda df: {
         "dagster/row_count": len(df),
@@ -161,6 +164,10 @@ def fpl_fixtures_df(
     df["TeamAScore"] = df["TeamAScore"].astype("Int64")
     df["TeamH"] = df["TeamH"].map(team_idents_dict).map(canonical_name)
     df["TeamHScore"] = df["TeamHScore"].astype("Int64")
+    df["Div"] = "E0"
+    df["Season"] = (
+        datetime.now().year if datetime.now().month >= 8 else datetime.now().year - 1
+    )
 
     data_version = df_data_version(df)
 
@@ -183,6 +190,30 @@ def fpl_fixtures_df(
         },
         data_version=DataVersion(data_version),
     )
+
+
+@asset(
+    group_name="FPL",
+    kinds={"Postgres"},
+    code_version="v1",
+    ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
+    metadata={
+        "dagster/column_schema": FixturesTableSchema,
+        "dagster/table_name": "fixtures",
+    },
+    tags={"db_write": "true"},
+    automation_condition=AutomationCondition.eager(),
+)
+def fpl_fixtures_postgres(
+    fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+) -> Output[None]:
+    """Writes the fixtures from FPL into Postgres."""
+    rows = [
+        {str(col): val for col, val in row.items()}
+        for row in fpl_fixtures_df.to_dict("records")
+    ]
+    rowcount = vercel_postgres.upsert_fixtures(rows)
+    return Output(None, metadata={"dagster/row_count": rowcount})
 
 
 FPLResultsDataFrame = create_dagster_pandas_dataframe_type(
@@ -242,10 +273,6 @@ def fpl_results_df(
         )
     )
     df["Date"] = df["Date"].dt.normalize()
-    df["Div"] = "E0"
-    df["Season"] = (
-        datetime.now().year if datetime.now().month >= 8 else datetime.now().year - 1
-    )
     df["FTR"] = df.apply(result_from_row, axis=1)
 
     data_version = df_data_version(df)
@@ -284,7 +311,7 @@ def fpl_results_df(
 def fpl_results_postgres(
     fpl_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> Output[None]:
-    """Writes the fixtures from FPL into Postgres."""
+    """Writes the results from FPL into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in fpl_results_df.to_dict("records")
