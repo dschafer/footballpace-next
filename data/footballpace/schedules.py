@@ -37,7 +37,7 @@ fpl_refresh_schedule = ScheduleDefinition(
     name="fpl_refresh_schedule",
     cron_schedule="0 * * * *",
     target=AssetSelection.assets(
-        "fpl_bootstrap_json", "fpl_fixtures_json", "fpl_fixtures_df"
+        "fpl_bootstrap_json", "fpl_fixtures_json", "fpl_fixtures_df", "fpl_results_df"
     ),
     default_status=DefaultScheduleStatus.RUNNING,
 )
