@@ -62,10 +62,10 @@ export default async function Matches({
             <AccordionControl>
               <Title order={4}>{month}</Title>
             </AccordionControl>
-            <AccordionPanel p="md">
+            <AccordionPanel>
               {Array.from(matchesDict).map(([date, matches]) => (
                 <Stack key={date}>
-                  <Title order={4}>{date}</Title>
+                  <Title order={5}>{date}</Title>
                   <List listStyleType="none" pb="md">
                     {matches!.map((match, j) => (
                       <ListItem key={j}>

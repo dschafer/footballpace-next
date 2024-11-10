@@ -53,7 +53,7 @@ export default async function Fixtures({
             <AccordionControl>
               <Title order={4}>{month}</Title>
             </AccordionControl>
-            <AccordionPanel p="md">
+            <AccordionPanel>
               <FixturesMonth
                 fixtures={fixturesDict}
                 dateHeadings={dateHeadings}

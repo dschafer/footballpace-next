@@ -18,7 +18,7 @@ export default async function FixturesMonth({
       <>
         {Array.from(fixtures).map(([date, fixtures]) => (
           <Stack key={date}>
-            <Title order={4}>{date}</Title>
+            <Title order={5}>{date}</Title>
             <List listStyleType="none" pb="md">
               {fixtures!.map((fixture, j) => (
                 <ListItem key={j}>
@@ -55,7 +55,7 @@ export default async function FixturesMonth({
   } else {
     const allFixtures = Array.from(fixtures.values()).flat();
     return (
-      <List listStyleType="none" pb="md">
+      <List listStyleType="none">
         {allFixtures.map((fixture, i) => (
           <ListItem key={i}>
             <Anchor
