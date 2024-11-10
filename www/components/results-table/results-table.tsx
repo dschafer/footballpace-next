@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Box,
   NumberFormatter,
   Table,
@@ -16,7 +15,7 @@ import ColoredCell from "../pace-display/colored-cell";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
 
-export default async function FixturesTable({
+export default async function ResultsTable({
   paceMatches,
   team,
 }: {

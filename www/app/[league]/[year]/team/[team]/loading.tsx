@@ -1,7 +1,7 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import FixturesTablePlaceholder from "@/components/results-table/results-table-placeholder";
 import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
+import ResultsTablePlaceholder from "@/components/results-table/results-table-placeholder";
 
 export default function SeasonLoading() {
   return (
@@ -20,7 +20,7 @@ export default function SeasonLoading() {
       <Title order={3}>
         <Skeleton>Recent Matches</Skeleton>
       </Title>
-      <FixturesTablePlaceholder rowCount={3} />
+      <ResultsTablePlaceholder rowCount={3} />
       <Title order={3}>
         <Skeleton>Table</Skeleton>
       </Title>
@@ -32,7 +32,7 @@ export default function SeasonLoading() {
       <Title order={3}>
         <Skeleton>Full Schedule</Skeleton>
       </Title>
-      <FixturesTablePlaceholder rowCount={38} />
+      <ResultsTablePlaceholder rowCount={38} />
     </Stack>
   );
 }

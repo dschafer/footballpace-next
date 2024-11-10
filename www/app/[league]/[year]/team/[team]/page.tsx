@@ -1,8 +1,8 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
-import FixturesTable from "@/components/results-table/results-table";
 import Link from "next/link";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
+import ResultsTable from "@/components/results-table/results-table";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
@@ -44,7 +44,7 @@ export default async function SeasonPage({
         </Text>
       </Anchor>
       <Title order={3}>Recent Matches</Title>
-      <FixturesTable paceMatches={previewMatches} team={teamDecoded} />
+      <ResultsTable paceMatches={previewMatches} team={teamDecoded} />
       <Title order={3}>Table</Title>
       <PaceTable
         paceTeams={paceTeams.slice(
@@ -56,7 +56,7 @@ export default async function SeasonPage({
       <Title order={3}>Pace Chart</Title>
       <PaceChart paceTeams={[paceTeam]} allColors={allColors} />
       <Title order={3}>Full Schedule</Title>
-      <FixturesTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
+      <ResultsTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
     </Stack>
   );
 }

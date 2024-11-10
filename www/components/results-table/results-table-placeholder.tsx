@@ -9,7 +9,7 @@ import {
   TableTr,
 } from "@mantine/core";
 
-export default function FixturesTablePlaceholder({
+export default function ResultsTablePlaceholder({
   rowCount,
 }: {
   rowCount: number;
