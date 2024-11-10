@@ -30,7 +30,7 @@ export const ActiveNavLink = createPolymorphicComponent<
     }
 
     return (
-      <NavLink active={active} {...others}>
+      <NavLink active={active} defaultOpened={active} {...others}>
         {others.children}
       </NavLink>
     );
