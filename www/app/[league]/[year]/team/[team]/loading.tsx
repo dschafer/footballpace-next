@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import FixturesTablePlaceholder from "@/components/fixtures-table/fixtures-table-placeholder";
+import FixturesTablePlaceholder from "@/components/results-table/results-table-placeholder";
 import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
 

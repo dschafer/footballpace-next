@@ -1,5 +1,5 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
-import FixturesTable from "@/components/fixtures-table/fixtures-table";
+import FixturesTable from "@/components/results-table/results-table";
 import Link from "next/link";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
