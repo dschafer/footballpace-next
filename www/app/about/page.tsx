@@ -63,6 +63,24 @@ export default function AboutPage() {
           </Link>
           .
         </Text>
+        <Text>
+          The original inspiration for this is from the Reddit user{" "}
+          <Link href="https://www.reddit.com/user/AndrycApp/">AndrycApp</Link>
+          {"'"}s par table{" "}
+          <Link href="https://www.reddit.com/r/soccer/comments/2rx7ho/andrycapps_epl_par_table_game_week_20/">
+            posts
+          </Link>
+          ; the term {'"'}pace{'"'} is used here instead to clarify that teams
+          want to be{" "}
+          <Text span fs="italic">
+            ahead
+          </Text>{" "}
+          of pace (whereas with par in golf, you generally want to be{" "}
+          <Text span fs="italic">
+            below
+          </Text>{" "}
+          par).
+        </Text>
       </Stack>
       <Title order={3}>FAQ</Title>
       <List>
