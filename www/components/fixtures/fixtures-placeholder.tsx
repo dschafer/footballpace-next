@@ -1,6 +1,6 @@
 import { List, ListItem, Skeleton, Stack, Title } from "@mantine/core";
 
-export default function MatchesPlaceholder({
+export default function FixturesPlaceholder({
   dayCount,
   matchCount,
 }: {
@@ -17,7 +17,7 @@ export default function MatchesPlaceholder({
           <List listStyleType="none">
             {[...Array(matchCount)].map((_, j) => (
               <ListItem key={j}>
-                <Skeleton>Arsenal 2-0 Tottenham</Skeleton>
+                <Skeleton>(15:00) Arsenal vs. Tottenham</Skeleton>
               </ListItem>
             ))}
           </List>

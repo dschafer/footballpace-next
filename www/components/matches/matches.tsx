@@ -36,7 +36,7 @@ export default async function Matches({
     <Stack>
       {Array.from(matchesByDay).map(([date, matches]) => (
         <Stack key={date}>
-          <Title order={3}>{date}</Title>
+          <Title order={4}>{date}</Title>
           <List listStyleType="none">
             {matches!.map((match, j) => (
               <ListItem key={j}>
