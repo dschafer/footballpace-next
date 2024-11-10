@@ -5,7 +5,7 @@ import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
 
-export default async function RecentPaceTable({
+export default async function Matches({
   league,
   year,
 }: {
