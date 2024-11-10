@@ -15,7 +15,7 @@ export default async function Fixtures({
     orderBy: { kickoffTime: "asc" },
   });
   if (fixtures.length == 0) {
-    return <Text>No future fixtures data available.</Text>;
+    return null;
   }
   // This is just Map.groupBy but that's not available in Node 20.
   const fixturesByDay: Map<string, Array<Fixture>> = new Map();
@@ -32,6 +32,7 @@ export default async function Fixtures({
 
   return (
     <Stack>
+      <Title order={3}>Fixtures</Title>
       {Array.from(fixturesByDay).map(([date, fixtures]) => (
         <Stack key={date}>
           <Title order={4}>{date}</Title>

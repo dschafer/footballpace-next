@@ -8,13 +8,7 @@ export default function MatchesLoading() {
       <Title order={2}>
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
-      <Title order={3}>
-        <Skeleton>Results</Skeleton>
-      </Title>
       <MatchesPlaceholder dayCount={10} matchCount={5} />
-      <Title order={3}>
-        <Skeleton>Fixtures</Skeleton>
-      </Title>
       <FixturesPlaceholder dayCount={10} matchCount={5} />
     </Stack>
   );

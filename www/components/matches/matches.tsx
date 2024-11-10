@@ -34,6 +34,7 @@ export default async function Matches({
 
   return (
     <Stack>
+      <Title order={3}>Matches</Title>
       {Array.from(matchesByDay).map(([date, matches]) => (
         <Stack key={date}>
           <Title order={4}>{date}</Title>

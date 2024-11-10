@@ -9,6 +9,9 @@ export default function FixturesPlaceholder({
 }) {
   return (
     <Stack>
+      <Title order={3}>
+        <Skeleton>Fixtures</Skeleton>
+      </Title>
       {[...Array(dayCount)].map((_, i) => (
         <Stack key={i}>
           <Title order={4}>
