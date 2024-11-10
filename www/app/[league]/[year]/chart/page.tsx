@@ -8,12 +8,7 @@ export default function ChartPage({ params }: { params: LeagueYearParam }) {
   const yearInt = parseInt(params.year);
   return (
     <Stack>
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
+      <Title order={2}>
         {leagues.get(params.league)?.name} {yearInt}
       </Title>
       <StandingsPaceChart league={params.league} year={yearInt} />

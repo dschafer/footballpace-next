@@ -4,12 +4,7 @@ import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder
 export default function ChartLoading() {
   return (
     <Stack>
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
+      <Title order={2}>
         <Skeleton>English Premier League 2023</Skeleton>
       </Title>
       <PaceChartPlaceholder />

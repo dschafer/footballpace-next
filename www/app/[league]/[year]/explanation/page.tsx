@@ -12,27 +12,13 @@ export default function ExplanationPage({
 }) {
   return (
     <Stack>
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Historical Pace
-      </Title>
+      <Title order={2}>Historical Pace</Title>
       <HistoricalPacePreamble />
       <HistoricalPaceTable
         league={params.league}
         year={parseInt(params.year)}
       />
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Estimated Standings
-      </Title>
+      <Title order={2}>Estimated Standings</Title>
       <ProjectedStandingsPreamble />
       <ProjectedStandingsTable
         league={params.league}

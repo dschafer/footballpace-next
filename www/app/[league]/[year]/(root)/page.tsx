@@ -9,12 +9,7 @@ export default function PacePage({ params }: { params: LeagueYearParam }) {
   const yearInt = parseInt(params.year);
   return (
     <Stack>
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
+      <Title order={2}>
         {leagues.get(params.league)?.name} {yearInt}
       </Title>
       <StandingsPaceTable league={params.league} year={yearInt} />

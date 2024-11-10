@@ -31,14 +31,7 @@ export default async function SeasonPage({
 
   return (
     <Stack>
-      <Title
-        order={2}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        {teamDecoded}
-      </Title>
+      <Title order={2}>{teamDecoded}</Title>
       <Anchor
         component={Link}
         href={`/${params.league}/${yearInt}`}
@@ -50,23 +43,9 @@ export default async function SeasonPage({
           {leagues.get(params.league)?.name} {yearInt}
         </Text>
       </Anchor>
-      <Title
-        order={3}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Recent Matches
-      </Title>
+      <Title order={3}>Recent Matches</Title>
       <FixturesTable paceMatches={previewMatches} team={teamDecoded} />
-      <Title
-        order={3}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Table
-      </Title>
+      <Title order={3}>Table</Title>
       <PaceTable
         paceTeams={paceTeams.slice(
           Math.max(pacePlace - 2, 0),
@@ -74,23 +53,9 @@ export default async function SeasonPage({
         )}
         startPlace={Math.max(pacePlace - 2, 0)}
       />
-      <Title
-        order={3}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Pace Chart
-      </Title>
+      <Title order={3}>Pace Chart</Title>
       <PaceChart paceTeams={[paceTeam]} allColors={allColors} />
-      <Title
-        order={3}
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        Full Schedule
-      </Title>
+      <Title order={3}>Full Schedule</Title>
       <FixturesTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
     </Stack>
   );
