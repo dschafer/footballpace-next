@@ -14,10 +14,12 @@ export default function FixturesPlaceholder({
   monthCount,
   dayCount,
   matchCount,
+  dateHeadings,
 }: {
   monthCount: number;
   dayCount: number;
   matchCount: number;
+  dateHeadings: boolean;
 }) {
   return (
     <Stack>

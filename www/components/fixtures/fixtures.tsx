@@ -3,32 +3,20 @@ import {
   AccordionControl,
   AccordionItem,
   AccordionPanel,
-  Anchor,
-  List,
-  ListItem,
   Stack,
   Title,
 } from "@mantine/core";
 import { Fixture } from "@prisma/client";
-import Link from "next/link";
+import FixturesMonth from "./fixtures-month";
 import leagues from "@/lib/const/leagues";
-import prisma from "@/lib/prisma";
 
 export default async function Fixtures({
-  league,
-  year,
+  fixtures,
+  dateHeadings,
 }: {
-  league: string;
-  year: number;
+  fixtures: Fixture[];
+  dateHeadings: boolean;
 }) {
-  const fixtures = await prisma.fixture.findMany({
-    where: {
-      league: league,
-      year: year,
-      kickoffTime: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // Only show today and future fixtures
-    },
-    orderBy: { kickoffTime: "asc" },
-  });
   if (fixtures.length == 0) {
     return null;
   }
@@ -36,7 +24,7 @@ export default async function Fixtures({
   const fixturesByDay: Map<string, Array<Fixture>> = new Map();
   for (const fixture of fixtures) {
     const key = fixture.kickoffTime.toLocaleDateString([], {
-      timeZone: leagues.get(league)?.tz,
+      timeZone: leagues.get(fixture.league)?.tz,
     });
     if (!fixturesByDay.has(key)) {
       fixturesByDay.set(key, []);
@@ -66,40 +54,10 @@ export default async function Fixtures({
               <Title order={4}>{month}</Title>
             </AccordionControl>
             <AccordionPanel p="md">
-              {Array.from(fixturesDict).map(([date, fixtures]) => (
-                <Stack key={date}>
-                  <Title order={4}>{date}</Title>
-                  <List listStyleType="none" pb="md">
-                    {fixtures!.map((fixture, j) => (
-                      <ListItem key={j}>
-                        (
-                        {fixture.kickoffTime.toLocaleTimeString([], {
-                          timeZone: leagues.get(league)?.tz,
-                          timeStyle: "short",
-                        })}
-                        ){" "}
-                        <Anchor
-                          component={Link}
-                          href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
-                          underline="never"
-                          c="var(--mantine-color-text)"
-                        >
-                          {fixture.homeTeam}
-                        </Anchor>{" "}
-                        vs.{" "}
-                        <Anchor
-                          component={Link}
-                          href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
-                          underline="never"
-                          c="var(--mantine-color-text)"
-                        >
-                          {fixture.awayTeam}
-                        </Anchor>
-                      </ListItem>
-                    ))}
-                  </List>
-                </Stack>
-              ))}
+              <FixturesMonth
+                fixtures={fixturesDict}
+                dateHeadings={dateHeadings}
+              />
             </AccordionPanel>
           </AccordionItem>
         ))}
