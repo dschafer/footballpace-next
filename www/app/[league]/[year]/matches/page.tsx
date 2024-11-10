@@ -1,4 +1,4 @@
-import { Stack, Title } from "@mantine/core";
+import { SimpleGrid, Stack, Title } from "@mantine/core";
 import Fixtures from "@/components/fixtures/fixtures";
 import { LeagueYearParam } from "@/lib/const/current";
 import Matches from "@/components/matches/matches";
@@ -11,8 +11,10 @@ export default function MatchesPage({ params }: { params: LeagueYearParam }) {
       <Title order={2}>
         {leagues.get(params.league)?.name} {yearInt}
       </Title>
-      <Matches league={params.league} year={yearInt} />
-      <Fixtures league={params.league} year={yearInt} />
+      <SimpleGrid cols={{ base: 1, lg: 2 }}>
+        <Matches league={params.league} year={yearInt} />
+        <Fixtures league={params.league} year={yearInt} />
+      </SimpleGrid>
     </Stack>
   );
 }
