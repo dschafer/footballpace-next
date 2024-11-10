@@ -20,7 +20,7 @@ enum Result {
 model Match {
   league      String
   year        Int
-  date        DateTime
+  date        DateTime @db.Date
   homeTeam    String   @map("home_team")
   awayTeam    String   @map("away_team")
   ftHomeGoals Int      @map("ft_home_goals")
@@ -34,7 +34,7 @@ model Match {
 model Fixture {
   league      String
   year        Int
-  kickoffTime DateTime @map("kickoff_time")
+  kickoffTime DateTime @map("kickoff_time") @db.Timestamptz(3)
   homeTeam    String   @map("home_team")
   awayTeam    String   @map("away_team")
 
