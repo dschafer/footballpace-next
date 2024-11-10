@@ -97,7 +97,7 @@ FPLFixturesDataFrame = create_dagster_pandas_dataframe_type(
     name="FPLFixturesDataFrame",
     columns=[
         PandasColumn.boolean_column("FinishedProvisional"),
-        PandasColumn.datetime_column("KickoffTime"),
+        PandasColumn.datetime_column("KickoffTime", tz="UTC"),
         PandasColumn.string_column("TeamA"),
         PandasColumn.integer_column("TeamAScore", min_value=0),
         PandasColumn.string_column("TeamH"),
@@ -157,9 +157,7 @@ def fpl_fixtures_df(
     fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
     team_idents_dict = team_idents(fpl_bootstrap_obj)
     df["FinishedProvisional"] = df["FinishedProvisional"].astype(bool)
-    df["KickoffTime"] = pd.to_datetime(
-        df["KickoffTime"], format="ISO8601"
-    ).dt.tz_convert(None)
+    df["KickoffTime"] = pd.to_datetime(df["KickoffTime"], format="ISO8601")
     df["TeamA"] = df["TeamA"].map(team_idents_dict).map(canonical_name)
     df["TeamAScore"] = df["TeamAScore"].astype("Int64")
     df["TeamH"] = df["TeamH"].map(team_idents_dict).map(canonical_name)
@@ -221,7 +219,7 @@ FPLResultsDataFrame = create_dagster_pandas_dataframe_type(
     columns=[
         PandasColumn.string_column("Div"),
         PandasColumn.integer_column("Season"),
-        PandasColumn.datetime_column("Date"),
+        PandasColumn.datetime_column("Date", tz=None),
         PandasColumn.string_column("HomeTeam"),
         PandasColumn.string_column("AwayTeam"),
         PandasColumn.integer_column("FTHG", min_value=0),
@@ -272,7 +270,7 @@ def fpl_results_df(
             }
         )
     )
-    df["Date"] = df["Date"].dt.normalize()
+    df["Date"] = df["Date"].dt.tz_convert(None).dt.normalize()
     df["FTR"] = df.apply(result_from_row, axis=1)
 
     data_version = df_data_version(df)

@@ -88,7 +88,7 @@ MatchResultsTableSchema = TableSchema(
         TableColumn(
             "date",
             "datetime",
-            description="The date of the match, with no time included",
+            description="The date of the match. This is a datetime with the appropriate date, no timezone and the time set to 00:00:00",
             constraints=TableColumnConstraints(nullable=False),
         ),
         TableColumn(
@@ -171,7 +171,7 @@ FixturesTableSchema = TableSchema(
         TableColumn(
             "kickoff_time",
             "datetime",
-            description="The date and time of match kickoff, specified without a time zone (and hence assumed to be in local time for the league)",
+            description="The date and time of match kickoff with appropriate timezone",
             constraints=TableColumnConstraints(nullable=False),
         ),
         TableColumn(
