@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Text, Title } from "@mantine/core";
+import { SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core";
 import RecentPaceTablePlaceholder from "@/components/recent-pace-table/recent-pace-table-placeholder";
 import leagues from "@/lib/const/leagues";
 
@@ -14,25 +14,27 @@ export default function Home() {
         standings table, that shows how each team is doing compared to typical
         championship pace, given their schedule so far.
       </Text>
-      {Array.from(leagues).map(([leagueCode, _]) => (
-        <Stack key={leagueCode}>
-          <Title order={2}>
-            <Skeleton>English Premier League 2023</Skeleton>
-          </Title>
-          <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
-            <RecentPaceTablePlaceholder rowCount={5} key={leagueCode} />
-            <Skeleton
-              ta="right"
-              style={{
-                alignSelf: "flex-end",
-              }}
-              width={100}
-            >
-              Full Table »
-            </Skeleton>
+      <SimpleGrid cols={{ base: 1, lg: 2 }}>
+        {Array.from(leagues).map(([leagueCode, _]) => (
+          <Stack key={leagueCode}>
+            <Title order={2}>
+              <Skeleton>English Premier League 2023</Skeleton>
+            </Title>
+            <Stack style={{ maxWidth: "var(--mantine-breakpoint-md)" }}>
+              <RecentPaceTablePlaceholder rowCount={5} key={leagueCode} />
+              <Skeleton
+                ta="right"
+                style={{
+                  alignSelf: "flex-end",
+                }}
+                width={100}
+              >
+                Full Table »
+              </Skeleton>
+            </Stack>
           </Stack>
-        </Stack>
-      ))}
+        ))}
+      </SimpleGrid>
     </Stack>
   );
 }

@@ -20,17 +20,19 @@ export default function RecentPaceTablePlaceholder({
       <Table stickyHeader striped>
         <Box component="colgroup">
           <Box component="col" width="5%" />
-          <Box component="col" width="40%" />
+          <Box component="col" width="35%" />
           <Box component="col" width="25%" />
           <Box component="col" width="15%" />
-          <Box component="col" width="15%" />
+          <Box component="col" width="10%" />
+          <Box component="col" width="10%" />
         </Box>
         <TableThead>
           <TableTr>
             <TableTh ta="center">#</TableTh>
             <TableTh ta="left">Team</TableTh>
-            <TableTh ta="center">Last Result</TableTh>
+            <TableTh ta="right">Last Result</TableTh>
             <TableTh ta="right">vs. Expected</TableTh>
+            <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Season vs. Pace</TableTh>
           </TableTr>
         </TableThead>
@@ -47,6 +49,9 @@ export default function RecentPaceTablePlaceholder({
                 </TableTd>
                 <TableTd ta="right" p="0">
                   <Skeleton>+3</Skeleton>
+                </TableTd>
+                <TableTd ta="right" p="xs">
+                  <Skeleton>3</Skeleton>
                 </TableTd>
                 <TableTd ta="right" p="0">
                   <Skeleton>+3</Skeleton>

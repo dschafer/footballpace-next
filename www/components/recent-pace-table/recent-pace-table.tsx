@@ -53,9 +53,7 @@ export default async function RecentPaceTable({
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="right">Last Result</TableTh>
             <TableTh ta="right">vs. Expected</TableTh>
-            <TableTh ta="right" pr={0}>
-              Points
-            </TableTh>
+            <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Season vs. Pace</TableTh>
           </TableTr>
         </TableThead>
@@ -84,11 +82,11 @@ export default async function RecentPaceTable({
                   />
                 </TableTd>
                 <PaceTableCell paceMatch={lastMatch} />
-                <TableTd ta="right" p="0">
+                <TableTd ta="right" p="xs">
                   {paceTeam.points}
                 </TableTd>
                 <TableTd ta="right" p="0" fw={700}>
-                  <Box w="100%" h="100%" p="0.5rem">
+                  <Box w="100%" h="100%" p="xs">
                     <PaceNumber pace={paceTeam.delta} />
                   </Box>
                 </TableTd>
