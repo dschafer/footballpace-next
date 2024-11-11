@@ -1,5 +1,6 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
 import Link from "next/link";
+import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
@@ -56,6 +57,11 @@ export default async function SeasonPage({
       />
       <Title order={3}>Pace Chart</Title>
       <PaceChart paceTeams={[paceTeam]} allColors={allColors} />
+      <OpponentsTable
+        league={params.league}
+        year={yearInt}
+        paceTeam={paceTeam}
+      />
       <Title order={3}>Full Results</Title>
       <ResultsTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
       <TeamFixtures league={params.league} year={yearInt} team={teamDecoded} />
