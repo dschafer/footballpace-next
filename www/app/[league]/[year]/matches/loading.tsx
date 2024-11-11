@@ -10,7 +10,12 @@ export default function MatchesLoading() {
       </Title>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
         <MatchesPlaceholder monthCount={5} dayCount={10} matchCount={5} />
-        <FixturesPlaceholder monthCount={5} dayCount={10} matchCount={5} />
+        <FixturesPlaceholder
+          monthCount={5}
+          dayCount={10}
+          matchCount={5}
+          dateHeadings={true}
+        />
       </SimpleGrid>
     </Stack>
   );

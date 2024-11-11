@@ -33,6 +33,7 @@ export default async function FixturesMonth({
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
                     underline="never"
                     c="var(--mantine-color-text)"
+                    inherit
                   >
                     {fixture.homeTeam}
                   </Anchor>{" "}
@@ -42,6 +43,7 @@ export default async function FixturesMonth({
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
                     underline="never"
                     c="var(--mantine-color-text)"
+                    inherit
                   >
                     {fixture.awayTeam}
                   </Anchor>
@@ -63,6 +65,7 @@ export default async function FixturesMonth({
               href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
               underline="never"
               c="var(--mantine-color-text)"
+              inherit
             >
               {fixture.homeTeam}
             </Anchor>{" "}
@@ -72,6 +75,7 @@ export default async function FixturesMonth({
               href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
               underline="never"
               c="var(--mantine-color-text)"
+              inherit
             >
               {fixture.awayTeam}
             </Anchor>{" "}
