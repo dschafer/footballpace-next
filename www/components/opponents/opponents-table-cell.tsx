@@ -1,4 +1,5 @@
 "use client";
+import { Fixture, PaceSheetEntry } from "@prisma/client";
 import {
   NumberFormatter,
   Stack,
@@ -7,23 +8,26 @@ import {
   isLightColor,
   useComputedColorScheme,
 } from "@mantine/core";
-import { PaceSheetEntry } from "@prisma/client";
+
 import { PaceTeam } from "@/lib/pace/pace";
 import { ProjectedStandingsRow } from "@/lib/pace/projections";
 import Result from "../pace-display/result";
+import leagues from "@/lib/const/leagues";
 
 export default function OpponentsTableCell({
   opponentFinish,
   home,
+  fixtures,
   paceSheetEntries,
   paceTeam,
-  projectedStandings,
+  projectedStandingsRow,
 }: {
   opponentFinish: number;
   home: boolean;
+  fixtures: Fixture[];
   paceSheetEntries: PaceSheetEntry[];
   paceTeam: PaceTeam;
-  projectedStandings: ProjectedStandingsRow[];
+  projectedStandingsRow: ProjectedStandingsRow;
 }) {
   const computedColorScheme = useComputedColorScheme("light");
   const paceSheetEntry = paceSheetEntries.filter(
@@ -32,11 +36,7 @@ export default function OpponentsTableCell({
   if (!paceSheetEntry) {
     return <TableTd />;
   }
-  const withoutTeamProjectedStandings = projectedStandings.filter(
-    (psr) => psr.team != paceTeam.team,
-  );
-  const projectedOpponent =
-    withoutTeamProjectedStandings[opponentFinish - 2].team;
+  const projectedOpponent = projectedStandingsRow.team;
   const maybePaceMatch = paceTeam.paceMatches.filter(
     (pm) =>
       (home &&
@@ -45,6 +45,13 @@ export default function OpponentsTableCell({
       (!home &&
         pm.match.awayTeam == paceTeam.team &&
         pm.match.homeTeam == projectedOpponent),
+  )[0];
+  const maybeFixture = fixtures.filter(
+    (f) =>
+      (home &&
+        f.homeTeam == paceTeam.team &&
+        f.awayTeam == projectedOpponent) ||
+      (!home && f.awayTeam == paceTeam.team && f.homeTeam == projectedOpponent),
   )[0];
 
   if (maybePaceMatch) {
@@ -78,29 +85,39 @@ export default function OpponentsTableCell({
       </TableTd>
     );
   } else {
-    let projText = (
+    let matchDesc = (
       <Text span fs="italic" c="dimmed" size="sm">
-        &nbsp;
+        {paceTeam.team}
         <br />
         {projectedOpponent}
       </Text>
     );
     if (!home) {
-      projText = (
+      matchDesc = (
         <Text span fs="italic" c="dimmed" size="sm">
           {projectedOpponent}
           <br />
-          &nbsp;
+          {paceTeam.team}
         </Text>
       );
+    }
+    let pointsRow = <>&nbsp;</>;
+    if (maybeFixture) {
+      const dateStr = maybeFixture.kickoffTime.toLocaleDateString([], {
+        timeZone: leagues.get(maybeFixture.league)?.tz,
+        dateStyle: "short",
+      });
+      pointsRow = <>{dateStr}</>;
     }
     return (
       <TableTd ta="right" p="xs">
         <Stack>
-          {projText}
           <Text span fs="italic" c="dimmed" size="sm">
+            {matchDesc}
+          </Text>
+          <Text span fs="italic" c="dimmed" size="sm">
+            {pointsRow}
             <br />
-            &nbsp;{" "}
             <Text span fw="500">
               Exp
             </Text>

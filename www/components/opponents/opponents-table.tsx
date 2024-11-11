@@ -3,7 +3,9 @@ import {
   Table,
   TableScrollContainer,
   TableTbody,
+  TableTd,
   TableTh,
+  TableThead,
   TableTr,
   Text,
   Title,
@@ -22,7 +24,15 @@ export default async function OpponentsTable({
   year: number;
   paceTeam: PaceTeam;
 }) {
-  const [paceSheetEntries, projectedStandings] = await Promise.all([
+  const [fixtures, paceSheetEntries, projectedStandings] = await Promise.all([
+    prisma.fixture.findMany({
+      where: {
+        league: league,
+        year: year,
+        OR: [{ homeTeam: paceTeam.team }, { awayTeam: paceTeam.team }],
+      },
+      orderBy: { kickoffTime: "asc" },
+    }),
     prisma.paceSheetEntry.findMany({
       where: { league: league, year: year, teamFinish: 1 },
     }),
@@ -32,82 +42,60 @@ export default async function OpponentsTable({
     return null;
   }
 
+  const teamPsr = projectedStandings.filter(
+    (psr) => psr.team == paceTeam.team,
+  )[0];
+  const arrangedProjectedStandings = projectedStandings.filter(
+    (psr) => psr.team != paceTeam.team,
+  );
+  arrangedProjectedStandings.unshift(teamPsr);
+
   return (
     <Stack>
       <Title order={3}>Opponents</Title>
-      <Text></Text>
+      <Text size="sm">
+        This shows all opponents in their projected order of finish (assuming
+        that {paceTeam.team} wins the league), and shows the results of the
+        matches played thus far. This is most useful mid-season, since it shows
+        whether a team has played their most difficult matches yet (those
+        against top teams and away from home). By the end of the season, every
+        cell will be filled in.
+      </Text>
       <TableScrollContainer minWidth={0}>
-        <Table stickyHeader striped="even">
+        <Table stickyHeader striped>
+          <TableThead>
+            <TableTr>
+              <TableTh ta="right">Pos</TableTh>
+              <TableTh ta="right">Team</TableTh>
+              <TableTh ta="right">Home</TableTh>
+              <TableTh ta="right">Away</TableTh>
+            </TableTr>
+          </TableThead>
           <TableTbody>
-            <TableTr bg="var(--mantine-color-dimmed)">
-              <TableTh>Opponent</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
-                <TableTh key={i} ta="right">
-                  {i == 0 ? "" : i + 1}
+            {arrangedProjectedStandings.map((psr, i) => (
+              <TableTr key={psr.team}>
+                <TableTd ta="right">{i + 1}</TableTd>
+                <TableTh scope="row" ta="right">
+                  {psr.team}
                 </TableTh>
-              ))}
-            </TableTr>
-            <TableTr>
-              <TableTh scope="row">Home</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
                 <OpponentsTableCell
-                  key={i}
                   home={true}
                   opponentFinish={i + 1}
+                  fixtures={fixtures}
                   paceSheetEntries={paceSheetEntries}
                   paceTeam={paceTeam}
-                  projectedStandings={projectedStandings}
+                  projectedStandingsRow={psr}
                 />
-              ))}
-            </TableTr>
-            <TableTr>
-              <TableTh scope="row">Away</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
                 <OpponentsTableCell
-                  key={i}
                   home={false}
                   opponentFinish={i + 1}
+                  fixtures={fixtures}
                   paceSheetEntries={paceSheetEntries}
                   paceTeam={paceTeam}
-                  projectedStandings={projectedStandings}
+                  projectedStandingsRow={psr}
                 />
-              ))}
-            </TableTr>
-            <TableTr />
-            <TableTr bg="var(--mantine-color-dimmed)">
-              <TableTh>Opponent</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
-                <TableTh key={i} ta="right">
-                  {i + projectedStandings.length / 2 + 1}
-                </TableTh>
-              ))}
-            </TableTr>
-            <TableTr>
-              <TableTh scope="row">Home</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
-                <OpponentsTableCell
-                  key={i}
-                  home={true}
-                  opponentFinish={i + projectedStandings.length / 2 + 1}
-                  paceSheetEntries={paceSheetEntries}
-                  paceTeam={paceTeam}
-                  projectedStandings={projectedStandings}
-                />
-              ))}
-            </TableTr>
-            <TableTr>
-              <TableTh scope="row">Away</TableTh>
-              {[...Array(projectedStandings.length / 2)].map((_, i) => (
-                <OpponentsTableCell
-                  key={i}
-                  home={false}
-                  opponentFinish={i + projectedStandings.length / 2 + 1}
-                  paceSheetEntries={paceSheetEntries}
-                  paceTeam={paceTeam}
-                  projectedStandings={projectedStandings}
-                />
-              ))}
-            </TableTr>
+              </TableTr>
+            ))}
           </TableTbody>
         </Table>
       </TableScrollContainer>
