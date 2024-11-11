@@ -10,6 +10,7 @@ import {
 import { PaceSheetEntry } from "@prisma/client";
 import { PaceTeam } from "@/lib/pace/pace";
 import { ProjectedStandingsRow } from "@/lib/pace/projections";
+import Result from "../pace-display/result";
 
 export default function OpponentsTableCell({
   opponentFinish,
@@ -57,16 +58,17 @@ export default function OpponentsTableCell({
     return (
       <TableTd ta="right" p="xs" bg={bg} color={fg}>
         <Stack>
+          <Result match={match} link={true} multiline={true} />
           <Text span size="sm">
-            {match.homeTeam}&nbsp;{match.ftHomeGoals}
+            <Text span fw="500">
+              Pts
+            </Text>
+            : <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />
             <br />
-            {match.awayTeam}&nbsp;{match.ftAwayGoals}
-          </Text>
-          <Text span size="sm">
-            Pts:{" "}
-            <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />
-            <br />
-            Exp:{" "}
+            <Text span fw="500">
+              Exp
+            </Text>
+            :{" "}
             <NumberFormatter
               value={paceSheetEntry.expectedPoints}
               decimalScale={2}
@@ -98,7 +100,11 @@ export default function OpponentsTableCell({
           {projText}
           <Text span fs="italic" c="dimmed" size="sm">
             <br />
-            &nbsp; Exp:{" "}
+            &nbsp;{" "}
+            <Text span fw="500">
+              Exp
+            </Text>
+            :{" "}
             <NumberFormatter
               value={paceSheetEntry.expectedPoints}
               decimalScale={2}
