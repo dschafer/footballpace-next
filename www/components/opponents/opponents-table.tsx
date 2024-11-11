@@ -11,11 +11,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import Link from "next/link";
 import OpponentsTableCell from "./opponents-table-cell";
 import { PaceTeam } from "@/lib/pace/pace";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 import prisma from "@/lib/prisma";
-import Link from "next/link";
 
 export default async function OpponentsTable({
   league,
