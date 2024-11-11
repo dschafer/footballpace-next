@@ -66,13 +66,13 @@ export default function OpponentsTableCell({
       <TableTd ta="right" p="xs" bg={bg} color={fg}>
         <Stack>
           <Result match={match} link={true} multiline={true} />
-          <Text span size="sm">
-            <Text span fw="500">
+          <Text span size="sm" inherit>
+            <Text span fw="500" inherit>
               Pts
             </Text>
             : <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />
             <br />
-            <Text span fw="500">
+            <Text span fw="500" inherit>
               Exp
             </Text>
             :{" "}
@@ -86,7 +86,7 @@ export default function OpponentsTableCell({
     );
   } else {
     let matchDesc = (
-      <Text span fs="italic" c="dimmed" size="sm">
+      <Text span fs="italic" c="dimmed" size="sm" inherit>
         {paceTeam.team}
         <br />
         {projectedOpponent}
@@ -94,7 +94,7 @@ export default function OpponentsTableCell({
     );
     if (!home) {
       matchDesc = (
-        <Text span fs="italic" c="dimmed" size="sm">
+        <Text span fs="italic" c="dimmed" size="sm" inherit>
           {projectedOpponent}
           <br />
           {paceTeam.team}
@@ -112,10 +112,10 @@ export default function OpponentsTableCell({
     return (
       <TableTd ta="right" p="xs">
         <Stack>
-          <Text span fs="italic" c="dimmed" size="sm">
+          <Text span fs="italic" c="dimmed" size="sm" inherit>
             {matchDesc}
           </Text>
-          <Text span fs="italic" c="dimmed" size="sm">
+          <Text span fs="italic" c="dimmed" size="sm" inherit>
             {pointsRow}
             <br />
             <Text span fw="500">

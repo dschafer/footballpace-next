@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Stack,
   Table,
   TableScrollContainer,
@@ -14,6 +15,7 @@ import OpponentsTableCell from "./opponents-table-cell";
 import { PaceTeam } from "@/lib/pace/pace";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function OpponentsTable({
   league,
@@ -54,10 +56,13 @@ export default async function OpponentsTable({
     <Stack>
       <Title order={3}>Opponents</Title>
       <Text size="sm">
-        This shows all opponents in their projected order of finish (assuming
-        that {paceTeam.team} wins the league), and shows the results of the
-        matches played thus far. This is most useful mid-season, since it shows
-        whether a team has played their most difficult matches yet (those
+        This shows all opponents in their{" "}
+        <Anchor component={Link} href={`/${league}/${year}/explanation`}>
+          projected order of finish
+        </Anchor>{" "}
+        (assuming that {paceTeam.team} wins the league), and shows the results
+        of the matches played thus far. This is most useful mid-season, since it
+        shows whether a team has played their most difficult matches yet (those
         against top teams and away from home). By the end of the season, every
         cell will be filled in.
       </Text>
