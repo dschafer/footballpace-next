@@ -61,10 +61,18 @@ export default async function OpponentsTable({
           projected order of finish
         </Anchor>{" "}
         (assuming that {paceTeam.team} wins the league), and shows the results
-        of the matches played thus far. This is most useful mid-season, since it
-        shows whether a team has played their most difficult matches yet (those
-        against top teams and away from home). By the end of the season, every
-        cell will be filled in.
+        of the matches played thus far, including the points taken from the
+        match (
+        <Text span fw="500" inherit>
+          Pts
+        </Text>
+        ) and the expected points from the match (
+        <Text span fw="500" inherit>
+          Exp
+        </Text>
+        ). This is most useful mid-season, since it shows whether a team has
+        played their most difficult matches yet (those against top teams and
+        away from home). By the end of the season, every cell will be filled in.
       </Text>
       <TableScrollContainer minWidth={0}>
         <Table stickyHeader striped>

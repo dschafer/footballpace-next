@@ -70,8 +70,7 @@ export default function OpponentsTableCell({
             <Text span fw="500" inherit>
               Pts
             </Text>
-            : <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />
-            <br />
+            : <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />{" "}
             <Text span fw="500" inherit>
               Exp
             </Text>
@@ -85,30 +84,31 @@ export default function OpponentsTableCell({
       </TableTd>
     );
   } else {
-    let matchDesc = (
-      <Text span fs="italic" c="dimmed" size="sm" inherit>
-        {paceTeam.team}
-        <br />
-        {projectedOpponent}
-      </Text>
-    );
-    if (!home) {
-      matchDesc = (
-        <Text span fs="italic" c="dimmed" size="sm" inherit>
-          {projectedOpponent}
-          <br />
-          {paceTeam.team}
-        </Text>
-      );
-    }
-    let pointsRow = <>&nbsp;</>;
+    let dateInfo = <>&nbsp;</>;
     if (maybeFixture) {
       const dateStr = maybeFixture.kickoffTime.toLocaleDateString([], {
         timeZone: leagues.get(maybeFixture.league)?.tz,
         dateStyle: "short",
       });
-      pointsRow = <>{dateStr}</>;
+      dateInfo = <>{dateStr}</>;
     }
+    let matchDesc = (
+      <Text span fs="italic" c="dimmed" size="sm" inherit>
+        {dateInfo}
+        <br />
+        vs {projectedOpponent}
+      </Text>
+    );
+    if (!home) {
+      matchDesc = (
+        <Text span fs="italic" c="dimmed" size="sm" inherit>
+          at {projectedOpponent}
+          <br />
+          {dateInfo}
+        </Text>
+      );
+    }
+
     return (
       <TableTd ta="right" p="xs">
         <Stack>
@@ -116,8 +116,6 @@ export default function OpponentsTableCell({
             {matchDesc}
           </Text>
           <Text span fs="italic" c="dimmed" size="sm" inherit>
-            {pointsRow}
-            <br />
             <Text span fw="500">
               Exp
             </Text>
