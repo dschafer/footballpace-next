@@ -57,6 +57,7 @@ export default async function PaceTable({
                 <Anchor
                   component={Link}
                   href={`/${paceTeam.league}/${paceTeam.year}/team/${paceTeam.team}`}
+                  inherit
                 >
                   {paceTeam.team}
                 </Anchor>

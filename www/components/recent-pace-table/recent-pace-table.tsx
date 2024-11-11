@@ -70,6 +70,7 @@ export default async function RecentPaceTable({
                   <Anchor
                     component={Link}
                     href={`/${league}/${year}/team/${paceTeam.team}`}
+                    inherit
                   >
                     {paceTeam.team}
                   </Anchor>

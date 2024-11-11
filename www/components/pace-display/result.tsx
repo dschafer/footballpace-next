@@ -43,6 +43,7 @@ export default function Result({
         underline="never"
         c={homeC}
         fw={homeFw}
+        inherit
       >
         {homeTeam}
       </Anchor>
@@ -54,24 +55,25 @@ export default function Result({
         underline="never"
         c={awayC}
         fw={awayFw}
+        inherit
       >
         {awayTeam}
       </Anchor>
     );
   }
   let home = (
-    <Text c={homeC} fw={homeFw} span={true}>
+    <Text c={homeC} fw={homeFw} span={true} inherit>
       {homeTeam} {match.ftHomeGoals}
     </Text>
   );
   let away = (
-    <Text c={awayC} fw={awayFw} span={true}>
+    <Text c={awayC} fw={awayFw} span={true} inherit>
       {match.ftAwayGoals} {awayTeam}
     </Text>
   );
 
   return (
-    <Text span={true}>
+    <Text span={true} inherit>
       {home}:{away}
     </Text>
   );
