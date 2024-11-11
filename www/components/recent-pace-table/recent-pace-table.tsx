@@ -51,7 +51,7 @@ export default async function RecentPaceTable({
           <TableTr>
             <TableTh ta="center">#</TableTh>
             <TableTh ta="left">Team</TableTh>
-            <TableTh ta="center">Last Result</TableTh>
+            <TableTh ta="right">Last Result</TableTh>
             <TableTh ta="right">vs. Expected</TableTh>
             <TableTh ta="right" pr={0}>
               Points
@@ -75,11 +75,12 @@ export default async function RecentPaceTable({
                     {paceTeam.team}
                   </Anchor>
                 </TableTh>
-                <TableTd ta="center">
+                <TableTd ta="right">
                   <Result
                     match={lastMatch.match}
                     highlightedTeam={paceTeam.team}
                     link={true}
+                    multiline={true}
                   />
                 </TableTd>
                 <PaceTableCell paceMatch={lastMatch} />

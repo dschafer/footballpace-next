@@ -6,10 +6,12 @@ export default function Result({
   match,
   highlightedTeam,
   link,
+  multiline,
 }: {
   match: Match;
   highlightedTeam?: string;
   link?: boolean;
+  multiline?: boolean;
 }) {
   const homeFw =
     highlightedTeam == match.homeTeam ? 600 : highlightedTeam ? 300 : 400;
@@ -61,20 +63,41 @@ export default function Result({
       </Anchor>
     );
   }
-  let home = (
-    <Text c={homeC} fw={homeFw} span={true} inherit>
-      {homeTeam} {match.ftHomeGoals}
-    </Text>
-  );
-  let away = (
-    <Text c={awayC} fw={awayFw} span={true} inherit>
-      {match.ftAwayGoals} {awayTeam}
-    </Text>
-  );
+  if (multiline) {
+    let home = (
+      <Text c={homeC} fw={homeFw} span={true} inherit>
+        {homeTeam}&nbsp;{match.ftHomeGoals}
+      </Text>
+    );
+    let away = (
+      <Text c={awayC} fw={awayFw} span={true} inherit>
+        {awayTeam}&nbsp;{match.ftAwayGoals}
+      </Text>
+    );
 
-  return (
-    <Text span={true} inherit>
-      {home}:{away}
-    </Text>
-  );
+    return (
+      <Text span={true} inherit>
+        {home}
+        <br />
+        {away}
+      </Text>
+    );
+  } else {
+    let home = (
+      <Text c={homeC} fw={homeFw} span={true} inherit>
+        {homeTeam}&nbsp;{match.ftHomeGoals}
+      </Text>
+    );
+    let away = (
+      <Text c={awayC} fw={awayFw} span={true} inherit>
+        {match.ftAwayGoals}&nbsp;{awayTeam}
+      </Text>
+    );
+
+    return (
+      <Text span={true} inherit>
+        {home}:{away}
+      </Text>
+    );
+  }
 }
