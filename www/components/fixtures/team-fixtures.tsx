@@ -1,4 +1,6 @@
 import Fixtures from "./fixtures";
+import LinkableHeader from "../header/linkable-header";
+import { Stack } from "@mantine/core";
 import prisma from "@/lib/prisma";
 
 export default async function TeamFixtures({
@@ -19,5 +21,13 @@ export default async function TeamFixtures({
     },
     orderBy: { kickoffTime: "asc" },
   });
-  return <Fixtures fixtures={fixtures} dateHeadings={false} />;
+  if (fixtures.length == 0) {
+    return null;
+  }
+  return (
+    <Stack>
+      <LinkableHeader order={3} title="Fixtures" />
+      <Fixtures fixtures={fixtures} dateHeadings={false} />
+    </Stack>
+  );
 }

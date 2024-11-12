@@ -3,7 +3,6 @@ import {
   AccordionControl,
   AccordionItem,
   AccordionPanel,
-  Stack,
   Title,
 } from "@mantine/core";
 import { Fixture } from "@prisma/client";
@@ -17,9 +16,6 @@ export default async function Fixtures({
   fixtures: Fixture[];
   dateHeadings: boolean;
 }) {
-  if (fixtures.length == 0) {
-    return null;
-  }
   // This is just Map.groupBy but that's not available in Node 20.
   const fixturesByDay: Map<string, Array<Fixture>> = new Map();
   for (const fixture of fixtures) {
@@ -41,27 +37,24 @@ export default async function Fixtures({
     fixturesByMonth.get(key)!.set(day, fixtures);
   }
   return (
-    <Stack>
-      <Title order={3}>Fixtures</Title>
-      <Accordion
-        variant="separated"
-        multiple={true}
-        defaultValue={[new Date().toLocaleString([], { month: "long" })]}
-      >
-        {Array.from(fixturesByMonth).map(([month, fixturesDict]) => (
-          <AccordionItem key={month} value={month}>
-            <AccordionControl>
-              <Title order={4}>{month}</Title>
-            </AccordionControl>
-            <AccordionPanel>
-              <FixturesMonth
-                fixtures={fixturesDict}
-                dateHeadings={dateHeadings}
-              />
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </Stack>
+    <Accordion
+      variant="separated"
+      multiple={true}
+      defaultValue={[new Date().toLocaleString([], { month: "long" })]}
+    >
+      {Array.from(fixturesByMonth).map(([month, fixturesDict]) => (
+        <AccordionItem key={month} value={month}>
+          <AccordionControl>
+            <Title order={4}>{month}</Title>
+          </AccordionControl>
+          <AccordionPanel>
+            <FixturesMonth
+              fixtures={fixturesDict}
+              dateHeadings={dateHeadings}
+            />
+          </AccordionPanel>
+        </AccordionItem>
+      ))}
+    </Accordion>
   );
 }

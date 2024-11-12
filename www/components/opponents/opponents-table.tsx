@@ -9,9 +9,9 @@ import {
   TableThead,
   TableTr,
   Text,
-  Title,
 } from "@mantine/core";
 import Link from "next/link";
+import LinkableHeader from "../header/linkable-header";
 import OpponentsTableCell from "./opponents-table-cell";
 import { PaceTeam } from "@/lib/pace/pace";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
@@ -54,7 +54,7 @@ export default async function OpponentsTable({
 
   return (
     <Stack>
-      <Title order={3}>Opponents</Title>
+      <LinkableHeader order={3} title="Opponents" />
       <Text size="sm">
         This shows all opponents in their{" "}
         <Anchor component={Link} href={`/${league}/${year}/explanation`}>

@@ -1,3 +1,4 @@
+import { Stack, Title } from "@mantine/core";
 import Fixtures from "./fixtures";
 import prisma from "@/lib/prisma";
 
@@ -16,5 +17,13 @@ export default async function LeagueFixtures({
     },
     orderBy: { kickoffTime: "asc" },
   });
-  return <Fixtures fixtures={fixtures} dateHeadings={true} />;
+  if (fixtures.length == 0) {
+    return null;
+  }
+  return (
+    <Stack>
+      <Title order={3}>Fixtures</Title>
+      <Fixtures fixtures={fixtures} dateHeadings={true} />
+    </Stack>
+  );
 }

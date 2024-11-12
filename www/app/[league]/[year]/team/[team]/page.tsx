@@ -1,6 +1,7 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
 import { Metadata, ResolvingMetadata } from "next/types";
 import Link from "next/link";
+import LinkableHeader from "@/components/header/linkable-header";
 import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
@@ -56,9 +57,9 @@ export default async function SeasonPage({
           {leagues.get(params.league)?.name} {yearInt}
         </Text>
       </Anchor>
-      <Title order={3}>Recent Matches</Title>
+      <LinkableHeader order={3} title="Recent Matches" />
       <ResultsTable paceMatches={previewMatches} team={teamDecoded} />
-      <Title order={3}>Table</Title>
+      <LinkableHeader order={3} title="Table" />
       <PaceTable
         paceTeams={paceTeams.slice(
           Math.max(pacePlace - 2, 0),
@@ -66,14 +67,14 @@ export default async function SeasonPage({
         )}
         startPlace={Math.max(pacePlace - 2, 0)}
       />
-      <Title order={3}>Pace Chart</Title>
+      <LinkableHeader order={3} title="Pace Chart" />
       <PaceChart paceTeams={[paceTeam]} allColors={allColors} />
       <OpponentsTable
         league={params.league}
         year={yearInt}
         paceTeam={paceTeam}
       />
-      <Title order={3}>Full Results</Title>
+      <LinkableHeader order={3} title="Full Results" />
       <ResultsTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
       <TeamFixtures league={params.league} year={yearInt} team={teamDecoded} />
     </Stack>

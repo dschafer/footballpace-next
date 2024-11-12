@@ -48,7 +48,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      style={{
+        scrollPaddingTop: "4rem",
+      }}
+    >
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
