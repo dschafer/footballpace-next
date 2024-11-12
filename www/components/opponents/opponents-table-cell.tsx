@@ -81,7 +81,7 @@ export default function OpponentsTableCell({
             <Text span fw="500" inherit>
               Pts
             </Text>
-            : <NumberFormatter value={maybePaceMatch.points} decimalScale={2} />{" "}
+            : <NumberFormatter value={maybePaceMatch.points} decimalScale={0} />{" "}
             <Text span fw="500" inherit>
               Exp
             </Text>
@@ -89,6 +89,7 @@ export default function OpponentsTableCell({
             <NumberFormatter
               value={paceSheetEntry.expectedPoints}
               decimalScale={2}
+              fixedDecimalScale
             />
           </Text>
         </Stack>
@@ -134,6 +135,7 @@ export default function OpponentsTableCell({
             <NumberFormatter
               value={paceSheetEntry.expectedPoints}
               decimalScale={2}
+              fixedDecimalScale
             />
           </Text>
         </Stack>

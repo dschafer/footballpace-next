@@ -95,7 +95,11 @@ export default async function HistoricalPaceTable({
             <TableTh scope="row">Home</TableTh>
             {homePace.map((pace, i) => (
               <TableTd ta="right" key={i}>
-                <NumberFormatter value={i == 0 ? "" : pace} decimalScale={2} />
+                <NumberFormatter
+                  value={i == 0 ? "" : pace}
+                  decimalScale={2}
+                  fixedDecimalScale
+                />
               </TableTd>
             ))}
           </TableTr>
@@ -103,7 +107,11 @@ export default async function HistoricalPaceTable({
             <TableTh scope="row">Away</TableTh>
             {awayPace.map((pace, i) => (
               <TableTd ta="right" key={i}>
-                <NumberFormatter value={i == 0 ? "" : pace} decimalScale={2} />
+                <NumberFormatter
+                  value={i == 0 ? "" : pace}
+                  decimalScale={2}
+                  fixedDecimalScale
+                />
               </TableTd>
             ))}
           </TableTr>
