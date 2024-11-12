@@ -1,4 +1,4 @@
-import { List, ListItem, Stack, Text, Title } from "@mantine/core";
+import { Anchor, List, ListItem, Stack, Text, Title } from "@mantine/core";
 import Link from "next/link";
 
 export const metadata = {
@@ -46,35 +46,64 @@ export default function AboutPage() {
       <Stack gap="xs">
         <Text>
           FootballPace was made by{" "}
-          <Link href="https://github.com/dschafer/">Dan Schafer</Link>. The
-          source code is available on{" "}
-          <Link href="https://github.com/dschafer/footballpace-next">
+          <Anchor component={Link} href="https://github.com/dschafer/">
+            Dan Schafer
+          </Anchor>
+          . The source code is available on{" "}
+          <Anchor
+            component={Link}
+            href="https://github.com/dschafer/footballpace-next"
+          >
             Github
-          </Link>
+          </Anchor>
           .
         </Text>
         <Text>
           The data pipeline is powered by{" "}
-          <Link href="https://dagster.io/">Dagster</Link>, the front-end by{" "}
-          <Link href="https://nextjs.org/">Next.js</Link> and hosted on{" "}
-          <Link href="https://vercel.com/">Vercel</Link>. The components library
-          is <Link href="https://mantine.dev/">Mantine</Link>. Data is sourced
-          from{" "}
-          <Link href="https://www.football-data.co.uk/">Football Data UK</Link>{" "}
+          <Anchor component={Link} href="https://dagster.io/">
+            Dagster
+          </Anchor>
+          , the front-end by{" "}
+          <Anchor component={Link} href="https://nextjs.org/">
+            Next.js
+          </Anchor>{" "}
+          and hosted on{" "}
+          <Anchor component={Link} href="https://vercel.com/">
+            Vercel
+          </Anchor>
+          . The components library is{" "}
+          <Anchor component={Link} href="https://mantine.dev/">
+            Mantine
+          </Anchor>
+          . Data is sourced from{" "}
+          <Anchor component={Link} href="https://www.football-data.co.uk/">
+            Football Data UK
+          </Anchor>{" "}
           and from{" "}
-          <Link href="https://fantasy.premierleague.com/">
+          <Anchor component={Link} href="https://fantasy.premierleague.com/">
             Fantasy Premier League
-          </Link>
+          </Anchor>
           . Flags icons are from{" "}
-          <Link href="https://openmoji.org/">OpenMoji</Link>.
+          <Anchor component={Link} href="https://openmoji.org/">
+            OpenMoji
+          </Anchor>
+          .
         </Text>
         <Text>
           The original inspiration for this is from the Reddit user{" "}
-          <Link href="https://www.reddit.com/user/AndrycApp/">AndrycApp</Link>
-          {"'"}s par table{" "}
-          <Link href="https://www.reddit.com/r/soccer/comments/2rx7ho/andrycapps_epl_par_table_game_week_20/">
-            posts
-          </Link>
+          <Anchor
+            component={Link}
+            href="https://www.reddit.com/user/AndrycApp/"
+          >
+            AndrycApp
+          </Anchor>
+          {"'"}s{" "}
+          <Anchor
+            component={Link}
+            href="https://www.reddit.com/r/soccer/comments/2rx7ho/andrycapps_epl_par_table_game_week_20/"
+          >
+            par table posts
+          </Anchor>
           ; the term {'"'}pace{'"'} is used here instead to clarify that teams
           want to be{" "}
           <Text span fs="italic">
@@ -155,9 +184,9 @@ export default function AboutPage() {
               have observed that Leicester was top of the table, and would now
               have assessed Leicester as the best team in the league. And
               indeed, if you look at FootballPace for{" "}
-              <Link href="/E0/2015/team/Sunderland">
+              <Anchor component={Link} href="/E0/2015/team/Sunderland">
                 that completed season for Sunderland
-              </Link>
+              </Anchor>
               , you will see MD1 listed as {'"'}Away to 2{'"'}.
             </Text>
             <Text>
@@ -172,9 +201,16 @@ export default function AboutPage() {
       <Title order={3}>Contact</Title>
       <Text>
         For feedback, comments, questions, or bug reports, please{" "}
-        <Link href="mailto:feedback@footballpace.com">contact us</Link> or
-        report issues on{" "}
-        <Link href="https://github.com/dschafer/footballpace-next">Github</Link>
+        <Anchor component={Link} href="mailto:feedback@footballpace.com">
+          contact us
+        </Anchor>{" "}
+        or report issues on{" "}
+        <Anchor
+          component={Link}
+          href="https://github.com/dschafer/footballpace-next"
+        >
+          Github
+        </Anchor>
         .
       </Text>
     </Stack>
