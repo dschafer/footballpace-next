@@ -2,6 +2,7 @@ import {
   Anchor,
   Breadcrumbs,
   Group,
+  Paper,
   SimpleGrid,
   Spoiler,
   Stack,

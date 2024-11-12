@@ -10,6 +10,27 @@ import TeamFixtures from "@/components/fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
+import year from "@/lib/const/year";
+
+export async function generateStaticParams(): Promise<SeasonPageParams[]> {
+  const matches = await prisma.match.findMany({
+    where: { year: year },
+  });
+  const params: Set<SeasonPageParams> = new Set();
+  for (const m of matches) {
+    params.add({
+      league: m.league,
+      year: "" + m.year,
+      team: m.homeTeam,
+    });
+    params.add({
+      league: m.league,
+      year: "" + m.year,
+      team: m.awayTeam,
+    });
+  }
+  return Array.from(params);
+}
 
 type SeasonPageParams = {
   league: string;
