@@ -23,3 +23,9 @@ This is very much a solo side project that I'm doing for my own
 education/entertainment, and at my own cadence; while I welcome 
 feedback or feature requests at feedback@footballpace.com, I can't
 offer any guarantees that PRs or Issues will be addressed.
+
+# Name
+
+This is version 2 of this project; this new one uses Next.js as
+the front-end and is the "next" version of the project, hence
+the name.
