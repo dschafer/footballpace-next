@@ -14,6 +14,31 @@ export const metadata = {
     template: "%s | Football Pace",
   },
   description: "Reimagining football tables using historical championship pace",
+  keywords: [
+    "Football",
+    "Soccer",
+    "Standings",
+    "Table",
+    "Pace",
+    "Expected",
+    "Strength",
+    "Schedule",
+  ],
+  authors: ["Dan Schafer"],
+  openGraph: {
+    title: "Football Pace",
+    description:
+      "Reimagining football tables using historical championship pace",
+    url: "https://www.footballpace.com",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Football Pace",
+    description:
+      "Reimagining football tables using historical championship pace",
+    creator: "@dlschafer",
+    creatorId: "69042390",
+  },
 };
 
 export default function RootLayout({
