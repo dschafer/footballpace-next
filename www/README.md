@@ -12,6 +12,9 @@ The front-end uses Mantine as the component library, with Tabler icons.
 
 ## Running locally
 
+First, you need a copy of the environment variables; these should go into
+`.env` and should match the format of [.env.sample](.env.sample).
+
 To run this locally, using the package manager of the choice (in this
 example I'll use `pnpm`), you should install the dependencies then run:
 
