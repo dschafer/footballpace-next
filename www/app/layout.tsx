@@ -26,6 +26,7 @@ export const metadata = {
   ],
   authors: ["Dan Schafer"],
   openGraph: {
+    type: "website",
     title: "Football Pace",
     description:
       "Reimagining football tables using historical championship pace",
