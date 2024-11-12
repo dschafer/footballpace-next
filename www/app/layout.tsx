@@ -8,9 +8,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import theme from "@/lib/theme";
 
 export const metadata = {
-  metadataBase: new URL("https://footballpace-next.vercel.app/"),
-  title: "Football Pace",
-  description: "Tracking the pace of football clubs towards the championship",
+  metadataBase: new URL("https://www.footballpace.com/"),
+  title: {
+    default: "Football Pace",
+    template: "%s | Football Pace",
+  },
+  description: "Reimagining football tables using historical championship pace",
 };
 
 export default function RootLayout({

@@ -1,6 +1,10 @@
 import { List, ListItem, Stack, Text, Title } from "@mantine/core";
 import Link from "next/link";
 
+export const metadata = {
+  title: "About",
+};
+
 export default function AboutPage() {
   return (
     <Stack>

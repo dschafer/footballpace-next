@@ -1,4 +1,5 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
+import { Metadata, ResolvingMetadata } from "next/types";
 import Link from "next/link";
 import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
@@ -14,6 +15,16 @@ type SeasonPageParams = {
   year: string;
   team: string;
 };
+
+export async function generateMetadata(
+  { params }: { params: SeasonPageParams },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const teamDecoded = decodeURIComponent(params.team);
+  return {
+    title: `${teamDecoded} ${params.year}`,
+  };
+}
 
 export default async function SeasonPage({
   params,
