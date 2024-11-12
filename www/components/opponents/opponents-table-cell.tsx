@@ -5,6 +5,7 @@ import {
   Stack,
   TableTd,
   Text,
+  darken,
   isLightColor,
   useComputedColorScheme,
 } from "@mantine/core";
@@ -56,15 +57,25 @@ export default function OpponentsTableCell({
 
   if (maybePaceMatch) {
     const match = maybePaceMatch.match;
-    let bgColors = ["red.2", "gray.2", "", "green.2"];
+    let bgColors = [
+      "var(--mantine-color-red-2)",
+      "var(--mantine-color-gray-3)",
+      "",
+      "var(--mantine-color-green-2)",
+    ];
     if (computedColorScheme == "dark") {
-      bgColors = ["red.9", "gray.7", "", "green.9"];
+      bgColors = [
+        darken("var(--mantine-color-red-9)", 0.5),
+        "var(--mantine-color-gray-7)",
+        "",
+        darken("var(--mantine-color-green-9)", 0.5),
+      ];
     }
     const bg = bgColors[maybePaceMatch.points];
     const fg = isLightColor(bg) ? "black" : "white";
     return (
       <TableTd ta="right" p="xs" bg={bg} color={fg}>
-        <Stack>
+        <Stack gap="xs">
           <Result match={match} link={true} multiline={true} />
           <Text span size="sm" inherit>
             <Text span fw="500" inherit>
@@ -111,7 +122,7 @@ export default function OpponentsTableCell({
 
     return (
       <TableTd ta="right" p="xs">
-        <Stack>
+        <Stack gap="xs">
           <Text span fs="italic" c="dimmed" size="sm" inherit>
             {matchDesc}
           </Text>
