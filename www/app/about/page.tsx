@@ -65,7 +65,8 @@ export default function AboutPage() {
           <Link href="https://fantasy.premierleague.com/">
             Fantasy Premier League
           </Link>
-          .
+          . Flags icons are from{" "}
+          <Link href="https://openmoji.org/">OpenMoji</Link>.
         </Text>
         <Text>
           The original inspiration for this is from the Reddit user{" "}

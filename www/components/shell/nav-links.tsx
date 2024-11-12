@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 
 import { ActiveNavLink } from "./active-nav-link";
+import Image from "next/image";
 import Link from "next/link";
 import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
@@ -30,7 +31,12 @@ export default function NavLinks() {
           prefixUrl={`/${leagueCode}/${year}`}
           leftSection={
             <Center inline w={24}>
-              {league.flag}
+              <Image
+                src={league.flagImage}
+                alt={league.name}
+                width={24}
+                height={24}
+              />
             </Center>
           }
         >
