@@ -1,5 +1,5 @@
 import os
-from dagster import asset
+from dagster import AssetExecutionContext, asset
 
 import httpx
 
@@ -10,7 +10,7 @@ API_UPDATE_URL = "https://footballpace.com/api/update"
     group_name="CacheUpdate",
     kinds={"vercel"},
 )
-def cache_update() -> None:
+def cache_update(context: AssetExecutionContext) -> None:
     """
     Make sure that Next.js updates its caches.
 
@@ -21,4 +21,5 @@ def cache_update() -> None:
     bearer_token = os.getenv("UPDATE_BEARER_TOKEN")
     headers = {"Authorization": f"Bearer {bearer_token}"}
 
-    httpx.post(API_UPDATE_URL, headers=headers).raise_for_status()
+    response = httpx.post(API_UPDATE_URL, headers=headers).raise_for_status()
+    context.log.info(response.text)
