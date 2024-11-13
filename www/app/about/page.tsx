@@ -87,6 +87,13 @@ export default function AboutPage() {
           <Anchor component={Link} href="https://openmoji.org/">
             OpenMoji
           </Anchor>
+          . Team color data is from{" "}
+          <Anchor
+            component={Link}
+            href="https://github.com/jimniels/teamcolors/"
+          >
+            jimniels/teamcolors
+          </Anchor>
           .
         </Text>
         <Text>
