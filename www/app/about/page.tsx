@@ -116,6 +116,31 @@ export default function AboutPage() {
           par).
         </Text>
       </Stack>
+      <Title order={3}>Updates</Title>
+      <Text>
+        Football Pace checks for updates from our data sources every hour, but
+        we have different data sources for different leagues.
+        <List>
+          <ListItem>
+            The current{" "}
+            <Text fw={700} span inherit>
+              English Premier League
+            </Text>{" "}
+            season is sourced from the Fantasy Premier League API. This updates
+            nearly live, so English Premier League matches should appear on the
+            site within an hour or two after they finish. This API also provides
+            a full list of fixtures, allowing Football Pace to display those.
+          </ListItem>
+          <ListItem>
+            <Text fw={700} span inherit>
+              All other leagues
+            </Text>{" "}
+            (and all historical results) are sourced form Football Data UK. They
+            tend to update a day or two after the matches take place, so other
+            leagues results will appear with a day or two delay.
+          </ListItem>
+        </List>
+      </Text>
       <Title order={3}>FAQ</Title>
       <List>
         <ListItem>
