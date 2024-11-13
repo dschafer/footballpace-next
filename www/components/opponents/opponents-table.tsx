@@ -63,11 +63,11 @@ export default async function OpponentsTable({
         (assuming that {paceTeam.team} wins the league), and shows the results
         of the matches played thus far, including the points taken from the
         match (
-        <Text span fw="500" inherit>
+        <Text span fw={500} inherit>
           Pts
         </Text>
         ) and the expected points from the match (
-        <Text span fw="500" inherit>
+        <Text span fw={500} inherit>
           Exp
         </Text>
         ). This is most useful mid-season, since it shows whether a team has

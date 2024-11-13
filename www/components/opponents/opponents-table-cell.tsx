@@ -78,11 +78,11 @@ export default function OpponentsTableCell({
         <Stack gap="xs">
           <Result match={match} link={true} multiline={true} />
           <Text span size="sm" inherit>
-            <Text span fw="500" inherit>
+            <Text span fw={500} inherit>
               Pts
             </Text>
             : <NumberFormatter value={maybePaceMatch.points} decimalScale={0} />{" "}
-            <Text span fw="500" inherit>
+            <Text span fw={500} inherit>
               Exp
             </Text>
             :{" "}
@@ -128,7 +128,7 @@ export default function OpponentsTableCell({
             {matchDesc}
           </Text>
           <Text span fs="italic" c="dimmed" size="sm" inherit>
-            <Text span fw="500">
+            <Text span fw={500}>
               Exp
             </Text>
             :{" "}
