@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import theme from "@/lib/theme";
 
 export const metadata = {
-  metadataBase: new URL("https://www.footballpace.com/"),
+  metadataBase: new URL("https://footballpace.com/"),
   title: {
     default: "Football Pace",
     template: "%s | Football Pace",
@@ -30,13 +30,15 @@ export const metadata = {
     title: "Football Pace",
     description:
       "Reimagining football tables using historical championship pace",
-    url: "https://www.footballpace.com",
+    url: "https://footballpace.com",
   },
   twitter: {
     card: "summary_large_image",
     title: "Football Pace",
     description:
       "Reimagining football tables using historical championship pace",
+    site: "@fballpace",
+    siteId: "1856718770712236032",
     creator: "@dlschafer",
     creatorId: "69042390",
   },

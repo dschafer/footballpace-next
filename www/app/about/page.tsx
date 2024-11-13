@@ -228,13 +228,6 @@ export default function AboutPage() {
         For feedback, comments, questions, or bug reports, please{" "}
         <Anchor component={Link} href="mailto:feedback@footballpace.com">
           contact us
-        </Anchor>{" "}
-        or report issues on{" "}
-        <Anchor
-          component={Link}
-          href="https://github.com/dschafer/footballpace-next"
-        >
-          Github
         </Anchor>
         .
       </Text>
