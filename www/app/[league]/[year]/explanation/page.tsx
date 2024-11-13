@@ -17,7 +17,10 @@ export default function ExplanationPage({
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>
-      <HistoricalPacePreamble />
+      <HistoricalPacePreamble
+        league={params.league}
+        year={parseInt(params.year)}
+      />
       <HistoricalPaceTable
         league={params.league}
         year={parseInt(params.year)}

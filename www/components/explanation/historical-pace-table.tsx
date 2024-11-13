@@ -27,24 +27,23 @@ export default async function HistoricalPaceTable({
     return <ErrorAlert />;
   }
 
-  const homePace = [...Array(paceSheetEntries.length / 2)];
-  const awayPace = [...Array(paceSheetEntries.length / 2)];
+  const homePace = [...Array(paceSheetEntries.length / 2 + 1)];
+  const awayPace = [...Array(paceSheetEntries.length / 2 + 1)];
   for (const entry of paceSheetEntries) {
     if (entry.home) {
-      homePace[entry.opponentFinish - 1] = entry.expectedPoints;
+      homePace[entry.opponentFinish] = entry.expectedPoints;
     } else {
-      awayPace[entry.opponentFinish - 1] = entry.expectedPoints;
+      awayPace[entry.opponentFinish] = entry.expectedPoints;
     }
   }
-
   return (
     <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
         <TableCaption>
-          <Text fw={700} span>
+          <Text fw={700} span inherit>
             Home
           </Text>
-          <Text span>
+          <Text span inherit>
             :{" "}
             <NumberFormatter
               value={homePace.reduce((a, p) => (p ? a + p : a), 0)}
@@ -53,10 +52,10 @@ export default async function HistoricalPaceTable({
             />{" "}
             &middot;{" "}
           </Text>
-          <Text fw={700} span>
+          <Text fw={700} span inherit>
             Away
           </Text>
-          <Text span>
+          <Text span inherit>
             :{" "}
             <NumberFormatter
               value={awayPace.reduce((a, p) => (p ? a + p : a), 0)}
@@ -65,10 +64,10 @@ export default async function HistoricalPaceTable({
             />{" "}
             &middot;{" "}
           </Text>
-          <Text fw={700} span>
+          <Text fw={700} span inherit>
             Total
           </Text>
-          <Text span>
+          <Text span inherit>
             :{" "}
             <NumberFormatter
               value={
@@ -82,39 +81,31 @@ export default async function HistoricalPaceTable({
         </TableCaption>
         <TableThead>
           <TableTr>
-            <TableTh>Match</TableTh>
-            {homePace.map((_, i) => (
-              <TableTh key={i} ta="right">
-                {i + 1}
-              </TableTh>
-            ))}
+            <TableTh ta="right">Position</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="right">Away</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
-          <TableTr>
-            <TableTh scope="row">Home</TableTh>
-            {homePace.map((pace, i) => (
-              <TableTd ta="right" key={i}>
+          {[...Array(paceSheetEntries.length / 2)].map((_, i) => (
+            <TableTr key={i}>
+              <TableTd ta="right">{i + 2}</TableTd>
+              <TableTd ta="right">
                 <NumberFormatter
-                  value={i == 0 ? "" : pace}
+                  value={homePace[i + 2]}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
-            ))}
-          </TableTr>
-          <TableTr>
-            <TableTh scope="row">Away</TableTh>
-            {awayPace.map((pace, i) => (
-              <TableTd ta="right" key={i}>
+              <TableTd ta="right">
                 <NumberFormatter
-                  value={i == 0 ? "" : pace}
+                  value={awayPace[i + 2]}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
-            ))}
-          </TableTr>
+            </TableTr>
+          ))}
         </TableTbody>
       </Table>
     </TableScrollContainer>

@@ -78,7 +78,7 @@ export default async function OpponentsTable({
         <Table stickyHeader striped>
           <TableThead>
             <TableTr>
-              <TableTh ta="right">Pos</TableTh>
+              <TableTh ta="right">Position</TableTh>
               <TableTh ta="right">Team</TableTh>
               <TableTh ta="right">Home</TableTh>
               <TableTh ta="right">Away</TableTh>

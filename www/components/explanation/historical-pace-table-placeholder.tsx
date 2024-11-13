@@ -19,31 +19,23 @@ export default function HistoricalPaceTablePlaceholder({
       <Table stickyHeader striped>
         <TableThead>
           <TableTr>
-            <TableTh>Match</TableTh>
-            {[...Array(teamCount)].map((_, i) => (
-              <TableTh key={i} ta="right">
-                {i + 1}
-              </TableTh>
-            ))}
+            <TableTh ta="right">Position</TableTh>
+            <TableTh ta="right">Home</TableTh>
+            <TableTh ta="right">Away</TableTh>
           </TableTr>
         </TableThead>
         <TableTbody>
-          <TableTr>
-            <TableTh scope="row">Home</TableTh>
-            {[...Array(teamCount)].map((_, i) => (
-              <TableTd ta="right" key={i}>
+          {[...Array(teamCount - 1)].map((_, i) => (
+            <TableTr key={i}>
+              <TableTd ta="right">{i + 2}</TableTd>
+              <TableTd ta="right">
                 <Skeleton>0</Skeleton>
               </TableTd>
-            ))}
-          </TableTr>
-          <TableTr>
-            <TableTh scope="row">Away</TableTh>
-            {[...Array(teamCount)].map((_, i) => (
-              <TableTd ta="right" key={i}>
+              <TableTd ta="right">
                 <Skeleton>0</Skeleton>
               </TableTd>
-            ))}
-          </TableTr>
+            </TableTr>
+          ))}
         </TableTbody>
       </Table>
     </TableScrollContainer>

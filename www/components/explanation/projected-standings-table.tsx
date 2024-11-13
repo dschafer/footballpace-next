@@ -65,6 +65,7 @@ export default async function ProjectedStandingsTable({
                 <Anchor
                   component={Link}
                   href={`/${league}/${year}/team/${row.team}`}
+                  inherit
                 >
                   {row.team}
                 </Anchor>
