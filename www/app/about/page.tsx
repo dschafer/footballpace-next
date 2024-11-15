@@ -128,9 +128,11 @@ export default function AboutPage() {
         </Text>
       </Stack>
       <Title order={3}>Updates</Title>
-      <Text>
-        Football Pace checks for updates from our data sources every hour, but
-        we have different data sources for different leagues.
+      <Stack gap="xs">
+        <Text>
+          Football Pace checks for updates from our data sources every hour, but
+          we have different data sources for different leagues.
+        </Text>
         <List>
           <ListItem>
             The current{" "}
@@ -151,7 +153,7 @@ export default function AboutPage() {
             leagues results will appear with a day or two delay.
           </ListItem>
         </List>
-      </Text>
+      </Stack>
       <Title order={3}>FAQ</Title>
       <List>
         <ListItem>
