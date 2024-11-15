@@ -29,7 +29,7 @@ export default async function Matches({
     return <ErrorAlert />;
   }
   // This is just Map.groupBy but that's not available in Node 20.
-  const matchesByDay: Map<string, Array<Match>> = new Map();
+  const matchesByDay: Map<string, Match[]> = new Map();
   for (const match of matches) {
     const key = match.date.toLocaleDateString([], {
       timeZone: leagues.get(league)?.tz,
@@ -41,7 +41,7 @@ export default async function Matches({
     }
   }
 
-  const matchesByMonth: Map<string, Map<string, Array<Match>>> = new Map();
+  const matchesByMonth: Map<string, Map<string, Match[]>> = new Map();
   for (const [day, matches] of Array.from(matchesByDay.entries())) {
     const key = matches[0].date.toLocaleString([], { month: "long" });
     if (!matchesByMonth.has(key)) {

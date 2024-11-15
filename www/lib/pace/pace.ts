@@ -53,7 +53,7 @@ export async function fetchPaceTeams(
     ]),
   );
 
-  let paceTeams: Array<PaceTeam> = projectedStandings
+  let paceTeams: PaceTeam[] = projectedStandings
     .map(({ team }) => {
       const teamFinish = teamToFinish.get(team)!;
       let paceMatches = [];
