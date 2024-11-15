@@ -1,8 +1,12 @@
 import { Anchor, List, ListItem, Stack, Text, Title } from "@mantine/core";
+import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import Link from "next/link";
+import { Metadata } from "next/types";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About",
+  openGraph: { ...openGraphMetadata, title: "About" },
+  twitter: { ...twitterMetadata, title: "About" },
 };
 
 export default function AboutPage() {

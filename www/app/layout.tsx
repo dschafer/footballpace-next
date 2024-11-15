@@ -1,13 +1,16 @@
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import { Analytics } from "@vercel/analytics/react";
+import { Metadata } from "next/types";
 import NavLinks from "@/components/shell/nav-links";
 import Shell from "@/components/shell/shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+
 import theme from "@/lib/theme";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL("https://footballpace.com/"),
   title: {
     default: "Football Pace",
@@ -25,24 +28,9 @@ export const metadata = {
     "Strength",
     "Schedule",
   ],
-  authors: ["Dan Schafer"],
-  openGraph: {
-    type: "website",
-    title: "Football Pace",
-    description:
-      "Reimagining football tables using historical championship pace",
-    url: "https://footballpace.com",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Football Pace",
-    description:
-      "Reimagining football tables using historical championship pace",
-    site: "@fballpace",
-    siteId: "1856718770712236032",
-    creator: "@dlschafer",
-    creatorId: "69042390",
-  },
+  authors: [{ name: "Dan Schafer" }],
+  openGraph: openGraphMetadata,
+  twitter: twitterMetadata,
 };
 
 export default function RootLayout({

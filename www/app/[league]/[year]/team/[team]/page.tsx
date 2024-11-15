@@ -1,5 +1,6 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
 import { Metadata, ResolvingMetadata } from "next/types";
+import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import LinkableHeader from "@/components/header/linkable-header";
 import OpponentsTable from "@/components/opponents/opponents-table";
@@ -43,8 +44,11 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const teamDecoded = decodeURIComponent(params.team);
+  const title = `${teamDecoded} ${params.year}`;
   return {
-    title: `${teamDecoded} ${params.year}`,
+    title,
+    openGraph: { ...openGraphMetadata, title },
+    twitter: { ...twitterMetadata, title },
   };
 }
 

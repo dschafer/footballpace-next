@@ -1,4 +1,5 @@
 import { Metadata, ResolvingMetadata } from "next/types";
+import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import { LeagueYearParam } from "@/lib/const/current";
 import leagues from "@/lib/const/leagues";
 
@@ -7,11 +8,14 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const league = leagues.get(params.league);
+  const title = {
+    default: `${league ? league.name : "Unknown"} ${params.year}`,
+    template: "%s | Football Pace",
+  };
   return {
-    title: {
-      default: `${league ? league.name : "Unknown"} ${params.year}`,
-      template: "%s | Football Pace",
-    },
+    title,
+    openGraph: { ...openGraphMetadata, title },
+    twitter: { ...twitterMetadata, title },
   };
 }
 
