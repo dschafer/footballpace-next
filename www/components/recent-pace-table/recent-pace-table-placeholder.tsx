@@ -31,7 +31,7 @@ export default function RecentPaceTablePlaceholder({
             <TableTh ta="center">#</TableTh>
             <TableTh ta="left">Team</TableTh>
             <TableTh ta="right">Last Result</TableTh>
-            <TableTh ta="right">vs. Expected</TableTh>
+            <TableTh ta="right">vs. Target</TableTh>
             <TableTh ta="right">Points</TableTh>
             <TableTh ta="right">Season vs. Pace</TableTh>
           </TableTr>

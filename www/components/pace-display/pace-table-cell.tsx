@@ -39,7 +39,7 @@ export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
           </Text>
           <Text ta="center">
             <Text fw={700} span>
-              Expected Points
+              Target Points
             </Text>
             :{" "}
             <NumberFormatter

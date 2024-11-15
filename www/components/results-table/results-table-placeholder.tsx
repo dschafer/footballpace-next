@@ -22,9 +22,9 @@ export default function ResultsTablePlaceholder({
             <TableTh ta="left">Date</TableTh>
             <TableTh ta="center">Result</TableTh>
             <TableTh ta="right">Season vs. Pace</TableTh>
-            <TableTh ta="right">vs. Expected</TableTh>
+            <TableTh ta="right">vs. Target</TableTh>
             <TableTh ta="right">Points</TableTh>
-            <TableTh ta="right">Expected Points</TableTh>
+            <TableTh ta="right">Target Points</TableTh>
             <TableTh ta="center">Match Description</TableTh>
           </TableTr>
         </TableThead>

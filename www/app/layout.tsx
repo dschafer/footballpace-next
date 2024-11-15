@@ -21,6 +21,7 @@ export const metadata = {
     "Table",
     "Pace",
     "Expected",
+    "Target",
     "Strength",
     "Schedule",
   ],

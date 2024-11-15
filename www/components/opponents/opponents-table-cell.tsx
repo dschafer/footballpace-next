@@ -83,7 +83,7 @@ export default function OpponentsTableCell({
             </Text>
             : <NumberFormatter value={maybePaceMatch.points} decimalScale={0} />{" "}
             <Text span fw={500} inherit>
-              Exp
+              Tar
             </Text>
             :{" "}
             <NumberFormatter
@@ -129,7 +129,7 @@ export default function OpponentsTableCell({
           </Text>
           <Text span fs="italic" c="dimmed" size="sm" inherit>
             <Text span fw={500}>
-              Exp
+              Tar
             </Text>
             :{" "}
             <NumberFormatter

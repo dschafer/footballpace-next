@@ -66,9 +66,9 @@ export default async function OpponentsTable({
         <Text span fw={500} inherit>
           Pts
         </Text>
-        ) and the expected points from the match (
+        ) and the target points from the match (
         <Text span fw={500} inherit>
-          Exp
+          Tar
         </Text>
         ). This is most useful mid-season, since it shows whether a team has
         played their most difficult matches yet (those against top teams and

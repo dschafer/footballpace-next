@@ -29,7 +29,7 @@ export default function AboutPage() {
         <ListItem>
           The match{"'"}s{" "}
           <Text fw={700} span>
-            Expected Points
+            Target Points
           </Text>
           , based on how historical league champions perform in matches against
           opponents who finished in that position.
@@ -39,7 +39,7 @@ export default function AboutPage() {
           <Text fw={700} span>
             Championship Pace
           </Text>
-          , based on the sum of all expected points for the season so far.
+          , based on the sum of all target points for the season so far.
         </ListItem>
       </List>
       <Title order={2}>About FootballPace</Title>
@@ -159,7 +159,7 @@ export default function AboutPage() {
             <Text>
               For each match, FootballPace determines{" "}
               <Text span fs="italic">
-                expected points at championship pace
+                target points at championship pace
               </Text>{" "}
               – that is, how many points would a team expect to take from this
               match if they were on pace to finish champions of the league.
@@ -175,17 +175,17 @@ export default function AboutPage() {
         </ListItem>
         <ListItem>
           <Text fw={700}>
-            Why does the expected points for a given matchup change from
+            Why does the target points for a given matchup change from
             year-to-year, and league-to-league?
           </Text>
           <Stack gap="xs">
             <Text>
-              FootballPace determines the expected points based on historical
-              data for that league; so each league is expected to be different.
+              FootballPace determines the target points based on historical data
+              for that league; so each league is expected to be different.
             </Text>
             <Text>
               FootballPace also only considers results from previous seasons
-              when determining expected points. So if a league changes over time
+              when determining target points. So if a league changes over time
               (for example; the number of points needed to win the English
               Premier League has increased from the mid-2000s to present), this
               will be reflected in the pace for current seasons, but will not
@@ -195,12 +195,12 @@ export default function AboutPage() {
         </ListItem>
         <ListItem>
           <Text fw={700}>
-            Why does the expected points for a given match change as the year
-            goes on?
+            Why does the target points for a given match change as the year goes
+            on?
           </Text>
           <Stack gap="xs">
             <Text>
-              To determine expected points for a match, FootballPace has to
+              To determine target points for a match, FootballPace has to
               approximate where a given opponent will finish in the table this
               year. To do so, it looks at both their performance this year, and
               their performance in previous years.
@@ -222,8 +222,8 @@ export default function AboutPage() {
               , you will see MD1 listed as {'"'}Away to 2{'"'}.
             </Text>
             <Text>
-              Hence, that match would have much lower expected points at the end
-              of the year than at the start. This is an example of why expected
+              Hence, that match would have much lower target points at the end
+              of the year than at the start. This is an example of why target
               points for a given match change as the year goes on – though they
               are rarely quite this dramatic.
             </Text>

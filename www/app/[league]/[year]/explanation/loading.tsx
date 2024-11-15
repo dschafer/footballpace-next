@@ -10,12 +10,11 @@ export default function ExplanationLoading() {
       </Title>
       <Skeleton>
         <Text>
-          This table shows the expected number of points a championship team
-          would take from each match, based on historical data. To read, find
-          the row for the position of the opponent, then note whether the game
-          was home or away and go to that column. The value in that row and
-          column is how many points a typical championship team takes from that
-          match.
+          This table shows the target number of points a championship team would
+          take from each match, based on historical data. To read, find the row
+          for the position of the opponent, then note whether the game was home
+          or away and go to that column. The value in that row and column is how
+          many points a typical championship team takes from that match.
         </Text>
       </Skeleton>
       <HistoricalPaceTablePlaceholder teamCount={20} />
