@@ -1,6 +1,5 @@
 import { Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
-import { fetchStandings } from "./standings";
 import leagues from "../const/leagues";
 import prisma from "@/lib/prisma";
 
@@ -33,18 +32,16 @@ export async function fetchPaceTeams(
   league: string,
   year: number,
 ): Promise<PaceTeam[]> {
-  const [allStandings, projectedStandings, allMatches, allPaceSheets] =
-    await Promise.all([
-      fetchStandings(league, year),
-      fetchProjectedStandings(league, year),
-      prisma.match.findMany({
-        where: { league: league, year: year },
-        orderBy: { date: "asc" },
-      }),
-      prisma.paceSheetEntry.findMany({
-        where: { league: league, year: year, teamFinish: 1 },
-      }),
-    ]);
+  const [projectedStandings, allMatches, allPaceSheets] = await Promise.all([
+    fetchProjectedStandings(league, year),
+    prisma.match.findMany({
+      where: { league: league, year: year },
+      orderBy: { date: "asc" },
+    }),
+    prisma.paceSheetEntry.findMany({
+      where: { league: league, year: year, teamFinish: 1 },
+    }),
+  ]);
 
   const teamToFinish = new Map(
     projectedStandings.map(({ team }, i) => [team, i + 1]),
@@ -56,7 +53,7 @@ export async function fetchPaceTeams(
     ]),
   );
 
-  let paceTeams: Array<PaceTeam> = allStandings
+  let paceTeams: Array<PaceTeam> = projectedStandings
     .map(({ team }) => {
       const teamFinish = teamToFinish.get(team)!;
       let paceMatches = [];
