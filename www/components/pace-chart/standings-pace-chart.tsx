@@ -1,6 +1,6 @@
 import PaceChart from "./pace-chart";
 import { fetchPaceTeams } from "@/lib/pace/pace";
-import prisma from "@/lib/prisma";
+import { fetchTeamColorMap } from "@/lib/color";
 
 export default async function StandingsPaceChart({
   league,
@@ -9,11 +9,11 @@ export default async function StandingsPaceChart({
   league: string;
   year: number;
 }) {
-  let [paceTeams, allColors] = await Promise.all([
+  let [paceTeams, teamColorMap] = await Promise.all([
     fetchPaceTeams(league, year),
-    prisma.teamColor.findMany(),
+    fetchTeamColorMap(),
   ]);
   paceTeams = paceTeams.slice(0, 5);
 
-  return <PaceChart paceTeams={paceTeams} allColors={allColors} />;
+  return <PaceChart paceTeams={paceTeams} teamColorMap={teamColorMap} />;
 }

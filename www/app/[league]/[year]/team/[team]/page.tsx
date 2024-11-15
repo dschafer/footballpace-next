@@ -9,6 +9,7 @@ import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
+import { fetchTeamColorMap } from "@/lib/color";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
 import year from "@/lib/const/year";
@@ -60,9 +61,9 @@ export default async function SeasonPage({
   const yearInt = parseInt(params.year);
   const teamDecoded = decodeURIComponent(params.team);
 
-  const [paceTeams, allColors] = await Promise.all([
+  const [paceTeams, teamColorMap] = await Promise.all([
     fetchPaceTeams(params.league, yearInt),
-    prisma.teamColor.findMany(),
+    fetchTeamColorMap(),
   ]);
   const paceTeam = paceTeams.filter((pt) => pt.team == teamDecoded)[0];
   const pacePlace = paceTeams.findIndex((pt) => pt.team == teamDecoded);
@@ -93,7 +94,7 @@ export default async function SeasonPage({
         startPlace={Math.max(pacePlace - 2, 0)}
       />
       <LinkableHeader order={3} title="Pace Chart" />
-      <PaceChart paceTeams={[paceTeam]} allColors={allColors} />
+      <PaceChart paceTeams={[paceTeam]} teamColorMap={teamColorMap} />
       <OpponentsTable
         league={params.league}
         year={yearInt}

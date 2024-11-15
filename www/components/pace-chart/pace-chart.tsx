@@ -3,14 +3,12 @@ import ErrorAlert from "../error/error-alert";
 import { PaceTeam } from "@/lib/pace/pace";
 import { TeamColor } from "@prisma/client";
 
-import teamColor from "@/lib/color";
-
 export default async function PaceChart({
   paceTeams,
-  allColors,
+  teamColorMap,
 }: {
   paceTeams: PaceTeam[];
-  allColors: TeamColor[];
+  teamColorMap: Map<String, TeamColor>;
 }) {
   if (paceTeams.length == 0) {
     return <ErrorAlert />;
@@ -19,8 +17,7 @@ export default async function PaceChart({
   // https://colorbrewer2.org/#type=qualitative&scheme=Pastel1&n=5
   const colors = ["7fc97f", "beaed4", "fdc086", "ffff99", "386cb0"];
   let series: LineChartSeries[] = paceTeams.map((paceTeam, i) => {
-    const color =
-      teamColor(paceTeam.team, allColors)?.primaryColor ?? colors[i];
+    const color = teamColorMap.get(paceTeam.team)?.primaryColor ?? colors[i];
     return {
       name: paceTeam.team,
       color: "#" + color,

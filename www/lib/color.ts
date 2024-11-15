@@ -1,15 +1,7 @@
 import { TeamColor } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-export default function teamColor(
-  team: string,
-  allColors: TeamColor[],
-): TeamColor | undefined {
-  const allColorsMap = new Map(allColors.map((color) => [color.team, color]));
-  if (allColorsMap.has(team)) {
-    return allColorsMap.get(team);
-  }
-  if (allColorsMap.has(team.replace("Man", "Manchester"))) {
-    return allColorsMap.get(team.replace("Man", "Manchester"));
-  }
-  return undefined;
+export async function fetchTeamColorMap(): Promise<Map<String, TeamColor>> {
+  const allColors = await prisma.teamColor.findMany();
+  return new Map(allColors.map((color) => [color.team, color]));
 }
