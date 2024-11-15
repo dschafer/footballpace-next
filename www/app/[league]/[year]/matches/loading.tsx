@@ -1,5 +1,5 @@
 import { SimpleGrid, Skeleton, Stack, Title } from "@mantine/core";
-import FixturesPlaceholder from "@/components/fixtures/fixtures-placeholder";
+import LeagueFixturesPlaceholder from "@/components/fixtures/league-fixtures-placeholder";
 import MatchesPlaceholder from "@/components/matches/matches-placeholder";
 
 export default function MatchesLoading() {
@@ -10,11 +10,10 @@ export default function MatchesLoading() {
       </Title>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
         <MatchesPlaceholder monthCount={5} dayCount={10} matchCount={5} />
-        <FixturesPlaceholder
+        <LeagueFixturesPlaceholder
           monthCount={5}
           dayCount={10}
           matchCount={5}
-          dateHeadings={true}
         />
       </SimpleGrid>
     </Stack>

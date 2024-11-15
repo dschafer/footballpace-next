@@ -1,8 +1,8 @@
 import { Skeleton, Stack, Text, Title } from "@mantine/core";
-import FixturesPlaceholder from "@/components/fixtures/fixtures-placeholder";
 import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
 import ResultsTablePlaceholder from "@/components/results-table/results-table-placeholder";
+import TeamFixturesPlaceholder from "@/components/team-fixtures/team-fixtures-placeholder";
 
 export default function SeasonLoading() {
   return (
@@ -33,13 +33,8 @@ export default function SeasonLoading() {
       <Title order={3}>
         <Skeleton>Full Schedule</Skeleton>
       </Title>
-      <ResultsTablePlaceholder rowCount={38} />
-      <FixturesPlaceholder
-        monthCount={5}
-        dayCount={10}
-        matchCount={5}
-        dateHeadings={false}
-      />
+      <ResultsTablePlaceholder rowCount={19} />
+      <TeamFixturesPlaceholder matchCount={19} />
     </Stack>
   );
 }

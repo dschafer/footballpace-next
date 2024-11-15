@@ -10,16 +10,14 @@ import {
   Title,
 } from "@mantine/core";
 
-export default function FixturesPlaceholder({
+export default function LeagueFixturesPlaceholder({
   monthCount,
   dayCount,
   matchCount,
-  dateHeadings,
 }: {
   monthCount: number;
   dayCount: number;
   matchCount: number;
-  dateHeadings: boolean;
 }) {
   return (
     <Stack>

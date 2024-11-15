@@ -6,7 +6,7 @@ import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
-import TeamFixtures from "@/components/fixtures/team-fixtures";
+import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
