@@ -1,5 +1,8 @@
 import {
   Box,
+  Group,
+  MultiSelect,
+  NumberInput,
   Skeleton,
   Stack,
   Table,
@@ -22,6 +25,12 @@ export default function UpcomingTablePlaceholder({
 }) {
   return (
     <Stack>
+      <Group>
+        <Skeleton>
+          <NumberInput label="Matches" allowDecimal={false} />
+          <MultiSelect label="Teams" searchable />
+        </Skeleton>
+      </Group>
       <TableScrollContainer minWidth={0}>
         <Table
           style={{

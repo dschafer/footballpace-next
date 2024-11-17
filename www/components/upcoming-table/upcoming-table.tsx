@@ -1,6 +1,10 @@
+"use client";
 import {
   Box,
+  Group,
+  MultiSelect,
   NumberFormatter,
+  NumberInput,
   Stack,
   Table,
   TableScrollContainer,
@@ -16,40 +20,72 @@ import ErrorAlert from "../error/error-alert";
 import { ExtendedStandingsRow } from "@/lib/pace/standings";
 import { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
+import { useState } from "react";
 
 export default function UpcomingTable({
   standings,
   fixtures,
 }: {
   standings: ExtendedStandingsRow[];
-  fixtures: PaceFixture[][];
+  fixtures: Map<string, PaceFixture[]>;
 }) {
-  const numFixtures = Math.max(0, ...fixtures.map((f) => f.length));
-  if (numFixtures == 0) {
+  const allTeams = standings.map(({ team }) => team);
+  const maxFixtures = Math.max(
+    0,
+    ...Array.from(fixtures.values()).map((f) => f.length),
+  );
+
+  const [teams, setTeams] = useState(allTeams.slice(0, 4));
+  const [matchCount, setMatchCount] = useState<string | number>(6);
+
+  const filteredFixtures: PaceFixture[][] = teams.map(
+    (t) => fixtures.get(t)?.slice(0, +matchCount)!,
+  );
+  const numFixtures = Math.max(0, ...filteredFixtures.map((f) => f.length));
+
+  if (maxFixtures == 0) {
     return <ErrorAlert />;
   }
 
   return (
     <Stack>
+      <Group>
+        <NumberInput
+          label="Matches"
+          allowDecimal={false}
+          min={1}
+          max={maxFixtures}
+          onChange={setMatchCount}
+          value={matchCount}
+        />
+        <MultiSelect
+          label="Teams"
+          data={allTeams}
+          maxValues={6}
+          searchable
+          onChange={setTeams}
+          value={teams}
+        />
+      </Group>
       <TableScrollContainer minWidth={0}>
         <Table
           style={{
-            borderSpacing: "var(--mantine-spacing-lg) 0",
+            borderSpacing: "var(--mantine-spacing-xs) 0",
             borderCollapse: "separate",
           }}
         >
           <Box component="colgroup">
-            {standings.map(({ team }) => (
+            {teams.map((team) => (
               <Box
                 component="col"
-                width={`${100 / standings.length}%`}
+                width={`${100 / teams.length}%`}
                 key={team}
               />
             ))}
           </Box>
           <TableThead>
             <TableTr bd={0}>
-              {standings.map(({ team }) => (
+              {teams.map((team) => (
                 <TableTh ta="center" key={team}>
                   <Text span size="lg" fw={700}>
                     {team}
@@ -61,8 +97,8 @@ export default function UpcomingTable({
           <TableTbody>
             {[...Array(numFixtures)].map((_, matchNum) => (
               <TableTr key={matchNum} bd={0}>
-                {standings.map(({ team }, teamNum) => {
-                  const paceFixture = fixtures[teamNum][matchNum];
+                {teams.map((team, teamNum) => {
+                  const paceFixture = filteredFixtures[teamNum][matchNum];
                   if (!paceFixture) {
                     return <TableTd key={team} ml="xs" pl="xs" />;
                   }
@@ -72,9 +108,9 @@ export default function UpcomingTable({
                       key={team}
                       style={{
                         borderTopLeftRadius:
-                          matchNum == 0 ? "var(--mantine-radius-xl)" : 0,
+                          matchNum == 0 ? "var(--mantine-radius-lg)" : 0,
                         borderTopRightRadius:
-                          matchNum == 0 ? "var(--mantine-radius-xl)" : 0,
+                          matchNum == 0 ? "var(--mantine-radius-lg)" : 0,
                       }}
                     />
                   );
@@ -84,15 +120,15 @@ export default function UpcomingTable({
           </TableTbody>
           <TableTfoot>
             <TableTr bd={0}>
-              {standings.map(({ team }, teamNum) => (
+              {teams.map((team, teamNum) => (
                 <TableTd
                   ta="center"
                   key={team}
                   fw="700"
                   bg="summary-row"
                   style={{
-                    borderBottomLeftRadius: "var(--mantine-radius-xl)",
-                    borderBottomRightRadius: "var(--mantine-radius-xl)",
+                    borderBottomLeftRadius: "var(--mantine-radius-lg)",
+                    borderBottomRightRadius: "var(--mantine-radius-lg)",
                   }}
                 >
                   <Stack gap="0">
@@ -101,13 +137,16 @@ export default function UpcomingTable({
                     </Text>
                     <Text span fw={700} size="lg">
                       <NumberFormatter
-                        value={fixtures[teamNum].reduce(
+                        value={filteredFixtures[teamNum].reduce(
                           (a, f) => a + f.expectedPoints,
                           0,
                         )}
                         decimalScale={2}
                         fixedDecimalScale
                       />
+                    </Text>
+                    <Text span fw={500} size="xs">
+                      {getRecordString(filteredFixtures[teamNum])}
                     </Text>
                   </Stack>
                 </TableTd>
@@ -118,4 +157,39 @@ export default function UpcomingTable({
       </TableScrollContainer>
     </Stack>
   );
+}
+
+function getRecord(
+  matchCount: number,
+  points: number,
+): [number, number, number] {
+  if (matchCount == 0) {
+    return [0, 0, 0];
+  }
+  const pointsToGive = matchCount * 3 - points;
+  if (pointsToGive < 2) {
+    return [matchCount, 0, 0];
+  }
+  if (pointsToGive < 3) {
+    return [matchCount - 1, 1, 0];
+  }
+  if (pointsToGive < 4) {
+    return [matchCount - 1, 0, 1];
+  }
+  if (pointsToGive < 5) {
+    return [matchCount - 2, 2, 0];
+  }
+  if (pointsToGive < 6) {
+    return [matchCount - 2, 1, 1];
+  }
+  const [w, d, l] = getRecord(matchCount - 1, points);
+  return [w, d, l + 1];
+}
+
+function getRecordString(fixtures: PaceFixture[]): string {
+  const [w, d, l] = getRecord(
+    fixtures.length,
+    fixtures.reduce((a, f) => a + f.expectedPoints, 0),
+  );
+  return `W${w} D${d} L${l}`;
 }
