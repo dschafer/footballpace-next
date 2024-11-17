@@ -5,6 +5,7 @@ import {
   IconInfoCircle,
   IconList,
   IconRulerMeasure,
+  IconVersions,
 } from "@tabler/icons-react";
 
 import { ActiveNavLink } from "./active-nav-link";
@@ -57,6 +58,12 @@ export default function NavLinks() {
             label="Results"
             pageUrl={`/${leagueCode}/${year}/matches`}
             leftSection={<IconList />}
+          />
+          <ActiveNavLink
+            href={`/${leagueCode}/${year}/upcoming`}
+            label="Upcoming"
+            pageUrl={`/${leagueCode}/${year}/upcoming`}
+            leftSection={<IconVersions />}
           />
           <TeamNavLinks league={leagueCode} year={year} />
         </ActiveNavLink>
