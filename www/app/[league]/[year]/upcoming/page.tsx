@@ -3,9 +3,10 @@ import { Stack, Title } from "@mantine/core";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 import { fetchStandings } from "@/lib/pace/standings";
+import leagues from "@/lib/const/leagues";
 
 export function generateStaticParams(): LeagueYearParam[] {
-  return currentSeasons;
+  return currentSeasons.filter(({ league }) => leagues.get(league)?.fixtures);
 }
 
 export default async function UpcomingPage({

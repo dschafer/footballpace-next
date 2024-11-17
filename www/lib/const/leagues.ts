@@ -6,6 +6,7 @@ const leagues = new Map([
       flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
       flagImage: "/flags/E0.png",
       tz: "Europe/London",
+      fixtures: true,
     },
   ],
   [
@@ -15,6 +16,7 @@ const leagues = new Map([
       flag: "🇪🇸",
       flagImage: "/flags/SP1.png",
       tz: "Europe/Madrid",
+      fixtures: false,
     },
   ],
   [
@@ -24,6 +26,7 @@ const leagues = new Map([
       flag: "🇩🇪",
       flagImage: "/flags/D1.png",
       tz: "Europe/Berlin",
+      fixtures: false,
     },
   ],
   [
@@ -33,6 +36,7 @@ const leagues = new Map([
       flag: "🇫🇷",
       flagImage: "/flags/F1.png",
       tz: "Europe/Paris",
+      fixtures: false,
     },
   ],
   [
@@ -42,6 +46,7 @@ const leagues = new Map([
       flag: "🇮🇹",
       flagImage: "/flags/I1.png",
       tz: "Europe/Rome",
+      fixtures: false,
     },
   ],
 ]);

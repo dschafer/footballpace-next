@@ -12,6 +12,7 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import ErrorAlert from "../error/error-alert";
 import { ExtendedStandingsRow } from "@/lib/pace/standings";
 import { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
@@ -23,7 +24,10 @@ export default function UpcomingTable({
   standings: ExtendedStandingsRow[];
   fixtures: PaceFixture[][];
 }) {
-  const numFixtures = Math.max(...fixtures.map((f) => f.length));
+  const numFixtures = Math.max(0, ...fixtures.map((f) => f.length));
+  if (numFixtures == 0) {
+    return <ErrorAlert />;
+  }
 
   return (
     <Stack>

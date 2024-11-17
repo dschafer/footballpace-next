@@ -59,12 +59,14 @@ export default function NavLinks() {
             pageUrl={`/${leagueCode}/${year}/matches`}
             leftSection={<IconList />}
           />
-          <ActiveNavLink
-            href={`/${leagueCode}/${year}/upcoming`}
-            label="Upcoming"
-            pageUrl={`/${leagueCode}/${year}/upcoming`}
-            leftSection={<IconVersions />}
-          />
+          {league.fixtures ? (
+            <ActiveNavLink
+              href={`/${leagueCode}/${year}/upcoming`}
+              label="Upcoming"
+              pageUrl={`/${leagueCode}/${year}/upcoming`}
+              leftSection={<IconVersions />}
+            />
+          ) : null}
           <TeamNavLinks league={leagueCode} year={year} />
         </ActiveNavLink>
       ))}
