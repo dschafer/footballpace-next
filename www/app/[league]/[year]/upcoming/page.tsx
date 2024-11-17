@@ -1,8 +1,12 @@
+import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
 import { Stack, Title } from "@mantine/core";
-import { LeagueYearParam } from "@/lib/const/current";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 import { fetchStandings } from "@/lib/pace/standings";
+
+export function generateStaticParams(): LeagueYearParam[] {
+  return currentSeasons;
+}
 
 export default async function UpcomingPage({
   params,
