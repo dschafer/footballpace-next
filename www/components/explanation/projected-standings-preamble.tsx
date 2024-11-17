@@ -28,6 +28,14 @@ export default function ProjectedStandingsPreamble() {
           team from the previous season instead.
         </ListItem>
       </List>
+      <Text>
+        This tends to be fairly conservative on teams that get out to a hot
+        start; for example, even after 11 matchdays in 2024, it still projected
+        Nottingham Forest (5th in the table at the time) to finish 11th.
+        However, this matches pretty closely with the betting markets; Forest
+        had only the 10th best odds to make the Champions League at the time. So
+        that suggests this approximation is reasonable.
+      </Text>
     </>
   );
 }
