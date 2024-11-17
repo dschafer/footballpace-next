@@ -49,7 +49,13 @@ export default function UpcomingTable({
 
   return (
     <Stack>
-      <Group>
+      <Group
+        preventGrowOverflow={false}
+        gap="xs"
+        grow
+        wrap="nowrap"
+        align="start"
+      >
         <NumberInput
           label="Matches"
           allowDecimal={false}
@@ -57,6 +63,8 @@ export default function UpcomingTable({
           max={maxFixtures}
           onChange={setMatchCount}
           value={matchCount}
+          hideControls
+          maw="6em"
         />
         <MultiSelect
           label="Teams"
