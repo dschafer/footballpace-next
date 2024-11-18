@@ -1,5 +1,6 @@
 "use client";
 import {
+  Anchor,
   Box,
   Group,
   MultiSelect,
@@ -31,6 +32,8 @@ export default function UpcomingTable({
   standings: ExtendedStandingsRow[];
   fixtures: Map<string, PaceFixture[]>;
 }) {
+  const league = standings[0].league;
+  const year = standings[0].year;
   const allTeams = standings.map(({ team }) => team);
   const maxFixtures = Math.max(
     0,
@@ -81,7 +84,7 @@ export default function UpcomingTable({
       <TableScrollContainer minWidth={0}>
         <Table
           style={{
-            borderSpacing: "var(--mantine-spacing-xs) 0",
+            borderSpacing: "var(--mantine-spacing-xs) 1px",
             borderCollapse: "separate",
           }}
         >
@@ -99,7 +102,15 @@ export default function UpcomingTable({
               {teams.map((team) => (
                 <TableTh ta="center" key={team}>
                   <Text span size="lg" fw={700}>
-                    {team}
+                    <Anchor
+                      component={Link}
+                      href={`/${league}/${year}/team/${team}`}
+                      inherit
+                      c="black"
+                      underline="never"
+                    >
+                      {team}
+                    </Anchor>
                   </Text>
                 </TableTh>
               ))}

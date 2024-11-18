@@ -1,5 +1,6 @@
 "use client";
 import {
+  Anchor,
   NumberFormatter,
   Stack,
   TableTd,
@@ -9,6 +10,7 @@ import {
 import { PaceFixture } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import useFixtureDifficultyColor from "../pace-display/use-fixture-difficulty-color";
+import Link from "next/link";
 
 export default function UpcomingTableCell(
   props: {
@@ -27,7 +29,16 @@ export default function UpcomingTableCell(
           })}
         </Text>
         <Text span size="md">
-          {paceFixture.opponent} ({paceFixture.home ? "H" : "A"})
+          <Anchor
+            component={Link}
+            href={`/${paceFixture.fixture.league}/${paceFixture.fixture.year}/team/${paceFixture.opponent}`}
+            inherit
+            c="black"
+            underline="never"
+          >
+            {paceFixture.opponent}
+          </Anchor>{" "}
+          ({paceFixture.home ? "H" : "A"})
         </Text>
         <Text
           size="sm"
