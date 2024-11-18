@@ -8,10 +8,11 @@ export default function FixtureDifficultyCell(
     children: React.ReactNode;
   } & TableTdProps,
 ) {
-  const [bg, fg] = useFixtureDifficultyColor(props.val);
+  const { val, ...rest } = props;
+  const [bg, fg] = useFixtureDifficultyColor(val);
 
   return (
-    <TableTd bg={bg} c={fg} {...props}>
+    <TableTd bg={bg} c={fg} {...rest}>
       {props.children}
     </TableTd>
   );

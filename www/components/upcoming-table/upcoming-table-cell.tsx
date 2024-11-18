@@ -15,10 +15,10 @@ export default function UpcomingTableCell(
     paceFixture: PaceFixture;
   } & TableTdProps,
 ) {
-  const paceFixture = props.paceFixture;
+  const { paceFixture, ...rest } = props;
   const [bg, fg] = useFixtureDifficultyColor(paceFixture.expectedPoints);
   return (
-    <TableTd ta="center" bg={bg} c={fg} {...props}>
+    <TableTd ta="center" bg={bg} c={fg} {...rest}>
       <Stack gap="0">
         <Text span size="xs">
           {paceFixture.fixture.kickoffTime.toLocaleDateString([], {

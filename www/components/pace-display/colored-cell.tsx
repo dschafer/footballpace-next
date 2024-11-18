@@ -8,10 +8,11 @@ export default function ColoredCell(
     children: React.ReactNode;
   } & TableTdProps,
 ) {
-  const [bg, fg] = usePaceDeltaColor(props.val);
+  const { val, ...rest } = props;
+  const [bg, fg] = usePaceDeltaColor(val);
 
   return (
-    <TableTd p="0" bg={bg} c={fg} {...props}>
+    <TableTd p="0" bg={bg} c={fg} {...rest}>
       {props.children}
     </TableTd>
   );
