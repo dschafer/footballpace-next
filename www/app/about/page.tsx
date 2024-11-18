@@ -31,12 +31,19 @@ export default function AboutPage() {
           , based on the opponent{"'"}s finish this year and last year.
         </ListItem>
         <ListItem>
-          The match{"'"}s{" "}
+          The{" "}
           <Text fw={700} span>
             Target Points
           </Text>
           , based on how historical league champions perform in matches against
-          opponents who finished in that position.
+          opponents who finished in that position. From this, we can also
+          compute the match{"'"}s{" "}
+          <Text fw={700} span>
+            Difficulty
+          </Text>
+          , which is just 3 minus the Target Points; in other words, the
+          difficulty is how many points a typical champion drops from a given
+          fixture.
         </ListItem>
         <ListItem>
           The cumulative{" "}
