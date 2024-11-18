@@ -65,6 +65,7 @@ export default function UpcomingTable({
           value={matchCount}
           hideControls
           maw="6em"
+          miw="4em"
         />
         <MultiSelect
           label="Teams"
