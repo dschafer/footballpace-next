@@ -2,6 +2,8 @@
 
 This subfolder is a top-level Dagster pipeline for data ingestion.
 
+![Global Asset Lineage as of 18 Nov 2024.](./Global_Asset_Lineage.svg)
+
 ## Running locally
 
 First, you need a copy of the environment variables; these should go into
