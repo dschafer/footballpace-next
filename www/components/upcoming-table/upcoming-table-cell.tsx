@@ -36,12 +36,12 @@ export default function UpcomingTableCell(
           }}
         >
           <Text span inherit fw={500}>
-            Target
+            Difficulty
           </Text>
           {": "}
           <Text span inherit fw={700}>
             <NumberFormatter
-              value={paceFixture.expectedPoints}
+              value={3 - paceFixture.expectedPoints}
               decimalScale={2}
               fixedDecimalScale
             />

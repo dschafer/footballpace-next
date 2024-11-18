@@ -7,6 +7,7 @@ import {
   NumberInput,
   Stack,
   Table,
+  TableCaption,
   TableScrollContainer,
   TableTbody,
   TableTd,
@@ -21,6 +22,7 @@ import { ExtendedStandingsRow } from "@/lib/pace/standings";
 import { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function UpcomingTable({
   standings,
@@ -142,63 +144,44 @@ export default function UpcomingTable({
                 >
                   <Stack gap="0">
                     <Text span fw={500} size="xs">
-                      Total Target
+                      Total Difficulty
                     </Text>
                     <Text span fw={700} size="lg">
                       <NumberFormatter
                         value={filteredFixtures[teamNum].reduce(
-                          (a, f) => a + f.expectedPoints,
+                          (a, f) => a + 3 - f.expectedPoints,
                           0,
                         )}
                         decimalScale={2}
                         fixedDecimalScale
                       />
                     </Text>
-                    <Text span fw={500} size="xs">
-                      {getRecordString(filteredFixtures[teamNum])}
-                    </Text>
                   </Stack>
                 </TableTd>
               ))}
             </TableTr>
           </TableTfoot>
+          <TableCaption>
+            <Stack gap="xs">
+              <Text>
+                <Text inherit span fw={700}>
+                  Difficulty
+                </Text>{" "}
+                is the average number of points that previous title-winning
+                teams dropped in the corresponding match.
+              </Text>
+              <Text>
+                <Text inherit span fw={700}>
+                  Total Difficulty
+                </Text>{" "}
+                hence represents how many points each team can afford to drop
+                over this run if they want to keep pace with previous
+                title-winning teams.
+              </Text>
+            </Stack>
+          </TableCaption>
         </Table>
       </TableScrollContainer>
     </Stack>
   );
-}
-
-function getRecord(
-  matchCount: number,
-  points: number,
-): [number, number, number] {
-  if (matchCount == 0) {
-    return [0, 0, 0];
-  }
-  const pointsToGive = matchCount * 3 - points;
-  if (pointsToGive < 2) {
-    return [matchCount, 0, 0];
-  }
-  if (pointsToGive < 3) {
-    return [matchCount - 1, 1, 0];
-  }
-  if (pointsToGive < 4) {
-    return [matchCount - 1, 0, 1];
-  }
-  if (pointsToGive < 5) {
-    return [matchCount - 2, 2, 0];
-  }
-  if (pointsToGive < 6) {
-    return [matchCount - 2, 1, 1];
-  }
-  const [w, d, l] = getRecord(matchCount - 1, points);
-  return [w, d, l + 1];
-}
-
-function getRecordString(fixtures: PaceFixture[]): string {
-  const [w, d, l] = getRecord(
-    fixtures.length,
-    fixtures.reduce((a, f) => a + f.expectedPoints, 0),
-  );
-  return `W${w} D${d} L${l}`;
 }
