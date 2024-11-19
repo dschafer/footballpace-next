@@ -20,10 +20,10 @@ import {
 } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
 import { ExtendedStandingsRow } from "@/lib/pace/standings";
+import Link from "next/link";
 import { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
 import { useState } from "react";
-import Link from "next/link";
 
 export default function UpcomingTable({
   standings,

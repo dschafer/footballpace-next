@@ -7,10 +7,10 @@ import {
   TableTdProps,
   Text,
 } from "@mantine/core";
+import Link from "next/link";
 import { PaceFixture } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import useFixtureDifficultyColor from "../pace-display/use-fixture-difficulty-color";
-import Link from "next/link";
 
 export default function UpcomingTableCell(
   props: {
