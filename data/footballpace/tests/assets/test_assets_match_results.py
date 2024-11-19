@@ -4,7 +4,7 @@ from dagster import MultiPartitionKey, Output, build_asset_context
 
 from footballpace.assets.match_results import match_results_df, match_results_postgres
 
-from .read_csv_bytes import read_csv_bytes
+from .read_file import read_csv_bytes
 
 
 def test_match_results_df_93():

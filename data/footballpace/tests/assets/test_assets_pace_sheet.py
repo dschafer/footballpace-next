@@ -7,7 +7,7 @@ from footballpace.assets.match_with_finish import match_results_with_finish_df
 from footballpace.assets.pace_sheet import pace_sheet_entries_df
 from footballpace.assets.standings_rows import standings_rows_df
 
-from .read_csv_bytes import read_csv_bytes
+from .read_file import read_csv_bytes
 
 
 def helper_get_match_results_with_finish(year: str, filename: str) -> pd.DataFrame:
