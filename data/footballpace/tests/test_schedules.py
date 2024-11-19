@@ -1,9 +1,9 @@
 from dagster import MultiPartitionKey, RunRequest
-from footballpace.schedules import current_season_daily_refresh_schedule
+from footballpace.schedules import current_season_refresh_schedule
 
 
-def test_current_season_daily_refresh_schedule():
-    schedule = current_season_daily_refresh_schedule()
+def test_current_season_refresh_schedule():
+    schedule = current_season_refresh_schedule()
     assert isinstance(schedule, list)
     scheduled_seasons = set()
     scheduled_leagues = set()
