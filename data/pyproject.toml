@@ -19,11 +19,11 @@ dependencies = [
   "httpx",
   "pandas",
   "psycopg[binary]",
-
 ]
 
 [project.optional-dependencies]
 dev = [
   "dagster-webserver",
   "pytest",
+  "pytest-cov",
 ]
