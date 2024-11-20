@@ -33,7 +33,7 @@ export default function UpcomingTableCell(
             component={Link}
             href={`/${paceFixture.fixture.league}/${paceFixture.fixture.year}/team/${paceFixture.opponent}`}
             inherit
-            c="black"
+            c={fg}
             underline="never"
           >
             {paceFixture.opponent}

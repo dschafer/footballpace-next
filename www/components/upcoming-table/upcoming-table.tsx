@@ -106,7 +106,7 @@ export default function UpcomingTable({
                       component={Link}
                       href={`/${league}/${year}/team/${team}`}
                       inherit
-                      c="black"
+                      c="var(--mantine-color-text)"
                       underline="never"
                     >
                       {team}
