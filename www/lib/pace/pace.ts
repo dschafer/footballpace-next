@@ -15,7 +15,6 @@ export type PaceFixture = {
 
 export type PaceMatch = {
   match: Match;
-  dateString: string;
   delta: number;
   cumulativeDelta: number;
   points: number;
@@ -86,12 +85,8 @@ export async function fetchPaceTeams(
         cumulativePoints += points;
         cumulativeExpectedPoints += expectedPoints;
         cumulativeDelta += delta;
-        const dateString = match.date.toLocaleDateString([], {
-          timeZone: leagues.get(league)?.tz,
-        });
         paceMatches.push({
           match,
-          dateString,
           team,
           opponent,
           home,

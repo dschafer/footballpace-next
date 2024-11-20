@@ -31,6 +31,11 @@ export default async function TeamFixtures({
   if (fixtures.length == 0) {
     return null;
   }
+  const dateTimeFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    dateStyle: "short",
+    timeStyle: "short",
+  });
   return (
     <Stack>
       <LinkableHeader order={3} title="Fixtures" />
@@ -47,11 +52,7 @@ export default async function TeamFixtures({
             {upcomingFixtures.map((pf, i) => (
               <TableTr key={i}>
                 <TableTd ta="right">
-                  {pf.fixture.kickoffTime.toLocaleString([], {
-                    timeZone: leagues.get(pf.fixture.league)?.tz,
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}
+                  {dateTimeFormat.format(pf.fixture.kickoffTime)}
                 </TableTd>
                 <TableTd ta="right">
                   {pf.home ? "vs " + pf.opponent : "at " + pf.opponent}

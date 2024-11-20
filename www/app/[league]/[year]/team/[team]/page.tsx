@@ -84,7 +84,11 @@ export default async function SeasonPage({
         </Text>
       </Anchor>
       <LinkableHeader order={3} title="Recent Matches" />
-      <ResultsTable paceMatches={previewMatches} team={teamDecoded} />
+      <ResultsTable
+        paceMatches={previewMatches}
+        league={params.league}
+        team={teamDecoded}
+      />
       <LinkableHeader order={3} title="Table" />
       <PaceTable
         paceTeams={paceTeams.slice(
@@ -101,7 +105,11 @@ export default async function SeasonPage({
         paceTeam={paceTeam}
       />
       <LinkableHeader order={3} title="Full Results" />
-      <ResultsTable paceMatches={paceTeam.paceMatches} team={teamDecoded} />
+      <ResultsTable
+        paceMatches={paceTeam.paceMatches}
+        league={params.league}
+        team={teamDecoded}
+      />
       <TeamFixtures league={params.league} year={yearInt} team={teamDecoded} />
     </Stack>
   );

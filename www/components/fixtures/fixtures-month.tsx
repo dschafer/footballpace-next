@@ -4,15 +4,26 @@ import Link from "next/link";
 import leagues from "@/lib/const/leagues";
 
 export default async function FixturesMonth({
+  league,
   fixtures,
   dateHeadings,
 }: {
+  league: string;
   fixtures: Map<string, Fixture[]>;
   dateHeadings: boolean;
 }) {
   if (fixtures.size == 0) {
     return null;
   }
+  const timeFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    timeStyle: "short",
+  });
+  const dateTimeFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    dateStyle: "short",
+    timeStyle: "short",
+  });
   if (dateHeadings) {
     return (
       <>
@@ -22,12 +33,7 @@ export default async function FixturesMonth({
             <List listStyleType="none" pb="md">
               {fixtures!.map((fixture, j) => (
                 <ListItem key={j}>
-                  (
-                  {fixture.kickoffTime.toLocaleTimeString([], {
-                    timeZone: leagues.get(fixture.league)?.tz,
-                    timeStyle: "short",
-                  })}
-                  ){" "}
+                  ({timeFormat.format(fixture.kickoffTime)}){" "}
                   <Anchor
                     component={Link}
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
@@ -79,13 +85,7 @@ export default async function FixturesMonth({
             >
               {fixture.awayTeam}
             </Anchor>{" "}
-            (
-            {fixture.kickoffTime.toLocaleString([], {
-              timeZone: leagues.get(fixture.league)?.tz,
-              dateStyle: "short",
-              timeStyle: "short",
-            })}
-            )
+            ({dateTimeFormat.format(fixture.kickoffTime)})
           </ListItem>
         ))}
       </List>

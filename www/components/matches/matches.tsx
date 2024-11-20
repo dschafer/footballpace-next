@@ -28,12 +28,17 @@ export default async function Matches({
   if (matches.length == 0) {
     return <ErrorAlert />;
   }
+  const dateFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+  });
+  const monthFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    month: "long",
+  });
   // This is just Map.groupBy but that's not available in Node 20.
   const matchesByDay: Map<string, Match[]> = new Map();
   for (const match of matches) {
-    const key = match.date.toLocaleDateString([], {
-      timeZone: leagues.get(league)?.tz,
-    });
+    const key = dateFormat.format(match.date);
     if (matchesByDay.has(key)) {
       matchesByDay.get(key)!.push(match);
     } else {
@@ -43,7 +48,7 @@ export default async function Matches({
 
   const matchesByMonth: Map<string, Map<string, Match[]>> = new Map();
   for (const [day, matches] of Array.from(matchesByDay.entries())) {
-    const key = matches[0].date.toLocaleString([], { month: "long" });
+    const key = monthFormat.format(matches[0].date);
     if (!matchesByMonth.has(key)) {
       matchesByMonth.set(key, new Map());
     }
@@ -55,7 +60,7 @@ export default async function Matches({
       <Accordion
         variant="separated"
         multiple={true}
-        defaultValue={[new Date().toLocaleString([], { month: "long" })]}
+        defaultValue={[monthFormat.format(new Date())]}
       >
         {Array.from(matchesByMonth).map(([month, matchesDict]) => (
           <AccordionItem key={month} value={month}>

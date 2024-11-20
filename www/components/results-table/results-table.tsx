@@ -14,14 +14,21 @@ import { PaceMatch, matchDescription } from "@/lib/pace/pace";
 import ColoredCell from "../pace-display/colored-cell";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
+import leagues from "@/lib/const/leagues";
 
 export default async function ResultsTable({
   paceMatches,
+  league,
   team,
 }: {
   paceMatches: PaceMatch[];
+  league: string;
   team: string;
 }) {
+  const dateTimeFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    dateStyle: "short",
+  });
   return (
     <TableScrollContainer minWidth={0}>
       <Table stickyHeader striped>
@@ -39,7 +46,9 @@ export default async function ResultsTable({
         <TableTbody>
           {paceMatches.map((paceMatch, i) => (
             <TableTr key={i}>
-              <TableTd ta="left">{paceMatch.dateString}</TableTd>
+              <TableTd ta="left">
+                {dateTimeFormat.format(paceMatch.match.date)}
+              </TableTd>
               <TableTd ta="center">
                 <Result
                   match={paceMatch.match}

@@ -23,7 +23,7 @@ export default async function LeagueFixtures({
   return (
     <Stack>
       <Title order={3}>Fixtures</Title>
-      <Fixtures fixtures={fixtures} dateHeadings={true} />
+      <Fixtures league={league} fixtures={fixtures} dateHeadings={true} />
     </Stack>
   );
 }

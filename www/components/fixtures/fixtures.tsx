@@ -10,18 +10,25 @@ import FixturesMonth from "./fixtures-month";
 import leagues from "@/lib/const/leagues";
 
 export default async function Fixtures({
+  league,
   fixtures,
   dateHeadings,
 }: {
+  league: string;
   fixtures: Fixture[];
   dateHeadings: boolean;
 }) {
+  const dateFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+  });
+  const monthFormat = Intl.DateTimeFormat(undefined, {
+    timeZone: leagues.get(league)?.tz,
+    month: "long",
+  });
   // This is just Map.groupBy but that's not available in Node 20.
   const fixturesByDay: Map<string, Fixture[]> = new Map();
   for (const fixture of fixtures) {
-    const key = fixture.kickoffTime.toLocaleDateString([], {
-      timeZone: leagues.get(fixture.league)?.tz,
-    });
+    const key = dateFormat.format(fixture.kickoffTime);
     if (!fixturesByDay.has(key)) {
       fixturesByDay.set(key, []);
     }
@@ -30,7 +37,7 @@ export default async function Fixtures({
 
   const fixturesByMonth: Map<string, Map<string, Fixture[]>> = new Map();
   for (const [day, fixtures] of Array.from(fixturesByDay.entries())) {
-    const key = fixtures[0].kickoffTime.toLocaleString([], { month: "long" });
+    const key = monthFormat.format(fixtures[0].kickoffTime);
     if (!fixturesByMonth.has(key)) {
       fixturesByMonth.set(key, new Map());
     }
@@ -40,7 +47,7 @@ export default async function Fixtures({
     <Accordion
       variant="separated"
       multiple={true}
-      defaultValue={[new Date().toLocaleString([], { month: "long" })]}
+      defaultValue={[monthFormat.format(new Date())]}
     >
       {Array.from(fixturesByMonth).map(([month, fixturesDict]) => (
         <AccordionItem key={month} value={month}>
@@ -49,6 +56,7 @@ export default async function Fixtures({
           </AccordionControl>
           <AccordionPanel>
             <FixturesMonth
+              league={league}
               fixtures={fixturesDict}
               dateHeadings={dateHeadings}
             />

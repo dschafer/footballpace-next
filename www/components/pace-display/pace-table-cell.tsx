@@ -12,9 +12,10 @@ import { PaceMatch, matchDescription } from "@/lib/pace/pace";
 import ColoredCell from "../pace-display/colored-cell";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
+import leagues from "@/lib/const/leagues";
 
 export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
-  const { delta, dateString, match, points, expectedPoints, team } = paceMatch;
+  const { delta, match, points, expectedPoints, team } = paceMatch;
 
   return (
     <ColoredCell val={delta} ta="right">
@@ -26,7 +27,12 @@ export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
         </PopoverTarget>
         <PopoverDropdown>
           <Center>
-            <Badge ta="center">{dateString}</Badge>
+            <Badge ta="center">
+              {match.date.toLocaleDateString([], {
+                timeZone: leagues.get(match.league)?.tz,
+                dateStyle: "short",
+              })}
+            </Badge>
           </Center>
           <Text ta="center">
             <Result match={match} highlightedTeam={team} />
