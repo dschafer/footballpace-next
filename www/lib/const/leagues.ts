@@ -1,4 +1,12 @@
-const leagues = new Map([
+export type LeagueInfo = {
+  name: string;
+  flag: string;
+  flagImage: string;
+  tz: string;
+  fixtures: boolean;
+};
+
+export const leagues: Map<string, LeagueInfo> = new Map([
   [
     "E0",
     {

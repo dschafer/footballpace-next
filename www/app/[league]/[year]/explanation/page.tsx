@@ -1,4 +1,8 @@
-import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
+import {
+  LeagueYearParam,
+  currentSeasons,
+  validateLeagueYear,
+} from "@/lib/const/current";
 import { Stack, Title } from "@mantine/core";
 import HistoricalPacePreamble from "@/components/explanation/historical-pace-preamble";
 import HistoricalPaceTable from "@/components/explanation/historical-pace-table";
@@ -14,6 +18,7 @@ export default function ExplanationPage({
 }: {
   params: LeagueYearParam;
 }) {
+  const [leagueInfo, yearInt] = validateLeagueYear(params);
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>

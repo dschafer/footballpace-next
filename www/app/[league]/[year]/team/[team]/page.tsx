@@ -1,4 +1,5 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
+import { LeagueYearParam, validateLeagueYear } from "@/lib/const/current";
 import { Metadata, ResolvingMetadata } from "next/types";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import Link from "next/link";
@@ -10,7 +11,6 @@ import ResultsTable from "@/components/results-table/results-table";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
-import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
 import year from "@/lib/const/year";
 
@@ -34,9 +34,7 @@ export async function generateStaticParams(): Promise<SeasonPageParams[]> {
   return Array.from(params);
 }
 
-type SeasonPageParams = {
-  league: string;
-  year: string;
+type SeasonPageParams = LeagueYearParam & {
   team: string;
 };
 
@@ -58,7 +56,7 @@ export default async function SeasonPage({
 }: {
   params: SeasonPageParams;
 }) {
-  const yearInt = parseInt(params.year);
+  const [leagueInfo, yearInt] = validateLeagueYear(params);
   const teamDecoded = decodeURIComponent(params.team);
 
   const [paceTeams, teamColorMap] = await Promise.all([
@@ -80,7 +78,7 @@ export default async function SeasonPage({
         }}
       >
         <Text fs="italic">
-          {leagues.get(params.league)?.name} {yearInt}
+          {leagueInfo.name} {yearInt}
         </Text>
       </Anchor>
       <LinkableHeader order={3} title="Recent Matches" />

@@ -1,5 +1,9 @@
 import { ExtendedStandingsRow, fetchStandings } from "@/lib/pace/standings";
-import { LeagueYearParam, currentSeasons } from "@/lib/const/current";
+import {
+  LeagueYearParam,
+  currentSeasons,
+  validateLeagueYear,
+} from "@/lib/const/current";
 import { PaceFixture, fetchPaceFixtures } from "@/lib/pace/pace";
 import { Stack, Title } from "@mantine/core";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
@@ -22,7 +26,7 @@ export default async function UpcomingPage({
 }: {
   params: LeagueYearParam;
 }) {
-  const yearInt = parseInt(params.year);
+  const [leagueInfo, yearInt] = validateLeagueYear(params);
   const standings = await fetchStandings(params.league, yearInt);
   const fixtures = await Promise.all(
     standings.map(standingsRowToFixturesMapEntry),
