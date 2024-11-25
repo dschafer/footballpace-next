@@ -15,14 +15,14 @@ export default async function HistoricalPacePreamble({
   if (paceSheetEntries.length == 0) {
     return <ErrorAlert />;
   }
-  const hardMatch = paceSheetEntries.filter(
+  const hardMatch = paceSheetEntries.find(
     (pse) => pse.opponentFinish == 2 && !pse.home,
-  )[0];
-  const easyMatch = paceSheetEntries.filter(
+  )!;
+  const easyMatch = paceSheetEntries.find(
     (pse) =>
       pse.opponentFinish == Math.round(1 + paceSheetEntries.length / 2) &&
       pse.home,
-  )[0];
+  )!;
   return (
     <Stack>
       <Text inherit>

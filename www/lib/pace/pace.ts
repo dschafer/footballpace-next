@@ -2,7 +2,7 @@ import type { Fixture, Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
 
-export type PaceFixture = {
+export interface PaceFixture {
   fixture: Fixture;
   expectedPoints: number;
   cumulativeExpectedPoints: number;
@@ -10,9 +10,9 @@ export type PaceFixture = {
   team: string;
   opponent: string;
   opponentFinish: number;
-};
+}
 
-export type PaceMatch = {
+export interface PaceMatch {
   match: Match;
   delta: number;
   cumulativeDelta: number;
@@ -24,9 +24,9 @@ export type PaceMatch = {
   team: string;
   opponent: string;
   opponentFinish: number;
-};
+}
 
-export type PaceTeam = {
+export interface PaceTeam {
   team: string;
   paceMatches: PaceMatch[];
   points: number;
@@ -34,7 +34,7 @@ export type PaceTeam = {
   delta: number;
   league: string;
   year: number;
-};
+}
 
 export async function fetchPaceTeams(
   league: string,

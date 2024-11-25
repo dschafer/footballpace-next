@@ -36,7 +36,7 @@ export default async function Matches({
     month: "long",
   });
   // This is just Map.groupBy but that's not available in Node 20.
-  const matchesByDay: Map<string, Match[]> = new Map();
+  const matchesByDay = new Map<string, Match[]>();
   for (const match of matches) {
     const key = dateFormat.format(match.date);
     if (matchesByDay.has(key)) {
@@ -46,7 +46,7 @@ export default async function Matches({
     }
   }
 
-  const matchesByMonth: Map<string, Map<string, Match[]>> = new Map();
+  const matchesByMonth = new Map<string, Map<string, Match[]>>();
   for (const [day, matches] of Array.from(matchesByDay.entries())) {
     const key = monthFormat.format(matches[0].date);
     if (!matchesByMonth.has(key)) {

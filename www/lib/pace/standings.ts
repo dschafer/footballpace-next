@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 
-export type ExtendedStandingsRow = {
+export interface ExtendedStandingsRow {
   league: string;
   year: number;
   team: string;
@@ -12,7 +12,7 @@ export type ExtendedStandingsRow = {
   goalsFor: number;
   goalsAgainst: number;
   gd: number;
-};
+}
 
 function sortStandings(
   standings: ExtendedStandingsRow[],
@@ -29,7 +29,7 @@ export async function fetchStandings(
   const allMatches = await prisma.match.findMany({
     where: { league: league, year: year },
   });
-  const standingsMap: Map<string, ExtendedStandingsRow> = new Map();
+  const standingsMap = new Map<string, ExtendedStandingsRow>();
   for (const match of allMatches) {
     for (const team of [match.homeTeam, match.awayTeam]) {
       if (!standingsMap.has(team)) {

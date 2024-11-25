@@ -31,14 +31,14 @@ export default function OpponentsTableCell({
   projectedStandingsRow: ProjectedStandingsRow;
 }) {
   const computedColorScheme = useComputedColorScheme("light");
-  const paceSheetEntry = paceSheetEntries.filter(
+  const paceSheetEntry = paceSheetEntries.find(
     (pse) => pse.home == home && pse.opponentFinish == opponentFinish,
-  )[0];
+  );
   if (!paceSheetEntry) {
     return <TableTd />;
   }
   const projectedOpponent = projectedStandingsRow.team;
-  const maybePaceMatch = paceTeam.paceMatches.filter(
+  const maybePaceMatch = paceTeam.paceMatches.find(
     (pm) =>
       (home &&
         pm.match.homeTeam == paceTeam.team &&
@@ -46,14 +46,14 @@ export default function OpponentsTableCell({
       (!home &&
         pm.match.awayTeam == paceTeam.team &&
         pm.match.homeTeam == projectedOpponent),
-  )[0];
-  const maybeFixture = fixtures.filter(
+  );
+  const maybeFixture = fixtures.find(
     (f) =>
       (home &&
         f.homeTeam == paceTeam.team &&
         f.awayTeam == projectedOpponent) ||
       (!home && f.awayTeam == paceTeam.team && f.homeTeam == projectedOpponent),
-  )[0];
+  );
 
   if (maybePaceMatch) {
     const match = maybePaceMatch.match;

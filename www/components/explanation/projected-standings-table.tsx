@@ -80,9 +80,9 @@ export default async function ProjectedStandingsTable({
                   decimalScale={2}
                 />
               </TableTd>
-              <TableTd ta="right">{row.previousYear?.played || ""}</TableTd>
+              <TableTd ta="right">{row.previousYear?.played ?? ""}</TableTd>
               <TableTd ta="right" fw={700}>
-                {row.previousYear?.points || ""}
+                {row.previousYear?.points ?? ""}
               </TableTd>
               <TableTd ta="right">
                 <NumberFormatter
@@ -92,13 +92,13 @@ export default async function ProjectedStandingsTable({
               </TableTd>
               <TableTd ta="right">
                 {row.currentYear.played * row.currentYearMultiplier +
-                  (row.previousYear?.played || 0) * row.previousYearMultiplier}
+                  (row.previousYear?.played ?? 0) * row.previousYearMultiplier}
               </TableTd>
               <TableTd ta="right" fw={700}>
                 <NumberFormatter
                   value={
                     row.currentYear.points * row.currentYearMultiplier +
-                    (row.previousYear?.points || 0) * row.previousYearMultiplier
+                    (row.previousYear?.points ?? 0) * row.previousYearMultiplier
                   }
                   decimalScale={2}
                 />

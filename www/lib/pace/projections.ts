@@ -1,12 +1,12 @@
 import { type ExtendedStandingsRow, fetchStandings } from "./standings";
 
-export type ProjectedStandingsRow = {
+export interface ProjectedStandingsRow {
   team: string;
   currentYear: ExtendedStandingsRow;
   currentYearMultiplier: number;
   previousYear?: ExtendedStandingsRow | null;
   previousYearMultiplier: number;
-};
+}
 
 function score(
   psr: ProjectedStandingsRow,

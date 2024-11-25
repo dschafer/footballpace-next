@@ -1,12 +1,12 @@
-export type LeagueInfo = {
+export interface LeagueInfo {
   name: string;
   flag: string;
   flagImage: string;
   tz: string;
   fixtures: boolean;
-};
+}
 
-export const leagues: Map<string, LeagueInfo> = new Map([
+export const leagues = new Map<string, LeagueInfo>([
   [
     "E0",
     {

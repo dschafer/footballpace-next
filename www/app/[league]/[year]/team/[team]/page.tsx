@@ -18,7 +18,7 @@ export async function generateStaticParams(): Promise<SeasonPageParams[]> {
   const matches = await prisma.match.findMany({
     where: { year: year },
   });
-  const params: Set<SeasonPageParams> = new Set();
+  const params = new Set<SeasonPageParams>();
   for (const m of matches) {
     params.add({
       league: m.league,
@@ -63,7 +63,7 @@ export default async function SeasonPage({
     fetchPaceTeams(params.league, yearInt),
     fetchTeamColorMap(),
   ]);
-  const paceTeam = paceTeams.filter((pt) => pt.team == teamDecoded)[0];
+  const paceTeam = paceTeams.find((pt) => pt.team == teamDecoded)!;
   const pacePlace = paceTeams.findIndex((pt) => pt.team == teamDecoded);
   const previewMatches = Array.from(paceTeam.paceMatches).reverse().slice(0, 3);
 

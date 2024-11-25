@@ -44,9 +44,7 @@ export default async function OpponentsTable({
     return null;
   }
 
-  const teamPsr = projectedStandings.filter(
-    (psr) => psr.team == paceTeam.team,
-  )[0];
+  const teamPsr = projectedStandings.find((psr) => psr.team == paceTeam.team)!;
   const arrangedProjectedStandings = projectedStandings.filter(
     (psr) => psr.team != paceTeam.team,
   );
