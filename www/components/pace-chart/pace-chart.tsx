@@ -8,7 +8,7 @@ export default async function PaceChart({
   teamColorMap,
 }: {
   paceTeams: PaceTeam[];
-  teamColorMap: Map<String, TeamColor>;
+  teamColorMap: Map<string, TeamColor>;
 }) {
   if (paceTeams.length == 0) {
     return <ErrorAlert />;
@@ -16,7 +16,7 @@ export default async function PaceChart({
 
   // https://colorbrewer2.org/#type=qualitative&scheme=Pastel1&n=5
   const colors = ["7fc97f", "beaed4", "fdc086", "ffff99", "386cb0"];
-  let series: LineChartSeries[] = paceTeams.map((paceTeam, i) => {
+  const series: LineChartSeries[] = paceTeams.map((paceTeam, i) => {
     const color = teamColorMap.get(paceTeam.team)?.primaryColor ?? colors[i];
     return {
       name: paceTeam.team,
@@ -28,11 +28,11 @@ export default async function PaceChart({
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
 
-  let mappedData = [...Array(maxMatchday)].map((_, md) => {
+  const mappedData = [...Array(maxMatchday)].map((_, md) => {
     return new Map([["matchday", md + 1]]);
   });
 
-  paceTeams.forEach((paceTeam, i) => {
+  paceTeams.forEach((paceTeam) => {
     const { team, paceMatches } = paceTeam;
     let cumDelta = 0;
     paceMatches.forEach((paceMatch, md) => {

@@ -14,7 +14,7 @@ export function generateStaticParams(): LeagueYearParam[] {
 }
 
 export default function PacePage({ params }: { params: LeagueYearParam }) {
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
+  const [_leagueInfo, yearInt] = validateLeagueYear(params);
   return (
     <Stack>
       <Title order={2}>

@@ -40,7 +40,7 @@ type SeasonPageParams = LeagueYearParam & {
 
 export async function generateMetadata(
   { params }: { params: SeasonPageParams },
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const teamDecoded = decodeURIComponent(params.team);
   const title = `${teamDecoded} ${params.year}`;

@@ -12,7 +12,7 @@ function score(
   psr: ProjectedStandingsRow,
   propGetter: (rs: ExtendedStandingsRow) => number,
 ): number {
-  var score = propGetter(psr.currentYear) * psr.currentYearMultiplier;
+  let score = propGetter(psr.currentYear) * psr.currentYearMultiplier;
   if (psr.previousYear != null) {
     score += propGetter(psr.previousYear) * psr.previousYearMultiplier;
   }
@@ -59,7 +59,7 @@ export async function fetchProjectedStandings(
   const projectedStandings = currentStandings
     .map((currentYear) => {
       const team = currentYear.team;
-      let previousYear = findPreviousYear(prevStandings, team);
+      const previousYear = findPreviousYear(prevStandings, team);
 
       const numMatches = (currentStandings.length - 1) * 2;
       let previousYearMultiplier = 0;

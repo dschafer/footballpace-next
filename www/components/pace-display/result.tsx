@@ -64,12 +64,12 @@ export default function Result({
     );
   }
   if (multiline) {
-    let home = (
+    const home = (
       <Text c={homeC} fw={homeFw} span={true} inherit>
         {homeTeam}&nbsp;{match.ftHomeGoals}
       </Text>
     );
-    let away = (
+    const away = (
       <Text c={awayC} fw={awayFw} span={true} inherit>
         {awayTeam}&nbsp;{match.ftAwayGoals}
       </Text>
@@ -83,12 +83,12 @@ export default function Result({
       </Text>
     );
   } else {
-    let home = (
+    const home = (
       <Text c={homeC} fw={homeFw} span={true} inherit>
         {homeTeam}&nbsp;{match.ftHomeGoals}
       </Text>
     );
-    let away = (
+    const away = (
       <Text c={awayC} fw={awayFw} span={true} inherit>
         {match.ftAwayGoals}&nbsp;{awayTeam}
       </Text>

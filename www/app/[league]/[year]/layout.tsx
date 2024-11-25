@@ -5,7 +5,7 @@ import leagues from "@/lib/const/leagues";
 
 export async function generateMetadata(
   { params }: { params: LeagueYearParam },
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const league = leagues.get(params.league);
   const title = {

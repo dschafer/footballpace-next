@@ -18,24 +18,15 @@ export default function ExplanationPage({
 }: {
   params: LeagueYearParam;
 }) {
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
+  const [_leagueInfo, yearInt] = validateLeagueYear(params);
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>
-      <HistoricalPacePreamble
-        league={params.league}
-        year={parseInt(params.year)}
-      />
-      <HistoricalPaceTable
-        league={params.league}
-        year={parseInt(params.year)}
-      />
+      <HistoricalPacePreamble league={params.league} year={yearInt} />
+      <HistoricalPaceTable league={params.league} year={yearInt} />
       <Title order={2}>Estimated Standings</Title>
       <ProjectedStandingsPreamble />
-      <ProjectedStandingsTable
-        league={params.league}
-        year={parseInt(params.year)}
-      />
+      <ProjectedStandingsTable league={params.league} year={yearInt} />
     </Stack>
   );
 }

@@ -9,11 +9,11 @@ export default async function StandingsPaceChart({
   league: string;
   year: number;
 }) {
-  let [paceTeams, teamColorMap] = await Promise.all([
+  const [paceTeams, teamColorMap] = await Promise.all([
     fetchPaceTeams(league, year),
     fetchTeamColorMap(),
   ]);
-  paceTeams = paceTeams.slice(0, 5);
+  const slicedPaceTeams = paceTeams.slice(0, 5);
 
-  return <PaceChart paceTeams={paceTeams} teamColorMap={teamColorMap} />;
+  return <PaceChart paceTeams={slicedPaceTeams} teamColorMap={teamColorMap} />;
 }

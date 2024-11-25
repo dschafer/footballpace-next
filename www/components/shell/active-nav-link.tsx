@@ -18,7 +18,7 @@ export const ActiveNavLink = createPolymorphicComponent<
 >(
   forwardRef<HTMLButtonElement, ActiveNavLinkProps>(function ActiveNavLink(
     { pageUrl, prefixUrl, ...others },
-    ref,
+    _ref,
   ) {
     const pathname = usePathname();
     let active = false;

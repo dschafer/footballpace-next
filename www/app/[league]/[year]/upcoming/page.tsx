@@ -26,7 +26,7 @@ export default async function UpcomingPage({
 }: {
   params: LeagueYearParam;
 }) {
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
+  const [_leagueInfo, yearInt] = validateLeagueYear(params);
   const standings = await fetchStandings(params.league, yearInt);
   const fixtures = await Promise.all(
     standings.map(standingsRowToFixturesMapEntry),

@@ -1,6 +1,5 @@
 import { Fixture, Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
-import leagues from "../const/leagues";
 import prisma from "@/lib/prisma";
 
 export type PaceFixture = {
@@ -54,10 +53,10 @@ export async function fetchPaceTeams(
     projectedStandings.map(({ team }, i) => [team, i + 1]),
   );
 
-  let paceTeams: PaceTeam[] = projectedStandings
+  const paceTeams: PaceTeam[] = projectedStandings
     .map(({ team }) => {
       const teamFinish = teamToFinish.get(team)!;
-      let paceMatches = [];
+      const paceMatches = [];
       let cumulativeExpectedPoints = 0;
       let cumulativeDelta = 0;
       let cumulativePoints = 0;
@@ -149,7 +148,7 @@ export async function fetchPaceFixtures(
   );
 
   const teamFinish = teamToFinish.get(team)!;
-  let paceFixtures: PaceFixture[] = [];
+  const paceFixtures: PaceFixture[] = [];
   let cumulativeExpectedPoints = 0;
   for (const fixture of allFixtures) {
     if (fixture.homeTeam != team && fixture.awayTeam != team) {

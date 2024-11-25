@@ -29,7 +29,7 @@ export async function fetchStandings(
   const allMatches = await prisma.match.findMany({
     where: { league: league, year: year },
   });
-  const standingsMap: Map<String, ExtendedStandingsRow> = new Map();
+  const standingsMap: Map<string, ExtendedStandingsRow> = new Map();
   for (const match of allMatches) {
     for (const team of [match.homeTeam, match.awayTeam]) {
       if (!standingsMap.has(team)) {

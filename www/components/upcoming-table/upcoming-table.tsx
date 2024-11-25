@@ -44,7 +44,7 @@ export default function UpcomingTable({
   const [matchCount, setMatchCount] = useState<string | number>(6);
 
   const filteredFixtures: PaceFixture[][] = teams.map(
-    (t) => fixtures.get(t)?.slice(0, +matchCount)!,
+    (t) => fixtures.get(t)!.slice(0, +matchCount)!,
   );
   const numFixtures = Math.max(0, ...filteredFixtures.map((f) => f.length));
 
