@@ -9,6 +9,11 @@ export const openGraphMetadata: Metadata["openGraph"] = {
   siteName: "Football Pace",
   description: "Reimagining football tables using historical championship pace",
   url: "https://footballpace.com",
+  images: {
+    url: "https://footballpace.com/opengraph-image.png",
+    width: 1200,
+    height: 630,
+  },
 };
 
 export const twitterMetadata: Metadata["twitter"] = {
@@ -22,4 +27,9 @@ export const twitterMetadata: Metadata["twitter"] = {
   siteId: "1856718770712236032",
   creator: "@dlschafer",
   creatorId: "69042390",
+  images: {
+    url: "https://footballpace.com/twitter-image.png",
+    width: 1200,
+    height: 630,
+  },
 };
