@@ -1,4 +1,4 @@
-import { TeamColor } from "@prisma/client";
+import type { TeamColor } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function fetchTeamColorMap(): Promise<Map<string, TeamColor>> {

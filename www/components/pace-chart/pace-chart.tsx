@@ -1,7 +1,7 @@
-import { LineChart, LineChartSeries } from "@mantine/charts";
+import { LineChart, type LineChartSeries } from "@mantine/charts";
 import ErrorAlert from "../error/error-alert";
-import { PaceTeam } from "@/lib/pace/pace";
-import { TeamColor } from "@prisma/client";
+import type { PaceTeam } from "@/lib/pace/pace";
+import type { TeamColor } from "@prisma/client";
 
 export default async function PaceChart({
   paceTeams,

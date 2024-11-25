@@ -1,4 +1,4 @@
-import { LeagueInfo, leagues } from "@/lib/const/leagues";
+import { type LeagueInfo, leagues } from "@/lib/const/leagues";
 import { notFound } from "next/navigation";
 import year from "@/lib/const/year";
 

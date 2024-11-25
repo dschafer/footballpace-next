@@ -9,7 +9,7 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
-import { PaceMatch, matchDescription } from "@/lib/pace/pace";
+import { type PaceMatch, matchDescription } from "@/lib/pace/pace";
 
 import ColoredCell from "../pace-display/colored-cell";
 import PaceNumber from "../pace-display/pace-number";

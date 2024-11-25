@@ -1,4 +1,4 @@
-import { Anchor, Text, Title, TitleOrder } from "@mantine/core";
+import { Anchor, Text, Title, type TitleOrder } from "@mantine/core";
 import Link from "next/link";
 
 export default function LinkableHeader({

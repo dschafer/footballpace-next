@@ -13,7 +13,7 @@ import ErrorAlert from "../error/error-alert";
 import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "../pace-display/pace-table-cell";
-import { PaceTeam } from "@/lib/pace/pace";
+import type { PaceTeam } from "@/lib/pace/pace";
 
 export default async function PaceTable({
   paceTeams,

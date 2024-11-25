@@ -2,7 +2,7 @@
 
 import {
   NavLink,
-  NavLinkProps,
+  type NavLinkProps,
   createPolymorphicComponent,
 } from "@mantine/core";
 import { forwardRef } from "react";

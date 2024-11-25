@@ -3,7 +3,7 @@ import "@mantine/charts/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import { Analytics } from "@vercel/analytics/react";
-import { Metadata } from "next/types";
+import type { Metadata } from "next/types";
 import NavLinks from "@/components/shell/nav-links";
 import Shell from "@/components/shell/shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";

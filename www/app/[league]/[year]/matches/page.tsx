@@ -1,5 +1,5 @@
 import {
-  LeagueYearParam,
+  type LeagueYearParam,
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";

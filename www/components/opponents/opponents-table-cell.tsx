@@ -1,5 +1,5 @@
 "use client";
-import { Fixture, PaceSheetEntry } from "@prisma/client";
+import type { Fixture, PaceSheetEntry } from "@prisma/client";
 import {
   NumberFormatter,
   Stack,
@@ -10,8 +10,8 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 
-import { PaceTeam } from "@/lib/pace/pace";
-import { ProjectedStandingsRow } from "@/lib/pace/projections";
+import type { PaceTeam } from "@/lib/pace/pace";
+import type { ProjectedStandingsRow } from "@/lib/pace/projections";
 import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
 

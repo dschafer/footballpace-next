@@ -1,6 +1,6 @@
-import { Metadata, ResolvingMetadata } from "next/types";
+import type { Metadata, ResolvingMetadata } from "next/types";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
-import { LeagueYearParam } from "@/lib/const/current";
+import type { LeagueYearParam } from "@/lib/const/current";
 import leagues from "@/lib/const/leagues";
 
 export async function generateMetadata(

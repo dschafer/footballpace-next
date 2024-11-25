@@ -1,5 +1,5 @@
 "use client";
-import { TableTd, TableTdProps } from "@mantine/core";
+import { TableTd, type TableTdProps } from "@mantine/core";
 import usePaceDeltaColor from "./use-pace-color";
 
 export default function ColoredCell(

@@ -1,6 +1,6 @@
 import { Anchor, Text } from "@mantine/core";
 import Link from "next/link";
-import { Match } from "@prisma/client";
+import type { Match } from "@prisma/client";
 
 export default function Result({
   match,

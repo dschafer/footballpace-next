@@ -1,6 +1,6 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
-import { LeagueYearParam, validateLeagueYear } from "@/lib/const/current";
-import { Metadata, ResolvingMetadata } from "next/types";
+import { type LeagueYearParam, validateLeagueYear } from "@/lib/const/current";
+import type { Metadata, ResolvingMetadata } from "next/types";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import LinkableHeader from "@/components/header/linkable-header";

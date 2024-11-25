@@ -1,5 +1,5 @@
 import { Anchor, List, ListItem, Stack, Title } from "@mantine/core";
-import { Fixture } from "@prisma/client";
+import type { Fixture } from "@prisma/client";
 import Link from "next/link";
 import leagues from "@/lib/const/leagues";
 
@@ -31,7 +31,7 @@ export default async function FixturesMonth({
           <Stack key={date}>
             <Title order={5}>{date}</Title>
             <List listStyleType="none" pb="md">
-              {fixtures!.map((fixture, j) => (
+              {fixtures.map((fixture, j) => (
                 <ListItem key={j}>
                   ({timeFormat.format(fixture.kickoffTime)}){" "}
                   <Anchor

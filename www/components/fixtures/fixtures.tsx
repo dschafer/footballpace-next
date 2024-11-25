@@ -5,7 +5,7 @@ import {
   AccordionPanel,
   Title,
 } from "@mantine/core";
-import { Fixture } from "@prisma/client";
+import type { Fixture } from "@prisma/client";
 import FixturesMonth from "./fixtures-month";
 import leagues from "@/lib/const/leagues";
 

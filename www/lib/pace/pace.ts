@@ -1,4 +1,4 @@
-import { Fixture, Match } from "@prisma/client";
+import type { Fixture, Match } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
 

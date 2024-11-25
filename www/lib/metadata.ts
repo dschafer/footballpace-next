@@ -1,4 +1,4 @@
-import { Metadata } from "next/types";
+import type { Metadata } from "next/types";
 
 export const openGraphMetadata: Metadata["openGraph"] = {
   type: "website",

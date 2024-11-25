@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import LinkableHeader from "../header/linkable-header";
 import OpponentsTableCell from "./opponents-table-cell";
-import { PaceTeam } from "@/lib/pace/pace";
+import type { PaceTeam } from "@/lib/pace/pace";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 import prisma from "@/lib/prisma";
 

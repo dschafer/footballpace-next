@@ -1,6 +1,6 @@
 import { Anchor, Stack, Title } from "@mantine/core";
 import {
-  LeagueYearParam,
+  type LeagueYearParam,
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";

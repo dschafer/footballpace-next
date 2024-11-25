@@ -1,4 +1,4 @@
-import { ExtendedStandingsRow, fetchStandings } from "./standings";
+import { type ExtendedStandingsRow, fetchStandings } from "./standings";
 
 export type ProjectedStandingsRow = {
   team: string;

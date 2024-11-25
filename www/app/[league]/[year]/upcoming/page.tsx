@@ -1,10 +1,13 @@
-import { ExtendedStandingsRow, fetchStandings } from "@/lib/pace/standings";
 import {
-  LeagueYearParam,
+  type ExtendedStandingsRow,
+  fetchStandings,
+} from "@/lib/pace/standings";
+import {
+  type LeagueYearParam,
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";
-import { PaceFixture, fetchPaceFixtures } from "@/lib/pace/pace";
+import { type PaceFixture, fetchPaceFixtures } from "@/lib/pace/pace";
 import { Stack, Title } from "@mantine/core";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
 import leagues from "@/lib/const/leagues";

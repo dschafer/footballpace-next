@@ -19,9 +19,9 @@ import {
   Text,
 } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
-import { ExtendedStandingsRow } from "@/lib/pace/standings";
+import type { ExtendedStandingsRow } from "@/lib/pace/standings";
 import Link from "next/link";
-import { PaceFixture } from "@/lib/pace/pace";
+import type { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
 import { useState } from "react";
 
@@ -43,8 +43,8 @@ export default function UpcomingTable({
   const [teams, setTeams] = useState(allTeams.slice(0, 4));
   const [matchCount, setMatchCount] = useState<string | number>(6);
 
-  const filteredFixtures: PaceFixture[][] = teams.map(
-    (t) => fixtures.get(t)!.slice(0, +matchCount)!,
+  const filteredFixtures: PaceFixture[][] = teams.map((t) =>
+    fixtures.get(t)!.slice(0, +matchCount),
   );
   const numFixtures = Math.max(0, ...filteredFixtures.map((f) => f.length));
 

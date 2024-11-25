@@ -1,5 +1,5 @@
 "use client";
-import { TableTd, TableTdProps } from "@mantine/core";
+import { TableTd, type TableTdProps } from "@mantine/core";
 import useFixtureDifficultyColor from "./use-fixture-difficulty-color";
 
 export default function FixtureDifficultyCell(
