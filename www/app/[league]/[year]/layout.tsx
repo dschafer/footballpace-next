@@ -1,15 +1,14 @@
+import { type LeagueYearParam, validateLeagueYear } from "@/lib/const/current";
 import type { Metadata, ResolvingMetadata } from "next/types";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
-import type { LeagueYearParam } from "@/lib/const/current";
-import leagues from "@/lib/const/leagues";
 
 export async function generateMetadata(
   { params }: { params: LeagueYearParam },
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const league = leagues.get(params.league);
+  const [leagueInfo, yearInt] = validateLeagueYear(params);
   const title = {
-    default: `${league ? league.name : "Unknown"} ${params.year}`,
+    default: `${leagueInfo.name} ${yearInt}`,
     template: "%s | Football Pace",
   };
   return {
