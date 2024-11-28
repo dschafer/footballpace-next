@@ -1,5 +1,4 @@
 import { Anchor, Stack, Text, Title } from "@mantine/core";
-import { type LeagueYearParam, validateLeagueYear } from "@/lib/const/current";
 import type { Metadata, ResolvingMetadata } from "next/types";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import Link from "next/link";
@@ -8,17 +7,19 @@ import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
+import type { SeasonPageParam } from "./params";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
 import prisma from "@/lib/prisma";
+import { validateLeagueYear } from "@/lib/const/current";
 import year from "@/lib/const/year";
 
-export async function generateStaticParams(): Promise<SeasonPageParams[]> {
+export async function generateStaticParams(): Promise<SeasonPageParam[]> {
   const matches = await prisma.match.findMany({
     where: { year: year },
   });
-  const params = new Set<SeasonPageParams>();
+  const params = new Set<SeasonPageParam>();
   for (const m of matches) {
     params.add({
       league: m.league,
@@ -34,12 +35,8 @@ export async function generateStaticParams(): Promise<SeasonPageParams[]> {
   return Array.from(params);
 }
 
-type SeasonPageParams = LeagueYearParam & {
-  team: string;
-};
-
 export async function generateMetadata(
-  { params }: { params: SeasonPageParams },
+  { params }: { params: SeasonPageParam },
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const teamDecoded = decodeURIComponent(params.team);
@@ -54,7 +51,7 @@ export async function generateMetadata(
 export default async function SeasonPage({
   params,
 }: {
-  params: SeasonPageParams;
+  params: SeasonPageParam;
 }) {
   const [leagueInfo, yearInt] = validateLeagueYear(params);
   const teamDecoded = decodeURIComponent(params.team);
