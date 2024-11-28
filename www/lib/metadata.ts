@@ -8,7 +8,7 @@ export const openGraphMetadata: Metadata["openGraph"] = {
   },
   siteName: "Football Pace",
   description: "Reimagining football tables using historical championship pace",
-  url: "https://footballpace.com",
+  url: "./",
 };
 
 export const twitterMetadata: Metadata["twitter"] = {
