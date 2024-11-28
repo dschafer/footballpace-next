@@ -26,10 +26,14 @@ export function imageMetadata(subtitle?: string) {
   ];
 }
 
+const titleWeight = 600;
+const subtitleWeight = 400;
+
 export async function genOpenGraphImage(
   subtitle?: string,
 ): Promise<ImageResponse> {
-  const inter = await loadInterFont(400);
+  const inter = await loadInterFont(subtitleWeight);
+  const interBold = await loadInterFont(titleWeight);
   let subComponent = null;
   if (subtitle) {
     subComponent = (
@@ -56,7 +60,7 @@ export async function genOpenGraphImage(
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.5"
+      stroke-width="1.75"
       stroke-linecap="round"
       stroke-linejoin="round"
     >
@@ -80,6 +84,7 @@ export async function genOpenGraphImage(
           alignItems: "center",
           justifyContent: "center",
           fontFamily: "Inter",
+          fontWeight: subtitleWeight,
         }}
       >
         <div
@@ -92,6 +97,7 @@ export async function genOpenGraphImage(
             height: 128,
             borderBottomColor: "black",
             borderBottomWidth: subComponent ? "10px" : 0,
+            fontWeight: titleWeight,
           }}
         >
           Football Pace <span style={{ paddingLeft: "1rem" }}></span>
@@ -107,7 +113,13 @@ export async function genOpenGraphImage(
         {
           name: "Inter",
           data: inter,
-          weight: 400,
+          weight: subtitleWeight,
+          style: "normal",
+        },
+        {
+          name: "Inter",
+          data: interBold,
+          weight: titleWeight,
           style: "normal",
         },
       ],
