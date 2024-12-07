@@ -156,6 +156,9 @@ def fpl_fixtures_df(
 
     fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
     team_idents_dict = team_idents(fpl_bootstrap_obj)
+    df = df[
+        df["KickoffTime"].notnull()
+    ]  # Filter null values, for fixtures that are postponed.
     df["FinishedProvisional"] = df["FinishedProvisional"].astype(bool)
     df["KickoffTime"] = pd.to_datetime(df["KickoffTime"], format="ISO8601")
     df["TeamA"] = df["TeamA"].map(team_idents_dict).map(canonical_name)
