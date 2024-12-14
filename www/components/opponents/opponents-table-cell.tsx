@@ -79,11 +79,11 @@ export default function OpponentsTableCell({
           <Result match={match} link={true} multiline={true} />
           <Text span size="sm" inherit>
             <Text span fw={500} inherit>
-              Pts
+              <abbr title="Points">Pts</abbr>
             </Text>
             : <NumberFormatter value={maybePaceMatch.points} decimalScale={0} />{" "}
             <Text span fw={500} inherit>
-              Tar
+              <abbr title="Target Points">Tgt</abbr>
             </Text>
             :{" "}
             <NumberFormatter
@@ -129,7 +129,7 @@ export default function OpponentsTableCell({
           </Text>
           <Text span fs="italic" c="dimmed" size="sm" inherit>
             <Text span fw={500}>
-              Tar
+              <abbr title="Target Points">Tgt</abbr>
             </Text>
             :{" "}
             <NumberFormatter
