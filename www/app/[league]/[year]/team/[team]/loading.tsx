@@ -10,14 +10,7 @@ export default function SeasonLoading() {
       <Title order={2}>
         <Skeleton>Arsenal</Skeleton>
       </Title>
-      <Text
-        fs="italic"
-        style={{
-          alignSelf: "flex-start",
-        }}
-      >
-        <Skeleton>English Premier League 2023</Skeleton>
-      </Text>
+      <Skeleton>English Premier League 2023</Skeleton>
       <Title order={3}>
         <Skeleton>Recent Matches</Skeleton>
       </Title>
