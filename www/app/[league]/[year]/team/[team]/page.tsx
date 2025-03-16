@@ -35,10 +35,8 @@ export async function generateStaticParams(): Promise<SeasonPageParam[]> {
   return Array.from(params);
 }
 
-export async function generateMetadata(
-  { params }: { params: SeasonPageParam },
-  _parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<SeasonPageParam> }, _parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const teamDecoded = decodeURIComponent(params.team);
   const title = `${teamDecoded} ${params.year}`;
   return {
@@ -48,11 +46,12 @@ export async function generateMetadata(
   };
 }
 
-export default async function SeasonPage({
-  params,
-}: {
-  params: SeasonPageParam;
-}) {
+export default async function SeasonPage(
+  props: {
+    params: Promise<SeasonPageParam>;
+  }
+) {
+  const params = await props.params;
   const [leagueInfo, yearInt] = validateLeagueYear(params);
   const teamDecoded = decodeURIComponent(params.team);
 

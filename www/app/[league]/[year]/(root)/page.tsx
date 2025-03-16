@@ -13,7 +13,8 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default function PacePage({ params }: { params: LeagueYearParam }) {
+export default async function PacePage(props: { params: Promise<LeagueYearParam> }) {
+  const params = await props.params;
   const [_leagueInfo, yearInt] = validateLeagueYear(params);
   return (
     <Stack>
