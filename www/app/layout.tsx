@@ -1,6 +1,10 @@
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next/types";
@@ -44,6 +48,7 @@ export default function RootLayout({
       style={{
         scrollPaddingTop: "4rem",
       }}
+      {...mantineHtmlProps}
     >
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
