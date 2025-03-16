@@ -11,17 +11,21 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default async function MatchesPage(props: { params: Promise<LeagueYearParam> }) {
-  const params = await props.params;
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
+export default async function MatchesPage({
+  params,
+}: {
+  params: Promise<LeagueYearParam>;
+}) {
+  const { league, year } = await params;
+  const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return (
     <Stack>
       <Title order={2}>
         {leagueInfo.name} {yearInt}
       </Title>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
-        <Matches league={params.league} year={yearInt} />
-        <LeagueFixtures league={params.league} year={yearInt} />
+        <Matches league={league} year={yearInt} />
+        <LeagueFixtures league={league} year={yearInt} />
       </SimpleGrid>
     </Stack>
   );

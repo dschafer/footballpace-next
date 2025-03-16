@@ -11,18 +11,22 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default async function ChartPage(props: { params: Promise<LeagueYearParam> }) {
-  const params = await props.params;
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
+export default async function ChartPage({
+  params,
+}: {
+  params: Promise<LeagueYearParam>;
+}) {
+  const { league, year } = await params;
+  const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return (
     <Stack>
       <Title order={2}>
         {leagueInfo.name} {yearInt}
       </Title>
-      <StandingsPaceChart league={params.league} year={yearInt} />
+      <StandingsPaceChart league={league} year={yearInt} />
       <Anchor
         component={Link}
-        href={`/${params.league}/${yearInt}`}
+        href={`/${league}/${yearInt}`}
         ta="right"
         style={{
           alignSelf: "flex-end",

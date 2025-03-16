@@ -24,14 +24,14 @@ async function standingsRowToFixturesMapEntry(
   return [team, pfs.filter((pf) => pf.fixture.kickoffTime > new Date())];
 }
 
-export default async function UpcomingPage(
-  props: {
-    params: Promise<LeagueYearParam>;
-  }
-) {
-  const params = await props.params;
-  const [_leagueInfo, yearInt] = validateLeagueYear(params);
-  const standings = await fetchStandings(params.league, yearInt);
+export default async function UpcomingPage({
+  params,
+}: {
+  params: Promise<LeagueYearParam>;
+}) {
+  const { league, year } = await params;
+  const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
+  const standings = await fetchStandings(league, yearInt);
   const fixtures = await Promise.all(
     standings.map(standingsRowToFixturesMapEntry),
   );

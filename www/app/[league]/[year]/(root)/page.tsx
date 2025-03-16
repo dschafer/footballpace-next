@@ -13,15 +13,19 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default async function PacePage(props: { params: Promise<LeagueYearParam> }) {
-  const params = await props.params;
-  const [_leagueInfo, yearInt] = validateLeagueYear(params);
+export default async function PacePage({
+  params,
+}: {
+  params: Promise<LeagueYearParam>;
+}) {
+  const { league, year } = await params;
+  const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return (
     <Stack>
       <Title order={2}>
-        {leagues.get(params.league)?.name} {yearInt}
+        {leagues.get(league)?.name} {yearInt}
       </Title>
-      <StandingsPaceTable league={params.league} year={yearInt} />
+      <StandingsPaceTable league={league} year={yearInt} />
       <Group
         style={{
           alignSelf: "flex-end",
@@ -30,14 +34,14 @@ export default async function PacePage(props: { params: Promise<LeagueYearParam>
         <Breadcrumbs separator=" · ">
           <Anchor
             component={Link}
-            href={`/${params.league}/${params.year}/chart`}
+            href={`/${league}/${yearInt}/chart`}
             ta="right"
           >
             Pace Chart »
           </Anchor>
           <Anchor
             component={Link}
-            href={`/${params.league}/${yearInt}/explanation`}
+            href={`/${league}/${yearInt}/explanation`}
             ta="right"
           >
             Explanation »

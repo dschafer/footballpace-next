@@ -35,10 +35,13 @@ export async function generateStaticParams(): Promise<SeasonPageParam[]> {
   return Array.from(params);
 }
 
-export async function generateMetadata(props: { params: Promise<SeasonPageParam> }, _parent: ResolvingMetadata): Promise<Metadata> {
-  const params = await props.params;
-  const teamDecoded = decodeURIComponent(params.team);
-  const title = `${teamDecoded} ${params.year}`;
+export async function generateMetadata(
+  { params }: { params: Promise<SeasonPageParam> },
+  _parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const { year, team } = await params;
+  const teamDecoded = decodeURIComponent(team);
+  const title = `${teamDecoded} ${year}`;
   return {
     title,
     openGraph: { ...openGraphMetadata, title },
@@ -46,17 +49,17 @@ export async function generateMetadata(props: { params: Promise<SeasonPageParam>
   };
 }
 
-export default async function SeasonPage(
-  props: {
-    params: Promise<SeasonPageParam>;
-  }
-) {
-  const params = await props.params;
-  const [leagueInfo, yearInt] = validateLeagueYear(params);
-  const teamDecoded = decodeURIComponent(params.team);
+export default async function SeasonPage({
+  params,
+}: {
+  params: Promise<SeasonPageParam>;
+}) {
+  const { league, year, team } = await params;
+  const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
+  const teamDecoded = decodeURIComponent(team);
 
   const [paceTeams, teamColorMap] = await Promise.all([
-    fetchPaceTeams(params.league, yearInt),
+    fetchPaceTeams(league, yearInt),
     fetchTeamColorMap(),
   ]);
   const paceTeam = paceTeams.find((pt) => pt.team == teamDecoded)!;
@@ -68,7 +71,7 @@ export default async function SeasonPage(
       <Title order={2}>{teamDecoded}</Title>
       <Anchor
         component={Link}
-        href={`/${params.league}/${yearInt}`}
+        href={`/${league}/${yearInt}`}
         style={{
           alignSelf: "flex-start",
         }}
@@ -80,7 +83,7 @@ export default async function SeasonPage(
       <LinkableHeader order={3} title="Recent Matches" />
       <ResultsTable
         paceMatches={previewMatches}
-        league={params.league}
+        league={league}
         team={teamDecoded}
       />
       <LinkableHeader order={3} title="Table" />
@@ -93,18 +96,14 @@ export default async function SeasonPage(
       />
       <LinkableHeader order={3} title="Pace Chart" />
       <PaceChart paceTeams={[paceTeam]} teamColorMap={teamColorMap} />
-      <OpponentsTable
-        league={params.league}
-        year={yearInt}
-        paceTeam={paceTeam}
-      />
+      <OpponentsTable league={league} year={yearInt} paceTeam={paceTeam} />
       <LinkableHeader order={3} title="Full Results" />
       <ResultsTable
         paceMatches={paceTeam.paceMatches}
-        league={params.league}
+        league={league}
         team={teamDecoded}
       />
-      <TeamFixtures league={params.league} year={yearInt} team={teamDecoded} />
+      <TeamFixtures league={league} year={yearInt} team={teamDecoded} />
     </Stack>
   );
 }

@@ -13,21 +13,21 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default async function ExplanationPage(
-  props: {
-    params: Promise<LeagueYearParam>;
-  }
-) {
-  const params = await props.params;
-  const [_leagueInfo, yearInt] = validateLeagueYear(params);
+export default async function ExplanationPage({
+  params,
+}: {
+  params: Promise<LeagueYearParam>;
+}) {
+  const { league, year } = await params;
+  const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>
-      <HistoricalPacePreamble league={params.league} year={yearInt} />
-      <HistoricalPaceTable league={params.league} year={yearInt} />
+      <HistoricalPacePreamble league={league} year={yearInt} />
+      <HistoricalPaceTable league={league} year={yearInt} />
       <Title order={2}>Estimated Standings</Title>
       <ProjectedStandingsPreamble />
-      <ProjectedStandingsTable league={params.league} year={yearInt} />
+      <ProjectedStandingsTable league={league} year={yearInt} />
     </Stack>
   );
 }
