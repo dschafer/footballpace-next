@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Skeleton, Stack, Title } from "@mantine/core";
 import PaceChartPlaceholder from "@/components/pace-chart/pace-chart-placeholder";
 import PaceTablePlaceholder from "@/components/pace-table/pace-table-placeholder";
 import ResultsTablePlaceholder from "@/components/results-table/results-table-placeholder";
