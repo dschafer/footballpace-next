@@ -1,9 +1,9 @@
 from pathlib import Path
-from dagster import ExperimentalWarning
+from dagster import BetaWarning
 
 import warnings
 
-warnings.filterwarnings("ignore", category=ExperimentalWarning)
+warnings.filterwarnings("ignore", category=BetaWarning)
 
 # This file is all noqa: E402 so that we can call warnings.filterwarnings
 # above before doing the imports
