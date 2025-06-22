@@ -2,8 +2,9 @@
 # need to have access to any pipeline code.
 
 FROM python:3.12
+COPY --from=ghcr.io/astral-sh/uv:0.7.13 /uv /uvx /bin/
 
-RUN pip install \
+RUN uv pip install --system \
     dagster \
     dagster-graphql \
     dagster-webserver \
