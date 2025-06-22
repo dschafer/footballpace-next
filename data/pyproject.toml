@@ -27,3 +27,7 @@ dev = [
   "pytest",
   "pytest-cov",
 ]
+docker = [
+  "dagster-docker",
+  "dagster-postgres",
+]
