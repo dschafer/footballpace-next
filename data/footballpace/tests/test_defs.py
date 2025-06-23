@@ -1,4 +1,4 @@
-from footballpace import defs
+from footballpace.definitions import defs
 
 
 def test_def_can_load():

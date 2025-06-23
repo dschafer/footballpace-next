@@ -1,16 +1,16 @@
 import os
-from dagster import AssetExecutionContext, asset
 
+import dagster as dg
 import httpx
 
 API_UPDATE_URL = "https://footballpace.com/api/update"
 
 
-@asset(
+@dg.asset(
     group_name="CacheUpdate",
     kinds={"vercel"},
 )
-def cache_update(context: AssetExecutionContext) -> None:
+def cache_update(context: dg.AssetExecutionContext) -> None:
     """
     Make sure that Next.js updates its caches.
 

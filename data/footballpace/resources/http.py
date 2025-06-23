@@ -1,16 +1,17 @@
 from contextlib import contextmanager
-from pydantic import PrivateAttr
+
+import dagster as dg
 import httpx
-from dagster import ConfigurableResource, InitResourceContext
+from pydantic import PrivateAttr
 
 
-class HTTPResource(ConfigurableResource):
+class HTTPResource(dg.ConfigurableResource):
     """Resource to fetch data from the internet."""
 
     _httpx_client: httpx.Client = PrivateAttr()
 
     @contextmanager
-    def yield_for_execution(self, context: InitResourceContext):
+    def yield_for_execution(self, context: dg.InitResourceContext):
         with httpx.Client() as c:
             self._httpx_client = c
             yield self

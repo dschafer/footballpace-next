@@ -1,17 +1,12 @@
 from contextlib import contextmanager
-from pydantic import PrivateAttr
-import psycopg
-from dagster import (
-    ConfigurableResource,
-    InitResourceContext,
-    TableColumn,
-    TableColumnConstraints,
-    TableSchema,
-)
 from typing import Any
 
+import dagster as dg
+import psycopg
+from pydantic import PrivateAttr
 
-class VercelPostgresResource(ConfigurableResource):
+
+class VercelPostgresResource(dg.ConfigurableResource):
     """Resource to write data to the Postgres DB"""
 
     host: str
@@ -22,7 +17,7 @@ class VercelPostgresResource(ConfigurableResource):
     _db_connection: psycopg.Connection = PrivateAttr()
 
     @contextmanager
-    def yield_for_execution(self, context: InitResourceContext):
+    def yield_for_execution(self, context: dg.InitResourceContext):
         with psycopg.connect(
             host=self.host,
             dbname=self.dbname,
@@ -79,106 +74,114 @@ class VercelPostgresResource(ConfigurableResource):
             return cur.rowcount
 
 
-MatchResultsTableSchema = TableSchema(
+MatchResultsTableSchema = dg.TableSchema(
     columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "league", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
+        dg.TableColumn(
+            "year", "int", constraints=dg.TableColumnConstraints(nullable=False)
+        ),
+        dg.TableColumn(
             "date",
             "datetime",
             description="The date of the match. This is a datetime with the appropriate date, no timezone and the time set to 00:00:00",
-            constraints=TableColumnConstraints(nullable=False),
+            constraints=dg.TableColumnConstraints(nullable=False),
         ),
-        TableColumn(
-            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "home_team", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn(
-            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "away_team", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn(
+        dg.TableColumn(
             "ft_home_goals",
             "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+            constraints=dg.TableColumnConstraints(nullable=False, other=[">=0"]),
         ),
-        TableColumn(
+        dg.TableColumn(
             "ft_away_goals",
             "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=0"]),
+            constraints=dg.TableColumnConstraints(nullable=False, other=[">=0"]),
         ),
-        TableColumn(
+        dg.TableColumn(
             "ft_result",
             "enum",
-            constraints=TableColumnConstraints(
+            constraints=dg.TableColumnConstraints(
                 nullable=False, other=["One of 'H', 'A', 'D'"]
             ),
         ),
     ],
 )
 
-PaceSheetEntriesTableSchema = TableSchema(
+PaceSheetEntriesTableSchema = dg.TableSchema(
     columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "league", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
+        dg.TableColumn(
+            "year", "int", constraints=dg.TableColumnConstraints(nullable=False)
+        ),
+        dg.TableColumn(
             "team_finish",
             "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+            constraints=dg.TableColumnConstraints(nullable=False, other=[">=1"]),
         ),
-        TableColumn(
+        dg.TableColumn(
             "opponent_finish",
             "int",
-            constraints=TableColumnConstraints(nullable=False, other=[">=1"]),
+            constraints=dg.TableColumnConstraints(nullable=False, other=[">=1"]),
         ),
-        TableColumn("home", "bool", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
+        dg.TableColumn(
+            "home", "bool", constraints=dg.TableColumnConstraints(nullable=False)
+        ),
+        dg.TableColumn(
             "expected_points",
             "float",
-            constraints=TableColumnConstraints(nullable=False),
+            constraints=dg.TableColumnConstraints(nullable=False),
         ),
     ],
 )
 
-TeamColorsTableSchema = TableSchema(
+TeamColorsTableSchema = dg.TableSchema(
     columns=[
-        TableColumn(
+        dg.TableColumn(
             "team",
             "string",
-            constraints=TableColumnConstraints(nullable=False, unique=True),
+            constraints=dg.TableColumnConstraints(nullable=False, unique=True),
         ),
-        TableColumn(
+        dg.TableColumn(
             "primary_color",
             "string",
-            constraints=TableColumnConstraints(nullable=False),
+            constraints=dg.TableColumnConstraints(nullable=False),
         ),
-        TableColumn(
+        dg.TableColumn(
             "secondary_color",
             "string",
-            constraints=TableColumnConstraints(nullable=True),
+            constraints=dg.TableColumnConstraints(nullable=True),
         ),
     ],
 )
 
-FixturesTableSchema = TableSchema(
+FixturesTableSchema = dg.TableSchema(
     columns=[
-        TableColumn(
-            "league", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "league", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn("year", "int", constraints=TableColumnConstraints(nullable=False)),
-        TableColumn(
+        dg.TableColumn(
+            "year", "int", constraints=dg.TableColumnConstraints(nullable=False)
+        ),
+        dg.TableColumn(
             "kickoff_time",
             "datetime",
             description="The date and time of match kickoff with appropriate timezone",
-            constraints=TableColumnConstraints(nullable=False),
+            constraints=dg.TableColumnConstraints(nullable=False),
         ),
-        TableColumn(
-            "home_team", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "home_team", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
-        TableColumn(
-            "away_team", "string", constraints=TableColumnConstraints(nullable=False)
+        dg.TableColumn(
+            "away_team", "string", constraints=dg.TableColumnConstraints(nullable=False)
         ),
     ],
 )

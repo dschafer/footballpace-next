@@ -1,19 +1,10 @@
 from datetime import datetime
-from typing import Iterator
-import pandas as pd
-
-from dagster import (
-    AssetExecutionContext,
-    AssetIn,
-    AutomationCondition,
-    DataVersion,
-    MetadataValue,
-    Output,
-    asset,
-)
-
 import json
-from dagster_pandas import PandasColumn, create_dagster_pandas_dataframe_type
+from typing import Iterator
+
+import dagster as dg
+import dagster_pandas as dg_pd
+import pandas as pd
 
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import (
@@ -29,7 +20,7 @@ from footballpace.resources.vercel import (
 )
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"API"},
     code_version="v1",
@@ -37,8 +28,8 @@ from footballpace.resources.vercel import (
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
 )
 def fpl_bootstrap_json(
-    context: AssetExecutionContext, http_resource: HTTPResource
-) -> Iterator[Output[bytes]]:
+    context: dg.AssetExecutionContext, http_resource: HTTPResource
+) -> Iterator[dg.Output[bytes]]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/bootstrap-static/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -54,14 +45,14 @@ def fpl_bootstrap_json(
         context.log.debug("Skipping materializations; data versions match")
         return
 
-    yield Output(
+    yield dg.Output(
         bootstrap_json,
         metadata={"size": len(bootstrap_json)},
-        data_version=DataVersion(data_version),
+        data_version=dg.DataVersion(data_version),
     )
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"API"},
     code_version="v1",
@@ -69,8 +60,8 @@ def fpl_bootstrap_json(
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},
 )
 def fpl_fixtures_json(
-    context: AssetExecutionContext, http_resource: HTTPResource
-) -> Iterator[Output[bytes]]:
+    context: dg.AssetExecutionContext, http_resource: HTTPResource
+) -> Iterator[dg.Output[bytes]]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/fixtures/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -86,28 +77,28 @@ def fpl_fixtures_json(
         context.log.debug("Skipping materializations; data versions match")
         return
 
-    yield Output(
+    yield dg.Output(
         fixtures_json,
         metadata={"size": len(fixtures_json)},
-        data_version=DataVersion(data_version),
+        data_version=dg.DataVersion(data_version),
     )
 
 
-FPLFixturesDataFrame = create_dagster_pandas_dataframe_type(
+FPLFixturesDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
     name="FPLFixturesDataFrame",
     columns=[
-        PandasColumn.boolean_column("FinishedProvisional"),
-        PandasColumn.datetime_column("KickoffTime", tz="UTC"),
-        PandasColumn.string_column("TeamA"),
-        PandasColumn.integer_column("TeamAScore", min_value=0),
-        PandasColumn.string_column("TeamH"),
-        PandasColumn.integer_column("TeamHScore", min_value=0),
-        PandasColumn.string_column("Div"),
-        PandasColumn.integer_column("Season"),
+        dg_pd.PandasColumn.boolean_column("FinishedProvisional"),
+        dg_pd.PandasColumn.datetime_column("KickoffTime", tz="UTC"),
+        dg_pd.PandasColumn.string_column("TeamA"),
+        dg_pd.PandasColumn.integer_column("TeamAScore", min_value=0),
+        dg_pd.PandasColumn.string_column("TeamH"),
+        dg_pd.PandasColumn.integer_column("TeamHScore", min_value=0),
+        dg_pd.PandasColumn.string_column("Div"),
+        dg_pd.PandasColumn.integer_column("Season"),
     ],
     metadata_fn=lambda df: {
         "dagster/row_count": len(df),
-        "preview": MetadataValue.md(pd.concat([df.head(), df.tail()]).to_markdown()),
+        "preview": dg.MetadataValue.md(pd.concat([df.head(), df.tail()]).to_markdown()),
     },
 )
 
@@ -127,7 +118,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     return dict([(team["id"], team["name"]) for team in bootstrap_obj["teams"]])
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"Pandas"},
     code_version="v2",
@@ -135,8 +126,10 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     output_required=False,
 )
 def fpl_fixtures_df(
-    context: AssetExecutionContext, fpl_bootstrap_json: bytes, fpl_fixtures_json: bytes
-) -> Iterator[Output[pd.DataFrame]]:
+    context: dg.AssetExecutionContext,
+    fpl_bootstrap_json: bytes,
+    fpl_fixtures_json: bytes,
+) -> Iterator[dg.Output[pd.DataFrame]]:
     """
     Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame.
 
@@ -179,59 +172,61 @@ def fpl_fixtures_df(
     metadata_teams = (
         pd.concat([df["TeamH"], df["TeamA"]]).sort_values().unique().tolist()
     )
-    yield Output(
+    yield dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
-            "preview": MetadataValue.md(
+            "preview": dg.MetadataValue.md(
                 pd.concat([df.head(), df.tail()]).to_markdown()
             ),
-            "most_recent_match_date": MetadataValue.text(str(max(df["KickoffTime"]))),
+            "most_recent_match_date": dg.MetadataValue.text(
+                str(max(df["KickoffTime"]))
+            ),
             "teams": metadata_teams,
         },
-        data_version=DataVersion(data_version),
+        data_version=dg.DataVersion(data_version),
     )
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"Postgres"},
     code_version="v1",
-    ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
+    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixturesDataFrame)},
     metadata={
         "dagster/column_schema": FixturesTableSchema,
         "dagster/table_name": "fixtures",
     },
     tags={"db_write": "true"},
-    automation_condition=AutomationCondition.eager(),
+    automation_condition=dg.AutomationCondition.eager(),
 )
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
-) -> Output[None]:
+) -> dg.Output[None]:
     """Writes the fixtures from FPL into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in fpl_fixtures_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_fixtures(rows)
-    return Output(None, metadata={"dagster/row_count": rowcount})
+    return dg.Output(None, metadata={"dagster/row_count": rowcount})
 
 
-FPLResultsDataFrame = create_dagster_pandas_dataframe_type(
+FPLResultsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
     name="FPLResultsDataFrame",
     columns=[
-        PandasColumn.string_column("Div"),
-        PandasColumn.integer_column("Season"),
-        PandasColumn.datetime_column("Date", tz=None),
-        PandasColumn.string_column("HomeTeam"),
-        PandasColumn.string_column("AwayTeam"),
-        PandasColumn.integer_column("FTHG", min_value=0),
-        PandasColumn.integer_column("FTAG", min_value=0),
-        PandasColumn.categorical_column("FTR", categories={"H", "A", "D"}),
+        dg_pd.PandasColumn.string_column("Div"),
+        dg_pd.PandasColumn.integer_column("Season"),
+        dg_pd.PandasColumn.datetime_column("Date", tz=None),
+        dg_pd.PandasColumn.string_column("HomeTeam"),
+        dg_pd.PandasColumn.string_column("AwayTeam"),
+        dg_pd.PandasColumn.integer_column("FTHG", min_value=0),
+        dg_pd.PandasColumn.integer_column("FTAG", min_value=0),
+        dg_pd.PandasColumn.categorical_column("FTR", categories={"H", "A", "D"}),
     ],
     metadata_fn=lambda df: {
         "dagster/row_count": len(df),
-        "preview": MetadataValue.md(df.head().to_markdown()),
+        "preview": dg.MetadataValue.md(df.head().to_markdown()),
     },
 )
 
@@ -244,17 +239,17 @@ def result_from_row(fixture) -> str:
     return "D"
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"Pandas"},
-    ins={"fpl_fixtures_df": AssetIn(dagster_type=FPLFixturesDataFrame)},
+    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixturesDataFrame)},
     code_version="v2",
     dagster_type=FPLResultsDataFrame,
     output_required=False,
 )
 def fpl_results_df(
-    context: AssetExecutionContext, fpl_fixtures_df: pd.DataFrame
-) -> Iterator[Output[pd.DataFrame]]:
+    context: dg.AssetExecutionContext, fpl_fixtures_df: pd.DataFrame
+) -> Iterator[dg.Output[pd.DataFrame]]:
     """
     Convert the JSON from https://fantasy.premierleague.com into completed matches,
     then convert them to our standard results format for eventual DB writes.
@@ -285,37 +280,37 @@ def fpl_results_df(
     metadata_teams = (
         pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
     )
-    yield Output(
+    yield dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
-            "preview": MetadataValue.md(df.head().to_markdown()),
-            "most_recent_match_date": MetadataValue.text(str(max(df["Date"]))),
+            "preview": dg.MetadataValue.md(df.head().to_markdown()),
+            "most_recent_match_date": dg.MetadataValue.text(str(max(df["Date"]))),
             "teams": metadata_teams,
         },
-        data_version=DataVersion(data_version),
+        data_version=dg.DataVersion(data_version),
     )
 
 
-@asset(
+@dg.asset(
     group_name="FPL",
     kinds={"Postgres"},
     code_version="v1",
-    ins={"fpl_results_df": AssetIn(dagster_type=FPLResultsDataFrame)},
+    ins={"fpl_results_df": dg.AssetIn(dagster_type=FPLResultsDataFrame)},
     metadata={
         "dagster/column_schema": MatchResultsTableSchema,
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
-    automation_condition=AutomationCondition.eager(),
+    automation_condition=dg.AutomationCondition.eager(),
 )
 def fpl_results_postgres(
     fpl_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
-) -> Output[None]:
+) -> dg.Output[None]:
     """Writes the results from FPL into Postgres."""
     rows = [
         {str(col): val for col, val in row.items()}
         for row in fpl_results_df.to_dict("records")
     ]
     rowcount = vercel_postgres.upsert_matches(rows)
-    return Output(None, metadata={"dagster/row_count": rowcount})
+    return dg.Output(None, metadata={"dagster/row_count": rowcount})

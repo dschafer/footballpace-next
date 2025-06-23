@@ -1,27 +1,16 @@
 from pathlib import Path
-from dagster import BetaWarning
-
 import warnings
 
-warnings.filterwarnings("ignore", category=BetaWarning)
+import dagster as dg
+
+warnings.filterwarnings("ignore", category=dg.BetaWarning)
 
 # This file is all noqa: E402 so that we can call warnings.filterwarnings
 # above before doing the imports
 # ruff: noqa: E402
 
-from dagster import (
-    AnchorBasedFilePathMapping,
-    Definitions,
-    EnvVar,
-    link_code_references_to_git,
-    load_assets_from_package_module,
-    with_source_code_references,
-)
-
-from footballpace.resources.http import HTTPResource
-
-
 from . import assets
+from .resources.http import HTTPResource
 from .resources.footballdata import FootballDataResource
 from .resources.vercel import VercelPostgresResource
 from .sensors import db_write_sensor
@@ -32,12 +21,12 @@ from .schedules import (
 )
 
 http_resource = HTTPResource()
-defs = Definitions(
-    assets=link_code_references_to_git(
-        with_source_code_references(load_assets_from_package_module(assets)),
+defs = dg.Definitions(
+    assets=dg.link_code_references_to_git(
+        dg.with_source_code_references(dg.load_assets_from_package_module(assets)),
         git_url="https://github.com/dschafer/footballpace-next",
         git_branch="main",
-        file_path_mapping=AnchorBasedFilePathMapping(
+        file_path_mapping=dg.AnchorBasedFilePathMapping(
             local_file_anchor=Path(__file__),
             file_anchor_path_in_repository="data/footballpace/__init__.py",
         ),
@@ -46,10 +35,10 @@ defs = Definitions(
         "football_data": FootballDataResource(http_resource=http_resource),
         "http_resource": http_resource,
         "vercel_postgres": VercelPostgresResource(
-            host=EnvVar("VERCEL_POSTGRES_HOST"),
-            dbname=EnvVar("VERCEL_POSTGRES_DATABASE"),
-            user=EnvVar("VERCEL_POSTGRES_USER"),
-            password=EnvVar("VERCEL_POSTGRES_PASSWORD"),
+            host=dg.EnvVar("VERCEL_POSTGRES_HOST"),
+            dbname=dg.EnvVar("VERCEL_POSTGRES_DATABASE"),
+            user=dg.EnvVar("VERCEL_POSTGRES_USER"),
+            password=dg.EnvVar("VERCEL_POSTGRES_PASSWORD"),
         ),
     },
     schedules=[

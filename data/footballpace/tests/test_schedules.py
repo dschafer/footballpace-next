@@ -1,4 +1,5 @@
-from dagster import MultiPartitionKey, RunRequest
+import dagster as dg
+
 from footballpace.schedules import (
     current_season_refresh_schedule,
     pace_sheets_refresh_schedule,
@@ -11,8 +12,8 @@ def test_current_season_refresh_schedule():
     scheduled_seasons = set()
     scheduled_leagues = set()
     for s in schedule:
-        assert isinstance(s, RunRequest)
-        assert isinstance(s.partition_key, MultiPartitionKey)
+        assert isinstance(s, dg.RunRequest)
+        assert isinstance(s.partition_key, dg.MultiPartitionKey)
         scheduled_seasons.add(s.partition_key.keys_by_dimension["season"])
         scheduled_leagues.add(s.partition_key.keys_by_dimension["league"])
     assert len(scheduled_seasons) == 1
@@ -25,8 +26,8 @@ def test_pace_sheets_refresh_schedule():
     scheduled_seasons = set()
     scheduled_leagues = set()
     for s in schedule:
-        assert isinstance(s, RunRequest)
-        assert isinstance(s.partition_key, MultiPartitionKey)
+        assert isinstance(s, dg.RunRequest)
+        assert isinstance(s.partition_key, dg.MultiPartitionKey)
         scheduled_seasons.add(s.partition_key.keys_by_dimension["predicted_season"])
         scheduled_leagues.add(s.partition_key.keys_by_dimension["league"])
     assert len(scheduled_seasons) == 1

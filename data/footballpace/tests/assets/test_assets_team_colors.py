@@ -1,6 +1,5 @@
+import dagster as dg
 import pandas as pd
-
-from dagster import Output
 
 from footballpace.assets.team_colors import team_colors_df
 
@@ -9,7 +8,7 @@ from .read_file import read_teamcolors_bytes
 
 def test_fpl_fixtures_df():
     df_output = team_colors_df(read_teamcolors_bytes("teams.json"))
-    assert isinstance(df_output, Output)
+    assert isinstance(df_output, dg.Output)
     df = df_output.value
     assert isinstance(df, pd.DataFrame)
     assert len(df) == 20

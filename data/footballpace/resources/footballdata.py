@@ -1,10 +1,10 @@
+import dagster as dg
 import httpx
-from dagster import ConfigurableResource
 
 from footballpace.resources.http import HTTPResource
 
 
-class FootballDataResource(ConfigurableResource):
+class FootballDataResource(dg.ConfigurableResource):
     """Resource to fetch data from https://www.football-data.co.uk."""
 
     http_resource: HTTPResource

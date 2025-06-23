@@ -1,42 +1,35 @@
 from typing import Optional
-from dagster import (
-    AssetMaterialization,
-    AssetSelection,
-    DefaultSensorStatus,
-    IntMetadataValue,
-    MultiAssetSensorEvaluationContext,
-    RunRequest,
-    multi_asset_sensor,
-)
+
+import dagster as dg
 
 
-def metadata_int(m: AssetMaterialization, key: str) -> int:
+def metadata_int(m: dg.AssetMaterialization, key: str) -> int:
     metadata = m.metadata
     val = metadata.get(key)
     if not val:
         return 0
-    if not isinstance(val, IntMetadataValue):
+    if not isinstance(val, dg.IntMetadataValue):
         return 0
     if not val.value:
         return 0
     return val.value
 
 
-def row_count(m: AssetMaterialization) -> int:
+def row_count(m: dg.AssetMaterialization) -> int:
     return metadata_int(m, "dagster/partition_row_count") + metadata_int(
         m, "dagster/row_count"
     )
 
 
-@multi_asset_sensor(
+@dg.multi_asset_sensor(
     name="db_write_sensor",
-    monitored_assets=AssetSelection.tag("db_write", "true"),
-    request_assets=AssetSelection.groups("CacheUpdate"),
-    default_status=DefaultSensorStatus.RUNNING,
+    monitored_assets=dg.AssetSelection.tag("db_write", "true"),
+    request_assets=dg.AssetSelection.groups("CacheUpdate"),
+    default_status=dg.DefaultSensorStatus.RUNNING,
 )
 def db_write_sensor(
-    context: MultiAssetSensorEvaluationContext,
-) -> Optional[RunRequest]:
+    context: dg.MultiAssetSensorEvaluationContext,
+) -> Optional[dg.RunRequest]:
     """
     This sensor listens to DB writes, and will invalidate the Vercel cache when they happen.
 
@@ -59,4 +52,4 @@ def db_write_sensor(
     context.log.info("db_write_sensor saw %d rows written", total_rows_written)
     if total_rows_written > 0:
         context.advance_all_cursors()
-        return RunRequest()
+        return dg.RunRequest()

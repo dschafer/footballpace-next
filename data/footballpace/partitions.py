@@ -1,28 +1,22 @@
 from collections import defaultdict
 from typing import Mapping, Sequence
-from dagster import (
-    DimensionPartitionMapping,
-    IdentityPartitionMapping,
-    MultiPartitionMapping,
-    MultiPartitionsDefinition,
-    StaticPartitionMapping,
-    StaticPartitionsDefinition,
-)
+
+import dagster as dg
 
 ALL_SEASONS = range(1993, 2025)
-all_seasons_partition = StaticPartitionsDefinition([str(s) for s in ALL_SEASONS])
+all_seasons_partition = dg.StaticPartitionsDefinition([str(s) for s in ALL_SEASONS])
 
 ALL_LEAGUES = ["E0", "D1", "SP1", "I1", "F1"]
-all_leagues_partition = StaticPartitionsDefinition(ALL_LEAGUES)
+all_leagues_partition = dg.StaticPartitionsDefinition(ALL_LEAGUES)
 
-all_seasons_leagues_partition = MultiPartitionsDefinition(
+all_seasons_leagues_partition = dg.MultiPartitionsDefinition(
     {
         "season": all_seasons_partition,
         "league": all_leagues_partition,
     }
 )
 
-all_predicted_seasons_leagues_partition = MultiPartitionsDefinition(
+all_predicted_seasons_leagues_partition = dg.MultiPartitionsDefinition(
     {
         "predicted_season": all_seasons_partition,
         "league": all_leagues_partition,
@@ -58,20 +52,20 @@ def seasons_to_predicted_seasons(
     return {k: list(v) for k, v in mapping.items()}
 
 
-predicted_seasons_of_league_mapping = MultiPartitionMapping(
+predicted_seasons_of_league_mapping = dg.MultiPartitionMapping(
     {
-        "season": DimensionPartitionMapping(
+        "season": dg.DimensionPartitionMapping(
             dimension_name="predicted_season",
-            partition_mapping=StaticPartitionMapping(
+            partition_mapping=dg.StaticPartitionMapping(
                 {
                     str(k): list(map(str, v))
                     for k, v in seasons_to_predicted_seasons(ALL_SEASONS, 10).items()
                 }
             ),
         ),
-        "league": DimensionPartitionMapping(
+        "league": dg.DimensionPartitionMapping(
             dimension_name="league",
-            partition_mapping=IdentityPartitionMapping(),
+            partition_mapping=dg.IdentityPartitionMapping(),
         ),
     }
 )
