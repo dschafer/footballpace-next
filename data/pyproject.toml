@@ -12,22 +12,23 @@ module_name = "footballpace"
 name = "footballpace"
 version = "0.0.1"
 dependencies = [
-  "dagster",
-  "dagster-cloud",
-  "dagster-pandas",
-  "dagster-webserver",
-  "httpx",
-  "pandas",
-  "psycopg[binary]",
+  "dagster>=1.10.21",
+  "dagster-cloud>=1.10.21",
+  "dagster-pandas>=0.26.21",
+  "dagster-webserver>=1.10.21",
+  "httpx>=0.28.1",
+  "pandas>=2.3.0",
+  "psycopg[binary]>=3.2.9",
 ]
 
 [project.optional-dependencies]
-dev = [
-  "dagster-webserver",
-  "pytest",
-  "pytest-cov",
-]
 docker = [
-  "dagster-docker",
-  "dagster-postgres",
+    "dagster-docker>=0.26.21",
+    "dagster-postgres>=0.26.21",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
 ]

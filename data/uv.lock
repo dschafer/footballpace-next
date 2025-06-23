@@ -487,32 +487,36 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-dev = [
-    { name = "dagster-webserver" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-]
 docker = [
     { name = "dagster-docker" },
     { name = "dagster-postgres" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+]
+
 [package.metadata]
 requires-dist = [
-    { name = "dagster" },
-    { name = "dagster-cloud" },
-    { name = "dagster-docker", marker = "extra == 'docker'" },
-    { name = "dagster-pandas" },
-    { name = "dagster-postgres", marker = "extra == 'docker'" },
-    { name = "dagster-webserver" },
-    { name = "dagster-webserver", marker = "extra == 'dev'" },
-    { name = "httpx" },
-    { name = "pandas" },
-    { name = "psycopg", extras = ["binary"] },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "dagster", specifier = ">=1.10.21" },
+    { name = "dagster-cloud", specifier = ">=1.10.21" },
+    { name = "dagster-docker", marker = "extra == 'docker'", specifier = ">=0.26.21" },
+    { name = "dagster-pandas", specifier = ">=0.26.21" },
+    { name = "dagster-postgres", marker = "extra == 'docker'", specifier = ">=0.26.21" },
+    { name = "dagster-webserver", specifier = ">=1.10.21" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pandas", specifier = ">=2.3.0" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
 ]
-provides-extras = ["dev", "docker"]
+provides-extras = ["docker"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.4.1" },
+    { name = "pytest-cov", specifier = ">=6.2.1" },
+]
 
 [[package]]
 name = "fsspec"
