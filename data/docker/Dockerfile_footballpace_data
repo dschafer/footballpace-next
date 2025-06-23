@@ -7,8 +7,8 @@ COPY uv.lock /opt/dagster/app/uv.lock
 COPY pyproject.toml /opt/dagster/app/pyproject.toml
 COPY footballpace /opt/dagster/app/footballpace
 
-RUN uv export --locked --extra docker > requirements.txt
-RUN uv pip install --system -r requirements.txt
+RUN uv sync --locked --extra docker
+ENV PATH="/opt/dagster/app/.venv/bin:$PATH"
 
 EXPOSE 4000
 
