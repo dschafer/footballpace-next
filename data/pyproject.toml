@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 packages = ["footballpace"]
 
 [tool.dagster]
-module_name = "footballpace"
+module_name = "footballpace.definitions"
+code_location_name = "footballpace"
 
 [project]
 name = "footballpace"
@@ -29,6 +30,14 @@ docker = [
 
 [dependency-groups]
 dev = [
+    "dagster-dg-cli>=1.10.21",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
 ]
+
+[tool.dg]
+directory_type = "project"
+
+[tool.dg.project]
+root_module = "footballpace"
+code_location_target_module = "footballpace.definitions"
