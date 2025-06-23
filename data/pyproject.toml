@@ -1,14 +1,3 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-packages = ["footballpace"]
-
-[tool.dagster]
-module_name = "footballpace.definitions"
-code_location_name = "footballpace"
-
 [project]
 name = "footballpace"
 version = "0.0.1"
@@ -35,9 +24,20 @@ dev = [
     "pytest-cov>=6.2.1",
 ]
 
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["footballpace"]
+
+[tool.dagster]
+code_location_name = "footballpace"
+module_name = "footballpace.definitions"
+
 [tool.dg]
 directory_type = "project"
 
 [tool.dg.project]
-root_module = "footballpace"
 code_location_target_module = "footballpace.definitions"
+root_module = "footballpace"
