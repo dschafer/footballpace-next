@@ -1,6 +1,6 @@
 import dagster as dg
 
-from .partitions import ALL_LEAGUES, ALL_SEASONS
+from footballpace.partitions import ALL_LEAGUES, ALL_SEASONS
 
 
 @dg.schedule(
