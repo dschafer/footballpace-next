@@ -8,8 +8,11 @@ import pandas as pd
 
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import bytes_data_version, previous_data_version
-from footballpace.resources.http import HTTPResource
-from footballpace.resources.vercel import TeamColorsTableSchema, VercelPostgresResource
+from footballpace.defs.resources.http import HTTPResource
+from footballpace.defs.resources.vercel import (
+    TeamColorsTableSchema,
+    VercelPostgresResource,
+)
 
 
 @dg.asset(

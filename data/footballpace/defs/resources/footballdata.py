@@ -1,7 +1,7 @@
 import dagster as dg
 import httpx
 
-from footballpace.resources.http import HTTPResource
+from .http import HTTPResource
 
 
 class FootballDataResource(dg.ConfigurableResource):

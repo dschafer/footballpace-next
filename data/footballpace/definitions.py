@@ -10,11 +10,6 @@ warnings.filterwarnings("ignore", category=dg.BetaWarning)
 # ruff: noqa: E402
 
 from . import assets
-from .resources.http import HTTPResource
-from .resources.footballdata import FootballDataResource
-from .resources.vercel import VercelPostgresResource
-
-http_resource = HTTPResource()
 
 
 @dg.definitions
@@ -32,16 +27,6 @@ def defs() -> dg.Definitions:
                     file_anchor_path_in_repository="data/footballpace/definitions.py",
                 ),
             ),
-            resources={
-                "football_data": FootballDataResource(http_resource=http_resource),
-                "http_resource": http_resource,
-                "vercel_postgres": VercelPostgresResource(
-                    host=dg.EnvVar("VERCEL_POSTGRES_HOST"),
-                    dbname=dg.EnvVar("VERCEL_POSTGRES_DATABASE"),
-                    user=dg.EnvVar("VERCEL_POSTGRES_USER"),
-                    password=dg.EnvVar("VERCEL_POSTGRES_PASSWORD"),
-                ),
-            },
         ),
         dg.load_from_defs_folder(project_root=Path(__file__).parent.parent),
     )

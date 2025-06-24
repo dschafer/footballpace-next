@@ -8,8 +8,8 @@ import pandas as pd
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import bytes_data_version, previous_data_version
 from footballpace.partitions import all_seasons_leagues_partition
-from footballpace.resources.footballdata import FootballDataResource
-from footballpace.resources.vercel import (
+from footballpace.defs.resources.footballdata import FootballDataResource
+from footballpace.defs.resources.vercel import (
     MatchResultsTableSchema,
     VercelPostgresResource,
 )

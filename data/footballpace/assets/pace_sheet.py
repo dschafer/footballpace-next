@@ -7,7 +7,7 @@ from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     predicted_seasons_of_league_mapping,
 )
-from footballpace.resources.vercel import (
+from footballpace.defs.resources.vercel import (
     PaceSheetEntriesTableSchema,
     VercelPostgresResource,
 )

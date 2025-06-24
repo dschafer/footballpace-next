@@ -12,8 +12,8 @@ from footballpace.dataversion import (
     df_data_version,
     previous_data_version,
 )
-from footballpace.resources.http import HTTPResource
-from footballpace.resources.vercel import (
+from footballpace.defs.resources.http import HTTPResource
+from footballpace.defs.resources.vercel import (
     FixturesTableSchema,
     MatchResultsTableSchema,
     VercelPostgresResource,
