@@ -28,7 +28,7 @@ defs = dg.Definitions(
         git_branch="main",
         file_path_mapping=dg.AnchorBasedFilePathMapping(
             local_file_anchor=Path(__file__),
-            file_anchor_path_in_repository="data/footballpace/__init__.py",
+            file_anchor_path_in_repository="data/footballpace/definitions.py",
         ),
     ),
     resources={
