@@ -22,7 +22,9 @@ def augment_assets_with_references(asset_defs):
 
 @dg.definitions
 def defs() -> dg.Definitions:
-    folder_defs = dg.load_from_defs_folder(project_root=Path(__file__).parent.parent)
+    folder_defs = dg.load_from_defs_folder(
+        project_root=Path(__file__).parent.parent.parent
+    )
     return dg.Definitions(
         assets=augment_assets_with_references(folder_defs.assets),
         schedules=folder_defs.schedules,
