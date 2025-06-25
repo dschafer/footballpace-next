@@ -3,13 +3,9 @@ import warnings
 
 import dagster as dg
 
-warnings.filterwarnings("ignore", category=dg.BetaWarning)
-
-# This file is all noqa: E402 so that we can call warnings.filterwarnings
-# above before doing the imports
-# ruff: noqa: E402
-
 from . import assets
+
+warnings.filterwarnings("ignore", category=dg.BetaWarning)
 
 
 @dg.definitions
