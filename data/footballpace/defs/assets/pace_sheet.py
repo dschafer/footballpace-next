@@ -2,7 +2,7 @@ import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
-from footballpace.assets.match_with_finish import MatchResultsWithFinishDataFrame
+from footballpace.defs.assets.match_with_finish import MatchResultsWithFinishDataFrame
 from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     predicted_seasons_of_league_mapping,

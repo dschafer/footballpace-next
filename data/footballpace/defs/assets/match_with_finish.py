@@ -2,8 +2,8 @@ import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
-from footballpace.assets.match_results import MatchResultsDataFrame
-from footballpace.assets.standings_rows import StandingsRowsDataFrame
+from footballpace.defs.assets.match_results import MatchResultsDataFrame
+from footballpace.defs.assets.standings_rows import StandingsRowsDataFrame
 from footballpace.partitions import all_seasons_leagues_partition
 
 MatchResultsWithFinishDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
