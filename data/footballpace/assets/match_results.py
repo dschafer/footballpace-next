@@ -120,7 +120,7 @@ def match_results_df(
         StringIO(parsable_string),
         header=0,
         usecols=list(csv_dtypes.keys()),
-        dtype=csv_dtypes,
+        dtype=csv_dtypes,  # type: ignore This appears to be a false positive
     ).dropna(how="all")
 
     df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
