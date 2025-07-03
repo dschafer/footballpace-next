@@ -2,6 +2,7 @@ import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
+from footballpace.dataversion import eager_respecting_data_version
 from footballpace.defs.assets.match_results import MatchResultsDataFrame
 from footballpace.partitions import all_seasons_leagues_partition
 
@@ -32,7 +33,7 @@ StandingsRowsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
     code_version="v1",
     dagster_type=StandingsRowsDataFrame,
     ins={"match_results_df": dg.AssetIn(dagster_type=MatchResultsDataFrame)},
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def standings_rows_df(match_results_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
     """Transform the Match Results data frame into a Standings Table."""

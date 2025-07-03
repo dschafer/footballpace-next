@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-from typing import Iterator
 
 import dagster as dg
 import dagster_pandas as dg_pd
@@ -10,7 +9,7 @@ from footballpace.canonical import canonical_name
 from footballpace.dataversion import (
     bytes_data_version,
     df_data_version,
-    previous_data_version,
+    eager_respecting_data_version,
 )
 from footballpace.defs.resources.http import HTTPResource
 from footballpace.defs.resources.vercel import (
@@ -27,9 +26,7 @@ from footballpace.defs.resources.vercel import (
     output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
 )
-def fpl_bootstrap_json(
-    context: dg.AssetExecutionContext, http_resource: HTTPResource
-) -> Iterator[dg.Output[bytes]]:
+def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/bootstrap-static/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -41,11 +38,7 @@ def fpl_bootstrap_json(
 
     data_version = bytes_data_version(bootstrap_json)
 
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
-
-    yield dg.Output(
+    return dg.Output(
         bootstrap_json,
         metadata={"size": len(bootstrap_json)},
         data_version=dg.DataVersion(data_version),
@@ -59,9 +52,7 @@ def fpl_bootstrap_json(
     output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},
 )
-def fpl_fixtures_json(
-    context: dg.AssetExecutionContext, http_resource: HTTPResource
-) -> Iterator[dg.Output[bytes]]:
+def fpl_fixtures_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/fixtures/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -73,11 +64,7 @@ def fpl_fixtures_json(
 
     data_version = bytes_data_version(fixtures_json)
 
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
-
-    yield dg.Output(
+    return dg.Output(
         fixtures_json,
         metadata={"size": len(fixtures_json)},
         data_version=dg.DataVersion(data_version),
@@ -126,10 +113,9 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     output_required=False,
 )
 def fpl_fixtures_df(
-    context: dg.AssetExecutionContext,
     fpl_bootstrap_json: bytes,
     fpl_fixtures_json: bytes,
-) -> Iterator[dg.Output[pd.DataFrame]]:
+) -> dg.Output[pd.DataFrame]:
     """
     Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame.
 
@@ -165,14 +151,10 @@ def fpl_fixtures_df(
 
     data_version = df_data_version(df)
 
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
-
     metadata_teams = (
         pd.concat([df["TeamH"], df["TeamA"]]).sort_values().unique().tolist()
     )
-    yield dg.Output(
+    return dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
@@ -198,7 +180,7 @@ def fpl_fixtures_df(
         "dagster/table_name": "fixtures",
     },
     tags={"db_write": "true"},
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
@@ -247,9 +229,7 @@ def result_from_row(fixture) -> str:
     dagster_type=FPLResultsDataFrame,
     output_required=False,
 )
-def fpl_results_df(
-    context: dg.AssetExecutionContext, fpl_fixtures_df: pd.DataFrame
-) -> Iterator[dg.Output[pd.DataFrame]]:
+def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
     """
     Convert the JSON from https://fantasy.premierleague.com into completed matches,
     then convert them to our standard results format for eventual DB writes.
@@ -273,14 +253,10 @@ def fpl_results_df(
 
     data_version = df_data_version(df)
 
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
-
     metadata_teams = (
         pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
     )
-    yield dg.Output(
+    return dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
@@ -302,7 +278,7 @@ def fpl_results_df(
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def fpl_results_postgres(
     fpl_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

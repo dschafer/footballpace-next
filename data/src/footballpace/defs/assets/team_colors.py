@@ -1,13 +1,12 @@
-from hashlib import sha256
 import json
-from typing import Iterator, Optional
+from typing import Optional
 
 import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
 from footballpace.canonical import canonical_name
-from footballpace.dataversion import bytes_data_version, previous_data_version
+from footballpace.dataversion import bytes_data_version, eager_respecting_data_version
 from footballpace.defs.resources.http import HTTPResource
 from footballpace.defs.resources.vercel import (
     TeamColorsTableSchema,
@@ -24,9 +23,7 @@ from footballpace.defs.resources.vercel import (
         "dagster/uri": "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     },
 )
-def team_colors_json(
-    context: dg.AssetExecutionContext, http_resource: HTTPResource
-) -> Iterator[dg.Output[bytes]]:
+def team_colors_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     """Scrapes the latest JSON colors from jimniels/teamcolors.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -37,14 +34,11 @@ def team_colors_json(
     ).content
 
     data_version = bytes_data_version(teams_json)
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
 
-    yield dg.Output(
+    return dg.Output(
         teams_json,
         metadata={"size": len(teams_json)},
-        data_version=dg.DataVersion(sha256(teams_json).hexdigest()),
+        data_version=dg.DataVersion(data_version),
     )
 
 
@@ -76,7 +70,7 @@ def team_colors_dict(team) -> dict[str, Optional[str]]:
     kinds={"Pandas"},
     code_version="v2",
     dagster_type=TeamColorsDataFrame,
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def team_colors_df(team_colors_json: bytes) -> dg.Output[pd.DataFrame]:
     """Convert the JSON from jimniels/teamcolors into a Pandas DataFrame."""
@@ -110,7 +104,7 @@ def team_colors_df(team_colors_json: bytes) -> dg.Output[pd.DataFrame]:
         "dagster/table_name": "team_colors",
     },
     tags={"db_write": "true"},
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def team_colors_postgres(
     team_colors_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

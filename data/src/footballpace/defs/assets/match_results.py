@@ -1,12 +1,11 @@
 from io import StringIO
-from typing import Iterator
 
 import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
 from footballpace.canonical import canonical_name
-from footballpace.dataversion import bytes_data_version, previous_data_version
+from footballpace.dataversion import bytes_data_version, eager_respecting_data_version
 from footballpace.partitions import all_seasons_leagues_partition
 from footballpace.defs.resources.footballdata import FootballDataResource
 from footballpace.defs.resources.vercel import (
@@ -24,7 +23,7 @@ from footballpace.defs.resources.vercel import (
 )
 def match_results_csv(
     context: dg.AssetExecutionContext, football_data: FootballDataResource
-) -> Iterator[dg.Output[bytes]]:
+) -> dg.Output[bytes]:
     """Scrapes the latest CSV results from football-data.co.uk.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -39,11 +38,8 @@ def match_results_csv(
     results_data = football_data.request(season, league).content
 
     data_version = bytes_data_version(results_data)
-    if data_version == previous_data_version(context):
-        context.log.debug("Skipping materializations; data versions match")
-        return
 
-    yield dg.Output(
+    return dg.Output(
         results_data,
         metadata={
             "size": len(results_data),
@@ -88,7 +84,7 @@ MatchResultsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
     partitions_def=all_seasons_leagues_partition,
     code_version="v2",
     dagster_type=MatchResultsDataFrame,
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def match_results_df(
     context: dg.AssetExecutionContext, match_results_csv: bytes
@@ -160,7 +156,7 @@ def match_results_df(
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def match_results_postgres(
     match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource

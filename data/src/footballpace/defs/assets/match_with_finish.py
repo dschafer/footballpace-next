@@ -2,6 +2,7 @@ import dagster as dg
 import dagster_pandas as dg_pd
 import pandas as pd
 
+from footballpace.dataversion import eager_respecting_data_version
 from footballpace.defs.assets.match_results import MatchResultsDataFrame
 from footballpace.defs.assets.standings_rows import StandingsRowsDataFrame
 from footballpace.partitions import all_seasons_leagues_partition
@@ -37,7 +38,7 @@ MatchResultsWithFinishDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
         "standings_rows_df": dg.AssetIn(dagster_type=StandingsRowsDataFrame),
         "match_results_df": dg.AssetIn(dagster_type=MatchResultsDataFrame),
     },
-    automation_condition=dg.AutomationCondition.eager(),
+    automation_condition=eager_respecting_data_version,
 )
 def match_results_with_finish_df(
     match_results_df: pd.DataFrame,
