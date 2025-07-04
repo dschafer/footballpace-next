@@ -3,12 +3,24 @@ import os
 import dagster as dg
 import httpx
 
+from src.footballpace.row_count import has_nonzero_row_count
+
 API_UPDATE_URL = "https://footballpace.com/api/update"
 
 
 @dg.asset(
     group_name="CacheUpdate",
     kinds={"vercel"},
+    automation_condition=dg.AutomationCondition.any_deps_match(
+        dg.AutomationCondition.newly_updated() & has_nonzero_row_count()
+    ),
+    deps=[
+        "fpl_fixtures_postgres",
+        "fpl_results_postgres",
+        "match_results_postgres",
+        "pace_sheet_entries_postgres",
+        "team_colors_postgres",
+    ],
 )
 def cache_update(context: dg.AssetExecutionContext) -> None:
     """
