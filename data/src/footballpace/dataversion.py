@@ -14,6 +14,8 @@ def bytes_data_version(bytes: bytes) -> str:
     return sha256(bytes).hexdigest()
 
 
-eager_respecting_data_version = dg.AutomationCondition.eager().replace(
-    "newly_updated", dg.AutomationCondition.data_version_changed()
+eager_respecting_data_version = (
+    dg.AutomationCondition.eager()
+    .replace("newly_updated", dg.AutomationCondition.data_version_changed())
+    .with_label("eager_respecting_data_version")
 )
