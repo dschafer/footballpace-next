@@ -20,7 +20,7 @@ from footballpace.defs.resources.vercel import (
 
 @dg.asset(
     group_name="FPL",
-    kinds={"API"},
+    kinds={"json"},
     code_version="v1",
     output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
@@ -46,7 +46,7 @@ def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
 
 @dg.asset(
     group_name="FPL",
-    kinds={"API"},
+    kinds={"json"},
     code_version="v1",
     output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},

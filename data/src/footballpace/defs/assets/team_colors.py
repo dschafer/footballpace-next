@@ -16,7 +16,7 @@ from footballpace.defs.resources.vercel import (
 
 @dg.asset(
     group_name="TeamColors",
-    kinds={"API"},
+    kinds={"json"},
     code_version="v1",
     output_required=False,
     metadata={
