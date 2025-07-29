@@ -1,4 +1,3 @@
-from datetime import datetime
 import json
 
 import dagster as dg
@@ -145,9 +144,7 @@ def fpl_fixtures_df(
     df["TeamH"] = df["TeamH"].map(team_idents_dict).map(canonical_name)
     df["TeamHScore"] = df["TeamHScore"].astype("Int64")
     df["Div"] = "E0"
-    df["Season"] = (
-        datetime.now().year if datetime.now().month >= 8 else datetime.now().year - 1
-    )
+    df["Season"] = min(df["KickoffTime"]).year
 
     data_version = df_data_version(df)
 
@@ -162,7 +159,7 @@ def fpl_fixtures_df(
                 pd.concat([df.head(), df.tail()]).to_markdown()
             ),
             "most_recent_match_date": dg.MetadataValue.text(
-                str(max(df["KickoffTime"]))
+                str(max(df["KickoffTime"])) if not df.empty else "N/A"
             ),
             "teams": metadata_teams,
         },
@@ -249,7 +246,7 @@ def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
         )
     )
     df["Date"] = df["Date"].dt.tz_convert(None).dt.normalize()
-    df["FTR"] = df.apply(result_from_row, axis=1)
+    df["FTR"] = df.apply(result_from_row, axis=1).astype(str)
 
     data_version = df_data_version(df)
 
@@ -261,7 +258,9 @@ def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
         metadata={
             "dagster/row_count": len(df),
             "preview": dg.MetadataValue.md(df.head().to_markdown()),
-            "most_recent_match_date": dg.MetadataValue.text(str(max(df["Date"]))),
+            "most_recent_match_date": dg.MetadataValue.text(
+                str(max(df["Date"])) if not df.empty else "N/A"
+            ),
             "teams": metadata_teams,
         },
         data_version=dg.DataVersion(data_version),
