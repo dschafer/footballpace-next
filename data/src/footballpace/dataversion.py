@@ -1,12 +1,12 @@
 from hashlib import sha256
 
 import dagster as dg
-import pandas as pd
+import polars as pl
 
 
-def df_data_version(df: pd.DataFrame) -> str:
-    """Helper function to compute the data version of a pandas DataFrame."""
-    return sha256(pd.util.hash_pandas_object(df).to_numpy()).hexdigest()
+def df_data_version(df: pl.DataFrame) -> str:
+    """Helper function to compute the data version of a polars DataFrame."""
+    return str(df.hash_rows().implode().hash().item())
 
 
 def bytes_data_version(bytes: bytes) -> str:

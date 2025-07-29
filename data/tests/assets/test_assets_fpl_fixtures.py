@@ -1,5 +1,5 @@
 import dagster as dg
-import pandas as pd
+import polars as pl
 
 from footballpace.defs.assets.fpl_fixtures import fpl_fixtures_df, fpl_results_df
 
@@ -13,11 +13,11 @@ def test_fpl_fixtures_df():
     df_output = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
     assert isinstance(df_output, dg.Output)
     df = df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == (20 * 19)
-    assert df["FinishedProvisional"][0]
-    assert df["Div"][0] == "E0"
-    assert df["Season"][0] == 2024
+    assert df["finished_provisional"][0]
+    assert df["league"][0] == "E0"
+    assert df["year"][0] == 2024
 
 
 def test_fpl_results_df():
@@ -30,8 +30,8 @@ def test_fpl_results_df():
     df_output = fpl_results_df(dg.build_asset_context(), fixtures_df)
     assert isinstance(df_output, dg.Output)
     df = df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) < (20 * 19)
     assert len(df) > 0
-    assert df["Div"][0] == "E0"
-    assert df["Season"][0] == 2024
+    assert df["league"][0] == "E0"
+    assert df["year"][0] == 2024

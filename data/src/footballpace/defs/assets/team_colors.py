@@ -1,17 +1,14 @@
 import json
-from typing import Optional
 
 import dagster as dg
-import dagster_pandas as dg_pd
-import pandas as pd
+import polars as pl
 
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import bytes_data_version, eager_respecting_data_version
+from footballpace.defs.models import TeamColors, TeamColorsDagsterType
 from footballpace.defs.resources.http import HTTPResource
-from footballpace.defs.resources.vercel import (
-    TeamColorsTableSchema,
-    VercelPostgresResource,
-)
+from footballpace.defs.resources.vercel import VercelPostgresResource
+from footballpace.markdown import markdown_metadata
 
 
 @dg.asset(
@@ -41,53 +38,31 @@ def team_colors_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     )
 
 
-TeamColorsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="TeamColorsDataFrame",
-    columns=[
-        dg_pd.PandasColumn.string_column("Team", non_nullable=True, unique=True),
-        dg_pd.PandasColumn.string_column("PrimaryColor", non_nullable=True),
-        dg_pd.PandasColumn.string_column("SecondaryColor"),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/row_count": len(df),
-        "preview": dg.MetadataValue.md(df.head().to_markdown()),
-    },
-)
-
-
-def team_colors_dict(team) -> dict[str, Optional[str]]:
-    colors = team["colors"]["hex"]
-    return {
-        "Team": team["name"],
-        "PrimaryColor": colors[0],
-        "SecondaryColor": colors[1] if len(colors) > 1 else None,
-    }
-
-
 @dg.asset(
     group_name="TeamColors",
-    kinds={"Pandas"},
-    code_version="v2",
-    dagster_type=TeamColorsDataFrame,
+    kinds={"Polars"},
+    code_version="v3",
+    dagster_type=TeamColorsDagsterType,
+    metadata=TeamColorsDagsterType.metadata,
     automation_condition=eager_respecting_data_version,
 )
-def team_colors_df(team_colors_json: bytes) -> dg.Output[pd.DataFrame]:
-    """Convert the JSON from jimniels/teamcolors into a Pandas DataFrame."""
+def team_colors_df(team_colors_json: bytes) -> dg.Output[pl.DataFrame]:
+    """Convert the JSON from jimniels/teamcolors into a Polars DataFrame."""
 
     all_teams_obj = json.loads(team_colors_json)
     epl_teams_obj = [team for team in all_teams_obj if team["league"] == "epl"]
-    epl_teams = pd.DataFrame.from_records(
-        [team_colors_dict(team) for team in epl_teams_obj]
-    )
+    epl_teams = pl.DataFrame([TeamColors.from_json(team) for team in epl_teams_obj])
 
-    epl_teams["Team"] = epl_teams["Team"].map(canonical_name)
-    metadata_teams = epl_teams["Team"].sort_values().unique().tolist()
+    epl_teams = epl_teams.with_columns(
+        pl.col("team").map_elements(canonical_name, return_dtype=pl.String)
+    )
+    metadata_teams = epl_teams.get_column("team").sort().unique().to_list()
 
     return dg.Output(
         epl_teams,
         metadata={
             "dagster/row_count": len(epl_teams),
-            "preview": dg.MetadataValue.md(epl_teams.head().to_markdown()),
+            "preview": markdown_metadata(epl_teams.head()),
             "teams": metadata_teams,
         },
     )
@@ -96,22 +71,18 @@ def team_colors_df(team_colors_json: bytes) -> dg.Output[pd.DataFrame]:
 @dg.asset(
     group_name="TeamColors",
     kinds={"Postgres"},
-    code_version="v1",
-    ins={"team_colors_df": dg.AssetIn(dagster_type=TeamColorsDataFrame)},
+    code_version="v2",
+    ins={"team_colors_df": dg.AssetIn(dagster_type=TeamColorsDagsterType)},
     metadata={
-        "dagster/column_schema": TeamColorsTableSchema,
+        **TeamColorsDagsterType.metadata,
         "dagster/table_name": "team_colors",
     },
     tags={"db_write": "true"},
     automation_condition=eager_respecting_data_version,
 )
 def team_colors_postgres(
-    team_colors_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+    team_colors_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.Output[None]:
     """Writes the team colors into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in team_colors_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_team_colors(rows)
+    rowcount = vercel_postgres.upsert_team_colors(team_colors_df.to_dicts())
     return dg.Output(None, metadata={"dagster/row_count": rowcount})

@@ -1,5 +1,6 @@
 import dagster as dg
-import pandas as pd
+import datetime
+import polars as pl
 
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.match_with_finish import match_results_with_finish_df
@@ -22,10 +23,10 @@ def test_match_results_with_finish():
     )
     assert isinstance(match_results_with_finish_df_output, dg.Output)
     df = match_results_with_finish_df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == (20 * 19)
-    assert df["Date"][0] == pd.Timestamp("2022-08-05")
-    assert df["HomeTeam"][0] == "Crystal Palace"
-    assert df["AwayTeam"][0] == "Arsenal"
-    assert df["HomeFinish"][0] == 11
-    assert df["AwayFinish"][0] == 2
+    assert df["date"][0] == datetime.date(2022, 8, 5)
+    assert df["home_team"][0] == "Crystal Palace"
+    assert df["away_team"][0] == "Arsenal"
+    assert df["home_finish"][0] == 11
+    assert df["away_finish"][0] == 2

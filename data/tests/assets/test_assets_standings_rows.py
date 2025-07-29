@@ -1,5 +1,5 @@
 import dagster as dg
-import pandas as pd
+import polars as pl
 
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.standings_rows import standings_rows_df
@@ -17,10 +17,11 @@ def test_standingsrows_df():
     standings_row_df_output = standings_rows_df(match_results_df_output.value)
     assert isinstance(standings_row_df_output, dg.Output)
     df = standings_row_df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == 20
-    assert df.set_index("Team").at["Liverpool", "Wins"] == 19
-    assert df.set_index("Team").at["Liverpool", "Losses"] == 9
-    assert df.set_index("Team").at["Liverpool", "Draws"] == 10
-    assert df.set_index("Team").at["Liverpool", "For"] == 75
-    assert df.set_index("Team").at["Liverpool", "Against"] == 47
+    lpool = df.filter(pl.col("team") == "Liverpool")
+    assert lpool["wins"][0] == 19
+    assert lpool["losses"][0] == 9
+    assert lpool["draws"][0] == 10
+    assert lpool["goals_for"][0] == 75
+    assert lpool["goals_against"][0] == 47

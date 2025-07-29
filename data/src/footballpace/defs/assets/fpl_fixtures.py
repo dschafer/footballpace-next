@@ -1,8 +1,7 @@
 import json
 
 import dagster as dg
-import dagster_pandas as dg_pd
-import pandas as pd
+import polars as pl
 
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import (
@@ -10,12 +9,14 @@ from footballpace.dataversion import (
     df_data_version,
     eager_respecting_data_version,
 )
-from footballpace.defs.resources.http import HTTPResource
-from footballpace.defs.resources.vercel import (
-    FixturesTableSchema,
-    MatchResultsTableSchema,
-    VercelPostgresResource,
+from footballpace.defs.models import (
+    FPLFixtureDagsterType,
+    FixtureDagsterType,
+    MatchDagsterType,
 )
+from footballpace.defs.resources.http import HTTPResource
+from footballpace.defs.resources.vercel import VercelPostgresResource
+from footballpace.markdown import markdown_metadata
 
 
 @dg.asset(
@@ -68,53 +69,23 @@ def fpl_fixtures_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     )
 
 
-FPLFixturesDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="FPLFixturesDataFrame",
-    columns=[
-        dg_pd.PandasColumn.boolean_column("FinishedProvisional"),
-        dg_pd.PandasColumn.datetime_column("KickoffTime", tz="UTC"),
-        dg_pd.PandasColumn.string_column("TeamA"),
-        dg_pd.PandasColumn.integer_column("TeamAScore", min_value=0),
-        dg_pd.PandasColumn.string_column("TeamH"),
-        dg_pd.PandasColumn.integer_column("TeamHScore", min_value=0),
-        dg_pd.PandasColumn.string_column("Div"),
-        dg_pd.PandasColumn.integer_column("Season"),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/row_count": len(df),
-        "preview": dg.MetadataValue.md(pd.concat([df.head(), df.tail()]).to_markdown()),
-    },
-)
-
-
-def fixture_dict(fixture) -> dict:
-    return {
-        "FinishedProvisional": fixture["finished_provisional"],
-        "KickoffTime": fixture["kickoff_time"],
-        "TeamA": fixture["team_a"],
-        "TeamAScore": fixture["team_a_score"],
-        "TeamH": fixture["team_h"],
-        "TeamHScore": fixture["team_h_score"],
-    }
-
-
 def team_idents(bootstrap_obj) -> dict[int, str]:
     return dict([(team["id"], team["name"]) for team in bootstrap_obj["teams"]])
 
 
 @dg.asset(
     group_name="FPL",
-    kinds={"Pandas"},
-    code_version="v2",
-    dagster_type=FPLFixturesDataFrame,
+    kinds={"Polars"},
+    code_version="v3",
+    dagster_type=FPLFixtureDagsterType,
     automation_condition=eager_respecting_data_version,
 )
 def fpl_fixtures_df(
     fpl_bootstrap_json: bytes,
     fpl_fixtures_json: bytes,
-) -> dg.Output[pd.DataFrame]:
+) -> dg.Output[pl.DataFrame]:
     """
-    Convert the JSON from https://fantasy.premierleague.com into a Pandas DataFrame.
+    Convert the JSON from https://fantasy.premierleague.com into a Polars DataFrame.
 
     This also uses DataVersions to detect if changes have been made (and will opt not
     to materialize if not). This is because the bootstrap_json changes constantly
@@ -125,43 +96,57 @@ def fpl_fixtures_df(
     """
 
     fpl_fixtures_obj = json.loads(fpl_fixtures_json)
+    fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
 
-    df = pd.DataFrame.from_records(
-        [fixture_dict(fixture) for fixture in fpl_fixtures_obj]
+    team_idents_dict = team_idents(fpl_bootstrap_obj)
+
+    df = pl.DataFrame(fpl_fixtures_obj)
+    df = df.filter(
+        pl.col("kickoff_time").is_not_null()
+    )  # Filter null values, for fixtures that are postponed.
+    df = (
+        df.with_columns(
+            league=pl.lit("E0"),
+            finished_provisional=pl.col("finished_provisional").cast(bool),
+            kickoff_time=pl.col("kickoff_time").str.to_datetime(
+                format="%+"
+            ),  # %+ is ISO8601
+            away_team=pl.col("team_a").map_elements(
+                lambda x: canonical_name(team_idents_dict[x]), return_dtype=pl.String
+            ),
+            home_team=pl.col("team_h").map_elements(
+                lambda x: canonical_name(team_idents_dict[x]), return_dtype=pl.String
+            ),
+            ft_away_goals=pl.col("team_a_score").cast(int),
+            ft_home_goals=pl.col("team_h_score").cast(int),
+        )
+        .with_columns(year=pl.col("kickoff_time").min().dt.year())
+        .select(
+            "league",
+            "year",
+            "kickoff_time",
+            "home_team",
+            "away_team",
+            "finished_provisional",
+            "ft_home_goals",
+            "ft_away_goals",
+        )
     )
 
-    fpl_bootstrap_obj = json.loads(fpl_bootstrap_json)
-    team_idents_dict = team_idents(fpl_bootstrap_obj)
-    df = df[
-        df["KickoffTime"].notnull()
-    ]  # Filter null values, for fixtures that are postponed.
-    df["FinishedProvisional"] = df["FinishedProvisional"].astype(bool)
-    df["KickoffTime"] = pd.to_datetime(df["KickoffTime"], format="ISO8601")
-    df["TeamA"] = df["TeamA"].map(team_idents_dict).map(canonical_name)
-    df["TeamAScore"] = df["TeamAScore"].astype("Int64")
-    df["TeamH"] = df["TeamH"].map(team_idents_dict).map(canonical_name)
-    df["TeamHScore"] = df["TeamHScore"].astype("Int64")
-    df["Div"] = "E0"
-    df["Season"] = min(df["KickoffTime"]).year
-
-    data_version = df_data_version(df)
-
     metadata_teams = (
-        pd.concat([df["TeamH"], df["TeamA"]]).sort_values().unique().tolist()
+        pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
     return dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
-            "preview": dg.MetadataValue.md(
-                pd.concat([df.head(), df.tail()]).to_markdown()
-            ),
+            "preview": markdown_metadata(pl.concat([df.head(), df.tail()])),
             "most_recent_match_date": dg.MetadataValue.text(
-                str(max(df["KickoffTime"])) if not df.empty else "N/A"
+                str(max(df["kickoff_time"])) if not df.is_empty else "N/A"
             ),
             "teams": metadata_teams,
         },
-        data_version=dg.DataVersion(data_version),
+        data_version=dg.DataVersion(df_data_version(df)),
     )
 
 
@@ -169,99 +154,73 @@ def fpl_fixtures_df(
     group_name="FPL",
     kinds={"Postgres"},
     code_version="v1",
-    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixturesDataFrame)},
+    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType)},
     metadata={
-        "dagster/column_schema": FixturesTableSchema,
+        **FixtureDagsterType.metadata,
         "dagster/table_name": "fixtures",
     },
     tags={"db_write": "true"},
     automation_condition=eager_respecting_data_version,
 )
 def fpl_fixtures_postgres(
-    fpl_fixtures_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+    fpl_fixtures_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.Output[None]:
     """Writes the fixtures from FPL into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in fpl_fixtures_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_fixtures(rows)
+    rowcount = vercel_postgres.upsert_fixtures(fpl_fixtures_df.to_dicts())
     return dg.Output(None, metadata={"dagster/row_count": rowcount})
-
-
-FPLResultsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="FPLResultsDataFrame",
-    columns=[
-        dg_pd.PandasColumn.string_column("Div"),
-        dg_pd.PandasColumn.integer_column("Season"),
-        dg_pd.PandasColumn.datetime_column("Date", tz=None),
-        dg_pd.PandasColumn.string_column("HomeTeam"),
-        dg_pd.PandasColumn.string_column("AwayTeam"),
-        dg_pd.PandasColumn.integer_column("FTHG", min_value=0),
-        dg_pd.PandasColumn.integer_column("FTAG", min_value=0),
-        dg_pd.PandasColumn.categorical_column("FTR", categories={"H", "A", "D"}),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/row_count": len(df),
-        "preview": dg.MetadataValue.md(df.head().to_markdown()),
-    },
-)
-
-
-def result_from_row(fixture) -> str:
-    if fixture["FTAG"] > fixture["FTHG"]:
-        return "A"
-    if fixture["FTHG"] > fixture["FTAG"]:
-        return "H"
-    return "D"
 
 
 @dg.asset(
     group_name="FPL",
-    kinds={"Pandas"},
-    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixturesDataFrame)},
-    code_version="v2",
-    dagster_type=FPLResultsDataFrame,
+    kinds={"Polars"},
+    ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType)},
+    code_version="v3",
+    dagster_type=MatchDagsterType,
     automation_condition=eager_respecting_data_version,
 )
-def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
+def fpl_results_df(fpl_fixtures_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
     """
     Convert the JSON from https://fantasy.premierleague.com into completed matches,
     then convert them to our standard results format for eventual DB writes.
     """
 
     df = (
-        fpl_fixtures_df[fpl_fixtures_df["FinishedProvisional"]]
-        .drop(["FinishedProvisional"], axis=1)
-        .rename(
-            columns={
-                "KickoffTime": "Date",
-                "TeamA": "AwayTeam",
-                "TeamAScore": "FTAG",
-                "TeamH": "HomeTeam",
-                "TeamHScore": "FTHG",
-            }
+        fpl_fixtures_df.filter(pl.col("finished_provisional"))
+        .drop("finished_provisional")
+        .with_columns(
+            date=pl.col("kickoff_time").dt.replace_time_zone(None).dt.date(),
+            ft_result=pl.when(pl.col("ft_home_goals") > pl.col("ft_away_goals"))
+            .then(pl.lit("H"))
+            .when(pl.col("ft_away_goals") > pl.col("ft_home_goals"))
+            .then(pl.lit("A"))
+            .otherwise(pl.lit("D")),
+        )
+        .select(
+            "league",
+            "year",
+            "date",
+            "home_team",
+            "away_team",
+            "ft_home_goals",
+            "ft_away_goals",
+            "ft_result",
         )
     )
-    df["Date"] = df["Date"].dt.tz_convert(None).dt.normalize()
-    df["FTR"] = df.apply(result_from_row, axis=1).astype(str)
-
-    data_version = df_data_version(df)
 
     metadata_teams = (
-        pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
+        pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
     return dg.Output(
         df,
         metadata={
             "dagster/row_count": len(df),
-            "preview": dg.MetadataValue.md(df.head().to_markdown()),
+            "preview": markdown_metadata(df.head()),
             "most_recent_match_date": dg.MetadataValue.text(
-                str(max(df["Date"])) if not df.empty else "N/A"
+                str(max(df["date"])) if not df.is_empty else "N/A"
             ),
             "teams": metadata_teams,
         },
-        data_version=dg.DataVersion(data_version),
+        data_version=dg.DataVersion(df_data_version(df)),
     )
 
 
@@ -269,21 +228,17 @@ def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
     group_name="FPL",
     kinds={"Postgres"},
     code_version="v1",
-    ins={"fpl_results_df": dg.AssetIn(dagster_type=FPLResultsDataFrame)},
+    ins={"fpl_results_df": dg.AssetIn(dagster_type=MatchDagsterType)},
     metadata={
-        "dagster/column_schema": MatchResultsTableSchema,
+        **MatchDagsterType.metadata,
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
     automation_condition=eager_respecting_data_version,
 )
 def fpl_results_postgres(
-    fpl_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+    fpl_results_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.Output[None]:
     """Writes the results from FPL into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in fpl_results_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_matches(rows)
+    rowcount = vercel_postgres.upsert_matches(fpl_results_df.to_dicts())
     return dg.Output(None, metadata={"dagster/row_count": rowcount})

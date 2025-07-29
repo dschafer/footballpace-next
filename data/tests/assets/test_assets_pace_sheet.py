@@ -1,5 +1,5 @@
 import dagster as dg
-import pandas as pd
+import polars as pl
 
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.match_with_finish import match_results_with_finish_df
@@ -9,12 +9,12 @@ from footballpace.defs.assets.standings_rows import standings_rows_df
 from .read_file import read_csv_bytes
 
 
-def helper_get_match_results_with_finish(year: str, filename: str) -> pd.DataFrame:
+def helper_get_match_results_with_finish(year: str, filename: str) -> pl.DataFrame:
     bytes = read_csv_bytes(filename)
-    context_22 = dg.build_asset_context(
+    context_year = dg.build_asset_context(
         partition_key=dg.MultiPartitionKey({"season": year})
     )
-    match_results_df_output = match_results_df(context_22, bytes)
+    match_results_df_output = match_results_df(context_year, bytes)
     assert isinstance(match_results_df_output, dg.Output)
     standings_rows_df_output = standings_rows_df(match_results_df_output.value)
     assert isinstance(standings_rows_df_output, dg.Output)
@@ -42,6 +42,7 @@ def test_pace_sheet_entries():
     )
     assert isinstance(pace_sheet_entries_df_output, dg.Output)
     pace_sheet_entries = pace_sheet_entries_df_output.value
+    assert isinstance(pace_sheet_entries, pl.DataFrame)
     assert len(pace_sheet_entries) == (19 * 2)
     assert pace_sheet_entries["TeamFinish"][0] == 1
     assert pace_sheet_entries["OpponentFinish"][0] == 2

@@ -5,10 +5,11 @@ requires-python = ">= 3.12"
 dependencies = [
   "dagster>=1.11.3",
   "dagster-cloud>=1.11.3",
-  "dagster-pandas>=0.27.3",
+  "dagster-polars[patito]>=0.27.3",
   "dagster-webserver>=1.11.3",
   "httpx>=0.28.1",
-  "pandas>=2.3.0",
+  "patito>=0.8.3",
+  "polars>=1.31.0",
   "psycopg[binary]>=3.2.9",
 ]
 

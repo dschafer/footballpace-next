@@ -1,17 +1,15 @@
 from io import StringIO
 
 import dagster as dg
-import dagster_pandas as dg_pd
-import pandas as pd
+import polars as pl
 
 from footballpace.canonical import canonical_name
 from footballpace.dataversion import bytes_data_version, eager_respecting_data_version
-from footballpace.partitions import all_seasons_leagues_partition
+from footballpace.defs.models import MatchDagsterType
 from footballpace.defs.resources.footballdata import FootballDataResource
-from footballpace.defs.resources.vercel import (
-    MatchResultsTableSchema,
-    VercelPostgresResource,
-)
+from footballpace.defs.resources.vercel import VercelPostgresResource
+from footballpace.markdown import markdown_metadata
+from footballpace.partitions import all_seasons_leagues_partition
 
 
 @dg.asset(
@@ -49,46 +47,28 @@ def match_results_csv(
 
 
 csv_dtypes = {
-    "Div": "string",
-    "Date": "string",  # This gets converted to Date later
-    "HomeTeam": "string",
-    "AwayTeam": "string",
-    "FTHG": "UInt8",
-    "FTAG": "UInt8",
-    "FTR": "category",
+    "Div": pl.String,
+    "Date": pl.String,  # This gets converted to Date later
+    "HomeTeam": pl.String,
+    "AwayTeam": pl.String,
+    "FTHG": pl.UInt8,
+    "FTAG": pl.UInt8,
+    "FTR": pl.Enum(["H", "A", "D"]),
 }
-
-MatchResultsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="MatchResultsDataFrame",
-    columns=[
-        dg_pd.PandasColumn.string_column("Div"),
-        dg_pd.PandasColumn.integer_column("Season"),
-        dg_pd.PandasColumn.datetime_column("Date"),
-        dg_pd.PandasColumn.string_column("HomeTeam"),
-        dg_pd.PandasColumn.string_column("AwayTeam"),
-        dg_pd.PandasColumn.integer_column("FTHG", min_value=0),
-        dg_pd.PandasColumn.integer_column("FTAG", min_value=0),
-        dg_pd.PandasColumn.categorical_column("FTR", categories={"H", "A", "D"}),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/partition_row_count": len(df),
-        "preview": dg.MetadataValue.md(df.head().to_markdown()),
-    },
-)
 
 
 @dg.asset(
     group_name="MatchResults",
-    kinds={"Pandas"},
+    kinds={"Polars"},
     partitions_def=all_seasons_leagues_partition,
-    code_version="v2",
-    dagster_type=MatchResultsDataFrame,
+    code_version="v3",
+    dagster_type=MatchDagsterType,
     automation_condition=eager_respecting_data_version,
 )
 def match_results_df(
     context: dg.AssetExecutionContext, match_results_csv: bytes
-) -> dg.Output[pd.DataFrame]:
-    """Convert the CSV from football-data.co.uk into a Pandas DataFrame.
+) -> dg.Output[pl.DataFrame]:
+    """Convert the CSV from football-data.co.uk into a Polars DataFrame.
 
     API Docs: https://www.football-data.co.uk/notes.txt
     """
@@ -111,34 +91,59 @@ def match_results_df(
         )
 
     parsable_string = "\n".join(lines)
-    df = pd.read_csv(
-        StringIO(parsable_string),
-        header=0,
-        usecols=list(csv_dtypes.keys()),
-        dtype=csv_dtypes,  # type: ignore This appears to be a false positive
-    ).dropna(how="all")
+    df = (
+        pl.scan_csv(
+            StringIO(parsable_string),
+            schema_overrides=csv_dtypes,
+        )
+        .select(csv_dtypes.keys())
+        .filter(~pl.all_horizontal(pl.all().is_null()))
+        .with_columns(
+            league=pl.col("Div"),
+            year=pl.lit(season),
+            date=pl.when(pl.col("Date").str.len_chars() == 8)
+            .then(
+                pl.col("Date").str.to_date("%d/%m/%y", strict=False)
+            )  # Dates like 31/08/99
+            .otherwise(
+                pl.col("Date").str.to_date("%d/%m/%Y", strict=False)
+            ),  # Dates like 31/08/2003
+            home_team=pl.col("HomeTeam").map_elements(
+                canonical_name, return_dtype=pl.String
+            ),
+            away_team=pl.col("AwayTeam").map_elements(
+                canonical_name, return_dtype=pl.String
+            ),
+            ft_home_goals=pl.col("FTHG"),
+            ft_away_goals=pl.col("FTAG"),
+            ft_result=pl.col("FTR"),
+        )
+        .select(
+            "league",
+            "year",
+            "date",
+            "home_team",
+            "away_team",
+            "ft_home_goals",
+            "ft_away_goals",
+            "ft_result",
+        )
+    ).collect()
 
-    df["HomeTeam"] = df["HomeTeam"].map(canonical_name)
-    df["AwayTeam"] = df["AwayTeam"].map(canonical_name)
-
-    if len(df["Date"][0]) == 8:
-        # Dates like 31/08/99
-        df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%y")
-    else:
-        # Dates like 31/08/2003
-        df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
-
-    df["Season"] = season
+    # We need to use strict=False above, hence this check
+    assert not df["date"].has_nulls()
     metadata_teams = (
-        pd.concat([df["HomeTeam"], df["AwayTeam"]]).sort_values().unique().tolist()
+        pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
 
     return dg.Output(
         df,
         metadata={
             "dagster/partition_row_count": len(df),
-            "preview": dg.MetadataValue.md(df.head().to_markdown()),
-            "most_recent_match_date": dg.MetadataValue.text(str(max(df["Date"]))),
+            "preview": markdown_metadata(pl.concat([df.head(), df.tail()])),
+            "most_recent_match_date": dg.MetadataValue.text(
+                str(max(df["kickoff_time"])) if not df.is_empty else "N/A"
+            ),
             "teams": metadata_teams,
         },
     )
@@ -149,21 +154,17 @@ def match_results_df(
     kinds={"Postgres"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
-    ins={"match_results_df": dg.AssetIn(dagster_type=MatchResultsDataFrame)},
+    ins={"match_results_df": dg.AssetIn(dagster_type=MatchDagsterType)},
     metadata={
-        "dagster/column_schema": MatchResultsTableSchema,
+        **MatchDagsterType.metadata,
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
     automation_condition=eager_respecting_data_version,
 )
 def match_results_postgres(
-    match_results_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+    match_results_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.Output[None]:
     """Writes the match results from football-data.co.uk into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in match_results_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_matches(rows)
+    rowcount = vercel_postgres.upsert_matches(match_results_df.to_dicts())
     return dg.Output(None, metadata={"dagster/partition_row_count": rowcount})

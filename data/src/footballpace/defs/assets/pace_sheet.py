@@ -1,31 +1,15 @@
 import dagster as dg
-import dagster_pandas as dg_pd
-import pandas as pd
+import polars as pl
 
-from footballpace.defs.assets.match_with_finish import MatchResultsWithFinishDataFrame
+from footballpace.defs.models import (
+    MatchWithFinishDagsterType,
+    PaceSheetEntryDagsterType,
+)
+from footballpace.defs.resources.vercel import VercelPostgresResource
+from footballpace.markdown import markdown_metadata
 from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     predicted_seasons_of_league_mapping,
-)
-from footballpace.defs.resources.vercel import (
-    PaceSheetEntriesTableSchema,
-    VercelPostgresResource,
-)
-
-PaceSheetEntryDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="PaceSheetEntry",
-    columns=[
-        dg_pd.PandasColumn.string_column("Div"),
-        dg_pd.PandasColumn.integer_column("Season"),
-        dg_pd.PandasColumn.integer_column("TeamFinish", min_value=1),
-        dg_pd.PandasColumn.integer_column("OpponentFinish", min_value=1),
-        dg_pd.PandasColumn.boolean_column("Home"),
-        dg_pd.PandasColumn.float_column("ExpectedPoints", min_value=0, max_value=3),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/partition_row_count": len(df),
-        "preview": dg.MetadataValue.md(df.head().to_markdown()),
-    },
 )
 
 HOME_POINTS = {"H": 3, "D": 1, "A": 0}
@@ -34,70 +18,71 @@ AWAY_POINTS = {"A": 3, "D": 1, "H": 0}
 
 @dg.asset(
     group_name="PaceSheet",
-    kinds={"Pandas"},
+    kinds={"Polars"},
     partitions_def=all_predicted_seasons_leagues_partition,
-    code_version="v1",
-    dagster_type=PaceSheetEntryDataFrame,
+    code_version="v2",
+    dagster_type=PaceSheetEntryDagsterType,
     ins={
         "match_results_with_finish_df": dg.AssetIn(
-            dagster_type=dg.Dict[str, MatchResultsWithFinishDataFrame],
+            dagster_type=dg.Dict[str, MatchWithFinishDagsterType],
             partition_mapping=predicted_seasons_of_league_mapping,
         ),
     },
 )
 def pace_sheet_entries_df(
     context: dg.AssetExecutionContext,
-    match_results_with_finish_df: dict[str, pd.DataFrame],
-) -> dg.Output[pd.DataFrame]:
+    match_results_with_finish_df: dict[str, pl.DataFrame],
+) -> dg.Output[pl.DataFrame]:
     """Determine the expected pace for each match in each league and season."""
     assert isinstance(context.partition_key, dg.MultiPartitionKey)
     season = int(context.partition_key.keys_by_dimension["predicted_season"])
 
-    all_match_results_with_finish = pd.concat(match_results_with_finish_df.values())
-    assert season not in all_match_results_with_finish["Season"].values
+    all_match_results_with_finish = pl.concat(match_results_with_finish_df.values())
+    assert season not in all_match_results_with_finish["year"]
 
     home_results = (
-        all_match_results_with_finish.copy()
-        .rename(columns={"HomeFinish": "TeamFinish", "AwayFinish": "OpponentFinish"})
-        .assign(
-            Home=True,
-            ExpectedPoints=lambda x: pd.to_numeric(
-                x["FTR"].map(HOME_POINTS), downcast="float"
+        all_match_results_with_finish.clone()
+        .rename({"home_finish": "team_finish", "away_finish": "opponent_finish"})
+        .with_columns(
+            home=pl.lit(True),
+            expected_points=pl.col("ft_result").replace_strict(
+                HOME_POINTS, return_dtype=pl.Float64
             ),
         )
-    )[["Div", "Season", "TeamFinish", "OpponentFinish", "Home", "ExpectedPoints"]]
-    away_results = (
-        all_match_results_with_finish.copy()
-        .rename(columns={"AwayFinish": "TeamFinish", "HomeFinish": "OpponentFinish"})
-        .assign(
-            Home=False,
-            ExpectedPoints=lambda x: pd.to_numeric(
-                x["FTR"].map(AWAY_POINTS), downcast="float"
-            ),
-        )
-    )[["Div", "Season", "TeamFinish", "OpponentFinish", "Home", "ExpectedPoints"]]
-    all_results = pd.concat([home_results, away_results])
-    summarized_results = (
-        all_results.groupby(["Div", "TeamFinish", "OpponentFinish", "Home"])
-        .ExpectedPoints.agg("mean")
-        .reset_index()
-        .query("TeamFinish == 1")
-        .sort_values(by=["TeamFinish", "Home", "OpponentFinish"])
-        .reset_index(drop=True)
+    ).select(
+        "league", "year", "team_finish", "opponent_finish", "home", "expected_points"
     )
-    summarized_results["Season"] = season
-
-    summarized_results["ExpectedPoints"] = (
-        summarized_results.groupby("Home")
-        .ExpectedPoints.apply(lambda x: x.sort_values(ignore_index=True))
-        .reset_index(drop=True)
+    away_results = (
+        all_match_results_with_finish.clone()
+        .rename({"away_finish": "team_finish", "home_finish": "opponent_finish"})
+        .with_columns(
+            home=pl.lit(False),
+            expected_points=pl.col("ft_result").replace_strict(
+                AWAY_POINTS, return_dtype=pl.Float64
+            ),
+        )
+    ).select(
+        "league", "year", "team_finish", "opponent_finish", "home", "expected_points"
+    )
+    all_results = pl.concat([home_results, away_results])
+    summarized_results = (
+        all_results.group_by(["league", "team_finish", "opponent_finish", "home"])
+        .agg(pl.col("expected_points").mean())
+        .filter(pl.col("team_finish") == 1)
+        .group_by("league", "home", "team_finish")
+        .agg(
+            pl.col("opponent_finish").sort(descending=False),
+            pl.col("expected_points").sort(descending=False),
+        )
+        .explode("opponent_finish", "expected_points")
+        .with_columns(year=season)
     )
 
     return dg.Output(
         summarized_results,
         metadata={
             "dagster/partition_row_count": len(summarized_results),
-            "preview": dg.MetadataValue.md(summarized_results.head().to_markdown()),
+            "preview": markdown_metadata(summarized_results.head()),
         },
     )
 
@@ -107,20 +92,18 @@ def pace_sheet_entries_df(
     kinds={"Postgres"},
     partitions_def=all_predicted_seasons_leagues_partition,
     code_version="v1",
-    ins={"pace_sheet_entries_df": dg.AssetIn(dagster_type=PaceSheetEntryDataFrame)},
+    ins={"pace_sheet_entries_df": dg.AssetIn(dagster_type=PaceSheetEntryDagsterType)},
     metadata={
-        "dagster/column_schema": PaceSheetEntriesTableSchema,
+        **PaceSheetEntryDagsterType.metadata,
         "dagster/table_name": "pace_sheet_entries",
     },
     tags={"db_write": "true"},
 )
 def pace_sheet_entries_postgres(
-    pace_sheet_entries_df: pd.DataFrame, vercel_postgres: VercelPostgresResource
+    pace_sheet_entries_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.Output[None]:
     """Writes the pace sheet entires into Postgres."""
-    rows = [
-        {str(col): val for col, val in row.items()}
-        for row in pace_sheet_entries_df.to_dict("records")
-    ]
-    rowcount = vercel_postgres.upsert_pace_sheet_entries(rows)
+    rowcount = vercel_postgres.upsert_pace_sheet_entries(
+        pace_sheet_entries_df.to_dicts()
+    )
     return dg.Output(None, metadata={"dagster/partition_row_count": rowcount})

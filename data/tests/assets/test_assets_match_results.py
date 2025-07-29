@@ -1,5 +1,6 @@
+import datetime
 import dagster as dg
-import pandas as pd
+import polars as pl
 
 from footballpace.defs.assets.match_results import (
     match_results_df,
@@ -17,10 +18,10 @@ def test_match_results_df_93():
     )
     assert isinstance(df_output, dg.Output)
     df = df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == (22 * 21)
-    assert df["Date"][0] == pd.Timestamp("1993-08-14")
-    assert df["Season"][0] == 1993
+    assert df["date"][0] == datetime.date(1993, 8, 14)
+    assert df["year"][0] == 1993
 
 
 def test_match_results_df_22():
@@ -31,10 +32,10 @@ def test_match_results_df_22():
     )
     assert isinstance(df_output, dg.Output)
     df = df_output.value
-    assert isinstance(df, pd.DataFrame)
+    assert isinstance(df, pl.DataFrame)
     assert len(df) == (20 * 19)
-    assert df["Date"][0] == pd.Timestamp("2022-08-05")
-    assert df["Season"][0] == 2022
+    assert df["date"][0] == datetime.date(2022, 8, 5)
+    assert df["year"][0] == 2022
 
 
 def test_match_results_postgres():

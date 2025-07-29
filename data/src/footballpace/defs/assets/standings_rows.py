@@ -1,63 +1,66 @@
 import dagster as dg
-import dagster_pandas as dg_pd
-import pandas as pd
+import polars as pl
 
 from footballpace.dataversion import eager_respecting_data_version
-from footballpace.defs.assets.match_results import MatchResultsDataFrame
-from footballpace.partitions import all_seasons_leagues_partition
-
-
-StandingsRowsDataFrame = dg_pd.create_dagster_pandas_dataframe_type(
-    name="StandingsRows",
-    columns=[
-        dg_pd.PandasColumn.string_column("Div"),
-        dg_pd.PandasColumn.integer_column("Season"),
-        dg_pd.PandasColumn.string_column("Team"),
-        dg_pd.PandasColumn.integer_column("Wins", min_value=0),
-        dg_pd.PandasColumn.integer_column("Losses", min_value=0),
-        dg_pd.PandasColumn.integer_column("Draws", min_value=0),
-        dg_pd.PandasColumn.integer_column("For", min_value=0),
-        dg_pd.PandasColumn.integer_column("Against", min_value=0),
-    ],
-    metadata_fn=lambda df: {
-        "dagster/partition_row_count": len(df),
-        "preview": dg.MetadataValue.md(df.head().to_markdown()),
-    },
+from footballpace.defs.models import (
+    MatchDagsterType,
+    StandingsRowDagsterType,
 )
+from footballpace.markdown import markdown_metadata
+from footballpace.partitions import all_seasons_leagues_partition
 
 
 @dg.asset(
     group_name="MatchResults",
-    kinds={"Pandas"},
+    kinds={"Polars"},
     partitions_def=all_seasons_leagues_partition,
-    code_version="v1",
-    dagster_type=StandingsRowsDataFrame,
-    ins={"match_results_df": dg.AssetIn(dagster_type=MatchResultsDataFrame)},
+    code_version="v2",
+    dagster_type=StandingsRowDagsterType,
+    ins={"match_results_df": dg.AssetIn(dagster_type=MatchDagsterType)},
     automation_condition=eager_respecting_data_version,
 )
-def standings_rows_df(match_results_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
+def standings_rows_df(match_results_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
     """Transform the Match Results data frame into a Standings Table."""
 
-    home_df = match_results_df.copy().rename(
-        columns={"HomeTeam": "Team", "FTHG": "For", "FTAG": "Against"}
-    )[["Div", "Season", "Team", "For", "Against"]]
-    away_df = match_results_df.copy().rename(
-        columns={"AwayTeam": "Team", "FTAG": "For", "FTHG": "Against"}
-    )[["Div", "Season", "Team", "For", "Against"]]
+    home_df = match_results_df.rename(
+        {
+            "home_team": "team",
+            "ft_home_goals": "goals_for",
+            "ft_away_goals": "goals_against",
+        }
+    ).select("league", "year", "team", "goals_for", "goals_against")
+    away_df = match_results_df.rename(
+        {
+            "away_team": "team",
+            "ft_away_goals": "goals_for",
+            "ft_home_goals": "goals_against",
+        }
+    ).select("league", "year", "team", "goals_for", "goals_against")
 
-    results_df = pd.concat([home_df, away_df])
-    results_df["Wins"] = results_df["For"] > results_df["Against"]
-    results_df["Losses"] = results_df["For"] < results_df["Against"]
-    results_df["Draws"] = results_df["For"] == results_df["Against"]
+    results_df = pl.concat([home_df, away_df], how="vertical").with_columns(
+        wins=pl.col("goals_for") > pl.col("goals_against"),
+        losses=pl.col("goals_for") < pl.col("goals_against"),
+        draws=pl.col("goals_for") == pl.col("goals_against"),
+    )
 
     standings_df = (
-        results_df.groupby(["Div", "Season", "Team"]).agg("sum").reset_index()
+        results_df.group_by(["league", "year", "team"])
+        .agg(
+            pl.col("wins", "losses", "draws", "goals_for", "goals_against")
+            .cast(int)
+            .sum()
+        )
+        .with_columns(
+            points=3 * pl.col("wins") + pl.col("draws"),
+            goal_difference=pl.col("goals_for") - pl.col("goals_against"),
+        )
+        .sort(by=["points", "goal_difference", "goals_for"], descending=True)
     )
 
     return dg.Output(
         standings_df,
         metadata={
             "dagster/partition_row_count": len(standings_df),
-            "preview": dg.MetadataValue.md(standings_df.head().to_markdown()),
+            "preview": markdown_metadata(standings_df.head()),
         },
     )
