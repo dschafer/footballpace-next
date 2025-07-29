@@ -1,5 +1,5 @@
-from footballpace.resources.footballdata import FootballDataResource
-from footballpace.resources.http import HTTPResource
+from footballpace.defs.resources.footballdata import FootballDataResource
+from footballpace.defs.resources.http import HTTPResource
 
 fd = FootballDataResource(http_resource=HTTPResource())
 

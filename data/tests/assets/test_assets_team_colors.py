@@ -1,7 +1,7 @@
 import dagster as dg
 import pandas as pd
 
-from footballpace.assets.team_colors import team_colors_df
+from footballpace.defs.assets.team_colors import team_colors_df
 
 from .read_file import read_teamcolors_bytes
 

@@ -1,9 +1,7 @@
-from typing import Iterator
-
 import dagster as dg
 import pandas as pd
 
-from footballpace.assets.fpl_fixtures import fpl_fixtures_df, fpl_results_df
+from footballpace.defs.assets.fpl_fixtures import fpl_fixtures_df, fpl_results_df
 
 from .read_file import read_fpl_bytes
 
@@ -12,9 +10,7 @@ def test_fpl_fixtures_df():
     bootstrap = read_fpl_bytes("bootstrap-static.json")
     fixtures = read_fpl_bytes("fixtures.json")
 
-    df_output_iterator = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
-    assert isinstance(df_output_iterator, Iterator)
-    df_output = next(df_output_iterator)
+    df_output = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
     assert isinstance(df_output, dg.Output)
     df = df_output.value
     assert isinstance(df, pd.DataFrame)
@@ -27,13 +23,11 @@ def test_fpl_fixtures_df():
 def test_fpl_results_df():
     bootstrap = read_fpl_bytes("bootstrap-static.json")
     fixtures = read_fpl_bytes("fixtures.json")
-    df_output_iterator = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
-    assert isinstance(df_output_iterator, Iterator)
-    fixtures_df = next(df_output_iterator).value
+    fixtures_df_output = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
+    assert isinstance(fixtures_df_output, dg.Output)
+    fixtures_df = fixtures_df_output.value
 
-    df_output_iterator = fpl_results_df(dg.build_asset_context(), fixtures_df)
-    assert isinstance(df_output_iterator, Iterator)
-    df_output = next(df_output_iterator)
+    df_output = fpl_results_df(dg.build_asset_context(), fixtures_df)
     assert isinstance(df_output, dg.Output)
     df = df_output.value
     assert isinstance(df, pd.DataFrame)

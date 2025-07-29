@@ -1,7 +1,10 @@
 import dagster as dg
 import pandas as pd
 
-from footballpace.assets.match_results import match_results_df, match_results_postgres
+from footballpace.defs.assets.match_results import (
+    match_results_df,
+    match_results_postgres,
+)
 
 from .read_file import read_csv_bytes
 

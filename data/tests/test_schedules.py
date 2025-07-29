@@ -1,6 +1,6 @@
 import dagster as dg
 
-from footballpace.schedules import (
+from footballpace.defs.schedules import (
     current_season_refresh_schedule,
     pace_sheets_refresh_schedule,
 )

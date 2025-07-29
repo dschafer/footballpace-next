@@ -1,10 +1,10 @@
 import dagster as dg
 import pandas as pd
 
-from footballpace.assets.match_results import match_results_df
-from footballpace.assets.match_with_finish import match_results_with_finish_df
-from footballpace.assets.pace_sheet import pace_sheet_entries_df
-from footballpace.assets.standings_rows import standings_rows_df
+from footballpace.defs.assets.match_results import match_results_df
+from footballpace.defs.assets.match_with_finish import match_results_with_finish_df
+from footballpace.defs.assets.pace_sheet import pace_sheet_entries_df
+from footballpace.defs.assets.standings_rows import standings_rows_df
 
 from .read_file import read_csv_bytes
 
