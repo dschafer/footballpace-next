@@ -2,10 +2,10 @@
 name = "footballpace"
 version = "0.0.1"
 dependencies = [
-  "dagster>=1.11.1",
-  "dagster-cloud>=1.11.1",
-  "dagster-pandas>=0.27.1",
-  "dagster-webserver>=1.11.1",
+  "dagster>=1.11.3",
+  "dagster-cloud>=1.11.3",
+  "dagster-pandas>=0.27.3",
+  "dagster-webserver>=1.11.3",
   "httpx>=0.28.1",
   "pandas>=2.3.0",
   "psycopg[binary]>=3.2.9",
@@ -13,13 +13,13 @@ dependencies = [
 
 [project.optional-dependencies]
 docker = [
-    "dagster-docker>=0.27.1",
-    "dagster-postgres>=0.27.1",
+    "dagster-docker>=0.27.3",
+    "dagster-postgres>=0.27.3",
 ]
 
 [dependency-groups]
 dev = [
-    "dagster-dg-cli>=1.10.21",
+    "dagster-dg-cli>=1.11.3",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
 ]
