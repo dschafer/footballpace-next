@@ -3,7 +3,7 @@ import os
 import dagster as dg
 import httpx
 
-from src.footballpace.row_count import has_nonzero_row_count
+from footballpace.row_count import has_nonzero_row_count
 
 API_UPDATE_URL = "https://footballpace.com/api/update"
 
