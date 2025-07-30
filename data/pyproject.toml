@@ -1,6 +1,7 @@
 [project]
 name = "footballpace"
 version = "0.0.1"
+requires-python = ">= 3.12"
 dependencies = [
   "dagster>=1.11.3",
   "dagster-cloud>=1.11.3",
