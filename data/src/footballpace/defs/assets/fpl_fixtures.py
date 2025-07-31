@@ -22,7 +22,6 @@ from footballpace.defs.resources.vercel import (
     group_name="FPL",
     kinds={"json"},
     code_version="v1",
-    output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
 )
 def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
@@ -48,7 +47,6 @@ def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     group_name="FPL",
     kinds={"json"},
     code_version="v1",
-    output_required=False,
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},
 )
 def fpl_fixtures_json(http_resource: HTTPResource) -> dg.Output[bytes]:
@@ -109,7 +107,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     kinds={"Pandas"},
     code_version="v2",
     dagster_type=FPLFixturesDataFrame,
-    output_required=False,
+    automation_condition=eager_respecting_data_version,
 )
 def fpl_fixtures_df(
     fpl_bootstrap_json: bytes,
@@ -224,7 +222,7 @@ def result_from_row(fixture) -> str:
     ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixturesDataFrame)},
     code_version="v2",
     dagster_type=FPLResultsDataFrame,
-    output_required=False,
+    automation_condition=eager_respecting_data_version,
 )
 def fpl_results_df(fpl_fixtures_df: pd.DataFrame) -> dg.Output[pd.DataFrame]:
     """

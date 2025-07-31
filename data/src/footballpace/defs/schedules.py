@@ -29,9 +29,7 @@ def current_season_refresh_schedule():
 fpl_refresh_schedule = dg.ScheduleDefinition(
     name="fpl_refresh_schedule",
     cron_schedule="0 * * * *",
-    target=dg.AssetSelection.assets(
-        "fpl_bootstrap_json", "fpl_fixtures_json", "fpl_fixtures_df", "fpl_results_df"
-    ),
+    target=dg.AssetSelection.assets("fpl_bootstrap_json", "fpl_fixtures_json"),
     default_status=dg.DefaultScheduleStatus.RUNNING,
 )
 

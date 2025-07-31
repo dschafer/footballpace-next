@@ -18,7 +18,6 @@ from footballpace.defs.resources.vercel import (
     group_name="TeamColors",
     kinds={"json"},
     code_version="v1",
-    output_required=False,
     metadata={
         "dagster/uri": "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     },

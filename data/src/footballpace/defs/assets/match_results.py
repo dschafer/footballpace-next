@@ -19,7 +19,6 @@ from footballpace.defs.resources.vercel import (
     kinds={"CSV"},
     partitions_def=all_seasons_leagues_partition,
     code_version="v1",
-    output_required=False,
 )
 def match_results_csv(
     context: dg.AssetExecutionContext, football_data: FootballDataResource
