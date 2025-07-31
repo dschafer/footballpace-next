@@ -16,6 +16,11 @@ def bytes_data_version(bytes: bytes) -> str:
 
 eager_respecting_data_version = (
     dg.AutomationCondition.eager()
-    .replace("newly_updated", dg.AutomationCondition.data_version_changed())
+    .replace(
+        "any_deps_updated",
+        dg.AutomationCondition.any_deps_updated()
+        .replace("newly_updated", dg.AutomationCondition.data_version_changed())
+        .with_label("any_deps_updated_respecting_data_version"),
+    )
     .with_label("eager_respecting_data_version")
 )
