@@ -13,7 +13,7 @@ API_UPDATE_URL = "https://footballpace.com/api/update"
     kinds={"vercel"},
     automation_condition=dg.AutomationCondition.any_deps_match(
         dg.AutomationCondition.newly_updated() & has_nonzero_row_count()
-    ),
+    ).with_label("any_deps_updated_with_nonzero_row_count"),
     deps=[
         "fpl_fixtures_postgres",
         "fpl_results_postgres",
