@@ -18,9 +18,9 @@ eager_respecting_data_version = (
     dg.AutomationCondition.eager()
     .replace(
         "any_deps_updated",
-        dg.AutomationCondition.any_deps_updated()
-        .replace("newly_updated", dg.AutomationCondition.data_version_changed())
-        .with_label("any_deps_updated_respecting_data_version"),
+        dg.AutomationCondition.any_deps_match(
+            dg.AutomationCondition.data_version_changed()
+        ).with_label("any_deps_updated_respecting_data_version"),
     )
     .with_label("eager_respecting_data_version")
 )
