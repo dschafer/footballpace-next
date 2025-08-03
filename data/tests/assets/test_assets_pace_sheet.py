@@ -46,4 +46,4 @@ def test_pace_sheet_entries():
     assert pace_sheet_entries["TeamFinish"][0] == 1
     assert pace_sheet_entries["OpponentFinish"][0] == 2
     assert pace_sheet_entries["Home"][0] == False  # noqa: E712
-    assert pace_sheet_entries["ExpectedPoints"][0] == 0.0
+    assert pace_sheet_entries["ExpectedPoints"][0] == 0.5

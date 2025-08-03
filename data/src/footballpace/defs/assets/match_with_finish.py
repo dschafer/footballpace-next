@@ -51,7 +51,7 @@ def match_results_with_finish_df(
 
     standings_sorted_df = (
         standings_rows_df.assign(
-            Points=2 * standings_rows_df["Wins"] + standings_rows_df["Draws"],
+            Points=3 * standings_rows_df["Wins"] + standings_rows_df["Draws"],
             GD=standings_rows_df["For"] - standings_rows_df["Against"],
         )
         .sort_values(by=["Points", "GD", "For"], ascending=False)
