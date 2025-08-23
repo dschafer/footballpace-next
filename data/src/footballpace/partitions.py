@@ -3,7 +3,7 @@ from typing import Mapping, Sequence
 
 import dagster as dg
 
-ALL_SEASONS = range(1993, 2025)
+ALL_SEASONS = range(1993, 2026)
 all_seasons_partition = dg.StaticPartitionsDefinition([str(s) for s in ALL_SEASONS])
 
 ALL_LEAGUES = ["E0", "D1", "SP1", "I1", "F1"]
