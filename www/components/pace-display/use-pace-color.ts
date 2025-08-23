@@ -2,7 +2,7 @@
 import { isLightColor, useComputedColorScheme } from "@mantine/core";
 
 export default function usePaceDeltaColor(paceDelta: number): [string, string] {
-  if (paceDelta < -3 || paceDelta > 3) {
+  if (paceDelta < -3 || paceDelta > 3 || isNaN(paceDelta)) {
     throw Error(
       `Invalid value passed to usePaceDeltaColor; must be in [-3, 3], got: {paceDelta}`,
     );

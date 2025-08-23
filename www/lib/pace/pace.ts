@@ -121,6 +121,11 @@ async function fetchPaceSheetMap(
   const allPaceSheets = await prisma.paceSheetEntry.findMany({
     where: { league: league, year: year, teamFinish: 1 },
   });
+  if (allPaceSheets.length == 0) {
+    throw new Error(
+      `fetchPaceSheetMap() failed for league ${league} and year ${year}`,
+    );
+  }
   return new Map(
     allPaceSheets.map(({ opponentFinish, home, expectedPoints }) => [
       `${opponentFinish}_${home}`,

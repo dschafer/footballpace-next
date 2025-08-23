@@ -9,7 +9,11 @@ import {
 export default function useFixtureDifficultyColor(
   fixtureDifficulty: number,
 ): [string, string] {
-  if (fixtureDifficulty < 0 || fixtureDifficulty > 3) {
+  if (
+    fixtureDifficulty < 0 ||
+    fixtureDifficulty > 3 ||
+    isNaN(fixtureDifficulty)
+  ) {
     throw Error(
       `Invalid value passed to FixtureDifficultyCell; must be in [0, 3], got: {props.val}`,
     );
