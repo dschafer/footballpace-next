@@ -1,9 +1,12 @@
 from collections import defaultdict
+from datetime import date
 from typing import Mapping, Sequence
 
 import dagster as dg
 
-ALL_SEASONS = range(1993, 2026)
+current_season = date.today().year if date.today().month >= 8 else date.today().year - 1
+
+ALL_SEASONS = range(1993, current_season + 1)
 all_seasons_partition = dg.StaticPartitionsDefinition([str(s) for s in ALL_SEASONS])
 
 ALL_LEAGUES = ["E0", "D1", "SP1", "I1", "F1"]

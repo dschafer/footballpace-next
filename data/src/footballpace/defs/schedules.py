@@ -36,7 +36,7 @@ fpl_refresh_schedule = dg.ScheduleDefinition(
 
 @dg.schedule(
     name="pace_sheets_refresh_schedule",
-    cron_schedule="0 3 1 8 *",
+    cron_schedule="0 3 2 8 *",
     target=dg.AssetSelection.groups("PaceSheet"),
     default_status=dg.DefaultScheduleStatus.RUNNING,
 )
