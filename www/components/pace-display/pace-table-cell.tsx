@@ -3,7 +3,6 @@ import {
   Box,
   Center,
   NumberFormatter,
-  Popover,
   PopoverDropdown,
   PopoverTarget,
   Text,
@@ -12,14 +11,19 @@ import { type PaceMatch, matchDescription } from "@/lib/pace/pace";
 import ColoredCell from "../pace-display/colored-cell";
 import PaceNumber from "../pace-display/pace-number";
 import Result from "../pace-display/result";
+import dynamic from "next/dynamic";
 import leagues from "@/lib/const/leagues";
+
+const PopoverNoSSR = dynamic(() =>
+  import("@mantine/core").then((mod) => mod.Popover),
+);
 
 export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
   const { delta, match, points, expectedPoints, team } = paceMatch;
 
   return (
     <ColoredCell val={delta} ta="right">
-      <Popover>
+      <PopoverNoSSR>
         <PopoverTarget>
           <Box w="100%" h="100%" p="0.5rem" style={{ cursor: "pointer" }}>
             <PaceNumber pace={delta} />
@@ -56,7 +60,7 @@ export default function PaceTableCell({ paceMatch }: { paceMatch: PaceMatch }) {
             {matchDescription(paceMatch)}
           </Text>
         </PopoverDropdown>
-      </Popover>
+      </PopoverNoSSR>
     </ColoredCell>
   );
 }
