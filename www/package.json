@@ -5,8 +5,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "prisma generate && next dev --turbopack",
-    "build": "prisma generate && prisma db push && next build",
+    "dev": "prisma generate --no-hints && next dev --turbopack",
+    "build": "prisma generate --no-hints && prisma db push && next build",
     "start": "next start",
     "lint": "next lint"
   },
