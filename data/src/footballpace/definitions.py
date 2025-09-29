@@ -15,7 +15,7 @@ def augment_assets_with_references(asset_defs):
         git_branch="main",
         file_path_mapping=dg.AnchorBasedFilePathMapping(
             local_file_anchor=Path(__file__),
-            file_anchor_path_in_repository="data/footballpace/definitions.py",
+            file_anchor_path_in_repository="data/src/footballpace/definitions.py",
         ),
     )
 
