@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     );
   } else {
     // If league and year are not both passed, revalidate the entire thing.
+    revalidatePath("/");
     revalidatePath("/", "layout");
     return Response.json(
       { message: "Revalidated entire site." },
