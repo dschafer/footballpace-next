@@ -27,7 +27,7 @@ export default defineConfig([
 
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: "www",
+        tsconfigRootDir: import.meta.dirname,
       },
     },
 
