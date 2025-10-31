@@ -1,10 +1,10 @@
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
+import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
 import reactCompiler from "eslint-plugin-react-compiler";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import tseslint from "typescript-eslint";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
 
 const compat = new FlatCompat();
 
@@ -55,4 +55,12 @@ export default defineConfig([
       "@typescript-eslint/require-await": ["off"],
     },
   },
+  globalIgnores([
+    "next.config.js",
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
 ]);
