@@ -1,25 +1,11 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import reactCompiler from "eslint-plugin-react-compiler";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import nextTs from "eslint-config-next/typescript";
+import nextVitals from "eslint-config-next/core-web-vitals";
 import tsParser from "@typescript-eslint/parser";
-import tseslint from "typescript-eslint";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-
-const compat = new FlatCompat();
 
 export default defineConfig([
-  js.configs.recommended,
-  tseslint.configs.recommended,
-  tseslint.configs.stylistic,
-  ...compat.extends("next/core-web-vitals"),
-  ...compat.extends("prettier"),
   {
-    plugins: {
-      "react-compiler": reactCompiler,
-      "@typescript-eslint": typescriptEslint,
-    },
-
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 5,
@@ -30,10 +16,13 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
     },
-
+  },
+  ...nextTs,
+  ...nextVitals,
+  eslintConfigPrettier,
+  {
     rules: {
       "sort-imports": ["warn"],
-      "react-compiler/react-compiler": ["warn"],
       "@typescript-eslint/consistent-type-exports": "warn",
       "@typescript-eslint/consistent-type-imports": "warn",
       "@typescript-eslint/no-unsafe-assignment": ["off"],
@@ -56,6 +45,7 @@ export default defineConfig([
     },
   },
   globalIgnores([
+    "eslint.config.mjs",
     "next.config.js",
     "node_modules/**",
     ".next/**",
