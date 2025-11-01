@@ -12,13 +12,17 @@ function getSubtitle(params: SeasonPageParam): string {
 }
 
 export function generateImageMetadata({ params }: { params: SeasonPageParam }) {
+  if (!params.league) {
+    return imageMetadata();
+  }
   return imageMetadata(getSubtitle(params));
 }
 
 export default async function Image({
   params,
 }: {
-  params: SeasonPageParam;
+  params: Promise<SeasonPageParam>;
 }): Promise<ImageResponse> {
-  return await genOpenGraphImage(getSubtitle(params));
+  const seasonPageParam = await params;
+  return await genOpenGraphImage(getSubtitle(seasonPageParam));
 }
