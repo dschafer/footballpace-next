@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Breadcrumbs,
   Group,
   SimpleGrid,
@@ -8,7 +7,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import RecentPaceTable from "@/components/recent-pace-table/recent-pace-table";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
@@ -53,20 +52,12 @@ export default function Home() {
               }}
             >
               <Breadcrumbs separator=" · ">
-                <Anchor
-                  component={Link}
-                  href={`/${leagueCode}/${year}/chart`}
-                  ta="right"
-                >
+                <AnchorLink href={`/${leagueCode}/${year}/chart`} ta="right">
                   Pace Chart »
-                </Anchor>
-                <Anchor
-                  component={Link}
-                  href={`/${leagueCode}/${year}`}
-                  ta="right"
-                >
+                </AnchorLink>
+                <AnchorLink href={`/${leagueCode}/${year}`} ta="right">
                   Full Pace Table »
-                </Anchor>
+                </AnchorLink>
               </Breadcrumbs>
             </Group>
           </Stack>

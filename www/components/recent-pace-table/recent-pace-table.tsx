@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Box,
   Table,
   TableScrollContainer,
@@ -9,8 +8,8 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
-import Link from "next/link";
 import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
@@ -64,13 +63,12 @@ export default async function RecentPaceTable({
               <TableTr key={paceTeam.team}>
                 <TableTd ta="center">{rowNum + 1}</TableTd>
                 <TableTh ta="left" scope="row">
-                  <Anchor
-                    component={Link}
+                  <AnchorLink
                     href={`/${league}/${year}/team/${paceTeam.team}`}
                     inherit
                   >
                     {paceTeam.team}
-                  </Anchor>
+                  </AnchorLink>
                 </TableTh>
                 <TableTd ta="right">
                   <Result

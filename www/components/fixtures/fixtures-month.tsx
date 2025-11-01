@@ -1,6 +1,6 @@
-import { Anchor, List, ListItem, Stack, Title } from "@mantine/core";
+import { List, ListItem, Stack, Title } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Fixture } from "@prisma/client";
-import Link from "next/link";
 import leagues from "@/lib/const/leagues";
 
 export default async function FixturesMonth({
@@ -34,25 +34,23 @@ export default async function FixturesMonth({
               {fixtures.map((fixture, j) => (
                 <ListItem key={j}>
                   ({timeFormat.format(fixture.kickoffTime)}){" "}
-                  <Anchor
-                    component={Link}
+                  <AnchorLink
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
                     underline="never"
                     c="var(--mantine-color-text)"
                     inherit
                   >
                     {fixture.homeTeam}
-                  </Anchor>{" "}
+                  </AnchorLink>{" "}
                   vs.{" "}
-                  <Anchor
-                    component={Link}
+                  <AnchorLink
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
                     underline="never"
                     c="var(--mantine-color-text)"
                     inherit
                   >
                     {fixture.awayTeam}
-                  </Anchor>
+                  </AnchorLink>
                 </ListItem>
               ))}
             </List>
@@ -66,25 +64,23 @@ export default async function FixturesMonth({
       <List listStyleType="none">
         {allFixtures.map((fixture, i) => (
           <ListItem key={i}>
-            <Anchor
-              component={Link}
+            <AnchorLink
               href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
               underline="never"
               c="var(--mantine-color-text)"
               inherit
             >
               {fixture.homeTeam}
-            </Anchor>{" "}
+            </AnchorLink>{" "}
             vs.{" "}
-            <Anchor
-              component={Link}
+            <AnchorLink
               href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
               underline="never"
               c="var(--mantine-color-text)"
               inherit
             >
               {fixture.awayTeam}
-            </Anchor>{" "}
+            </AnchorLink>{" "}
             ({dateTimeFormat.format(fixture.kickoffTime)})
           </ListItem>
         ))}

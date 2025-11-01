@@ -1,6 +1,6 @@
-import { Anchor, Text } from "@mantine/core";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Match } from "@prisma/client";
+import { Text } from "@mantine/core";
 
 export default function Result({
   match,
@@ -39,8 +39,7 @@ export default function Result({
   let awayTeam = <>{match.awayTeam}</>;
   if (link) {
     homeTeam = (
-      <Anchor
-        component={Link}
+      <AnchorLink
         href={`/${match.league}/${match.year}/team/${match.homeTeam}`}
         underline="never"
         c={homeC}
@@ -48,11 +47,10 @@ export default function Result({
         inherit
       >
         {homeTeam}
-      </Anchor>
+      </AnchorLink>
     );
     awayTeam = (
-      <Anchor
-        component={Link}
+      <AnchorLink
         href={`/${match.league}/${match.year}/team/${match.awayTeam}`}
         underline="never"
         c={awayC}
@@ -60,7 +58,7 @@ export default function Result({
         inherit
       >
         {awayTeam}
-      </Anchor>
+      </AnchorLink>
     );
   }
   if (multiline) {

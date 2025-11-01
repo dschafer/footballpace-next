@@ -1,10 +1,10 @@
-import { Anchor, Stack, Title } from "@mantine/core";
 import {
   type LeagueYearParam,
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";
-import Link from "next/link";
+import { Stack, Title } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import StandingsPaceChart from "@/components/pace-chart/standings-pace-chart";
 
 export function generateStaticParams(): LeagueYearParam[] {
@@ -24,8 +24,7 @@ export default async function ChartPage({
         {leagueInfo.name} {yearInt}
       </Title>
       <StandingsPaceChart league={league} year={yearInt} />
-      <Anchor
-        component={Link}
+      <AnchorLink
         href={`/${league}/${yearInt}`}
         ta="right"
         style={{
@@ -33,7 +32,7 @@ export default async function ChartPage({
         }}
       >
         Pace Table »
-      </Anchor>
+      </AnchorLink>
     </Stack>
   );
 }

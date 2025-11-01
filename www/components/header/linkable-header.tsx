@@ -1,5 +1,5 @@
-import { Anchor, Text, Title, type TitleOrder } from "@mantine/core";
-import Link from "next/link";
+import { Text, Title, type TitleOrder } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 
 export default function LinkableHeader({
   order,
@@ -14,9 +14,9 @@ export default function LinkableHeader({
       {title}
       <Text inherit span visibleFrom="sm">
         &nbsp;
-        <Anchor component={Link} href={`#${id}`} inherit c="dimmed">
+        <AnchorLink href={`#${id}`} inherit c="dimmed">
           #
-        </Anchor>
+        </AnchorLink>
       </Text>
     </Title>
   );

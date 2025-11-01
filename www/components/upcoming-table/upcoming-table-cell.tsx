@@ -1,13 +1,12 @@
 "use client";
 import {
-  Anchor,
   NumberFormatter,
   Stack,
   TableTd,
   type TableTdProps,
   Text,
 } from "@mantine/core";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { PaceFixture } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import useFixtureDifficultyColor from "../pace-display/use-fixture-difficulty-color";
@@ -29,15 +28,14 @@ export default function UpcomingTableCell(
           })}
         </Text>
         <Text span size="md">
-          <Anchor
-            component={Link}
+          <AnchorLink
             href={`/${paceFixture.fixture.league}/${paceFixture.fixture.year}/team/${paceFixture.opponent}`}
             inherit
             c={fg}
             underline="never"
           >
             {paceFixture.opponent}
-          </Anchor>{" "}
+          </AnchorLink>{" "}
           ({paceFixture.home ? "H" : "A"})
         </Text>
         <Text

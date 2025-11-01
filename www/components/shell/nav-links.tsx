@@ -10,7 +10,6 @@ import {
 
 import { ActiveNavLink } from "./active-nav-link";
 import Image from "next/image";
-import Link from "next/link";
 import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
@@ -19,7 +18,6 @@ export default function NavLinks() {
   return (
     <ScrollArea>
       <ActiveNavLink
-        component={Link}
         href="/"
         label="Home"
         pageUrl="/"
@@ -71,7 +69,6 @@ export default function NavLinks() {
         </ActiveNavLink>
       ))}
       <ActiveNavLink
-        component={Link}
         href="/about"
         label="About"
         pageUrl="/about"

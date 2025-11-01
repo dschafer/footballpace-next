@@ -1,5 +1,4 @@
 import {
-  Anchor,
   NumberFormatter,
   Table,
   TableScrollContainer,
@@ -9,8 +8,8 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
-import Link from "next/link";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 
 export default async function ProjectedStandingsTable({
@@ -62,13 +61,12 @@ export default async function ProjectedStandingsTable({
             <TableTr key={row.team}>
               <TableTd ta="center">{i + 1}</TableTd>
               <TableTh ta="left" scope="row">
-                <Anchor
-                  component={Link}
+                <AnchorLink
                   href={`/${league}/${year}/team/${row.team}`}
                   inherit
                 >
                   {row.team}
-                </Anchor>
+                </AnchorLink>
               </TableTh>
               <TableTd ta="right">{row.currentYear.played}</TableTd>
               <TableTd ta="right" fw={700}>

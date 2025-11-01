@@ -1,7 +1,7 @@
-import { Anchor, Stack, Text, Title } from "@mantine/core";
 import type { Metadata, ResolvingMetadata } from "next/types";
+import { Stack, Text, Title } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import LinkableHeader from "@/components/header/linkable-header";
 import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
@@ -69,8 +69,7 @@ export default async function SeasonPage({
   return (
     <Stack>
       <Title order={2}>{teamDecoded}</Title>
-      <Anchor
-        component={Link}
+      <AnchorLink
         href={`/${league}/${yearInt}`}
         style={{
           alignSelf: "flex-start",
@@ -79,7 +78,7 @@ export default async function SeasonPage({
         <Text fs="italic">
           {leagueInfo.name} {yearInt}
         </Text>
-      </Anchor>
+      </AnchorLink>
       <LinkableHeader order={3} title="Recent Matches" />
       <ResultsTable
         paceMatches={previewMatches}

@@ -1,10 +1,10 @@
-import { Anchor, Breadcrumbs, Group, Stack, Title } from "@mantine/core";
+import { Breadcrumbs, Group, Stack, Title } from "@mantine/core";
 import {
   type LeagueYearParam,
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
 
 import leagues from "@/lib/const/leagues";
@@ -32,20 +32,12 @@ export default async function PacePage({
         }}
       >
         <Breadcrumbs separator=" · ">
-          <Anchor
-            component={Link}
-            href={`/${league}/${yearInt}/chart`}
-            ta="right"
-          >
+          <AnchorLink href={`/${league}/${yearInt}/chart`} ta="right">
             Pace Chart »
-          </Anchor>
-          <Anchor
-            component={Link}
-            href={`/${league}/${yearInt}/explanation`}
-            ta="right"
-          >
+          </AnchorLink>
+          <AnchorLink href={`/${league}/${yearInt}/explanation`} ta="right">
             Explanation »
-          </Anchor>
+          </AnchorLink>
         </Breadcrumbs>
       </Group>
     </Stack>

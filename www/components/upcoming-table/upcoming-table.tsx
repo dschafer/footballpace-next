@@ -1,6 +1,5 @@
 "use client";
 import {
-  Anchor,
   Box,
   Group,
   MultiSelect,
@@ -18,9 +17,9 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
 import type { ExtendedStandingsRow } from "@/lib/pace/standings";
-import Link from "next/link";
 import type { PaceFixture } from "@/lib/pace/pace";
 import UpcomingTableCell from "./upcoming-table-cell";
 import { useState } from "react";
@@ -102,15 +101,14 @@ export default function UpcomingTable({
               {teams.map((team) => (
                 <TableTh ta="center" key={team}>
                   <Text span size="lg" fw={700}>
-                    <Anchor
-                      component={Link}
+                    <AnchorLink
                       href={`/${league}/${year}/team/${team}`}
                       inherit
                       c="var(--mantine-color-text)"
                       underline="never"
                     >
                       {team}
-                    </Anchor>
+                    </AnchorLink>
                   </Text>
                 </TableTh>
               ))}

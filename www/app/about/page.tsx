@@ -1,6 +1,6 @@
-import { Anchor, List, ListItem, Stack, Text, Title } from "@mantine/core";
+import { List, ListItem, Stack, Text, Title } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Metadata } from "next/types";
 
 export const metadata: Metadata = {
@@ -57,71 +57,48 @@ export default function AboutPage() {
       <Stack gap="xs">
         <Text>
           FootballPace was made by{" "}
-          <Anchor component={Link} href="https://github.com/dschafer/">
+          <AnchorLink href="https://github.com/dschafer/">
             Dan Schafer
-          </Anchor>
+          </AnchorLink>
           . The source code is available on{" "}
-          <Anchor
-            component={Link}
-            href="https://github.com/dschafer/footballpace-next"
-          >
+          <AnchorLink href="https://github.com/dschafer/footballpace-next">
             Github
-          </Anchor>
+          </AnchorLink>
           .
         </Text>
         <Text>
           The data pipeline is powered by{" "}
-          <Anchor component={Link} href="https://dagster.io/">
-            Dagster
-          </Anchor>
-          , the front-end by{" "}
-          <Anchor component={Link} href="https://nextjs.org/">
-            Next.js
-          </Anchor>{" "}
-          and hosted on{" "}
-          <Anchor component={Link} href="https://vercel.com/">
-            Vercel
-          </Anchor>
-          . The components library is{" "}
-          <Anchor component={Link} href="https://mantine.dev/">
-            Mantine
-          </Anchor>
-          . Data is sourced from{" "}
-          <Anchor component={Link} href="https://www.football-data.co.uk/">
+          <AnchorLink href="https://dagster.io/">Dagster</AnchorLink>, the
+          front-end by{" "}
+          <AnchorLink href="https://nextjs.org/">Next.js</AnchorLink> and hosted
+          on <AnchorLink href="https://vercel.com/">Vercel</AnchorLink>. The
+          components library is{" "}
+          <AnchorLink href="https://mantine.dev/">Mantine</AnchorLink>. Data is
+          sourced from{" "}
+          <AnchorLink href="https://www.football-data.co.uk/">
             Football Data UK
-          </Anchor>{" "}
+          </AnchorLink>{" "}
           and from{" "}
-          <Anchor component={Link} href="https://fantasy.premierleague.com/">
+          <AnchorLink href="https://fantasy.premierleague.com/">
             Fantasy Premier League
-          </Anchor>
+          </AnchorLink>
           . Flags icons are from{" "}
-          <Anchor component={Link} href="https://openmoji.org/">
-            OpenMoji
-          </Anchor>
-          . Team color data is from{" "}
-          <Anchor
-            component={Link}
-            href="https://github.com/jimniels/teamcolors/"
-          >
+          <AnchorLink href="https://openmoji.org/">OpenMoji</AnchorLink>. Team
+          color data is from{" "}
+          <AnchorLink href="https://github.com/jimniels/teamcolors/">
             jimniels/teamcolors
-          </Anchor>
+          </AnchorLink>
           .
         </Text>
         <Text>
           The original inspiration for this is from the Reddit user{" "}
-          <Anchor
-            component={Link}
-            href="https://www.reddit.com/user/AndrycApp/"
-          >
+          <AnchorLink href="https://www.reddit.com/user/AndrycApp/">
             AndrycApp
-          </Anchor>
+          </AnchorLink>
           {"'"}s{" "}
-          <Anchor
-            component={Link}
-            href="https://www.reddit.com/r/soccer/comments/2rx7ho/andrycapps_epl_par_table_game_week_20/"
-          >
+          <AnchorLink href="https://www.reddit.com/r/soccer/comments/2rx7ho/andrycapps_epl_par_table_game_week_20/">
             par table posts
-          </Anchor>
+          </AnchorLink>
           ; the term {'"'}pace{'"'} is used here instead to clarify that teams
           want to be{" "}
           <Text span fs="italic">
@@ -229,9 +206,9 @@ export default function AboutPage() {
               have observed that Leicester was top of the table, and would now
               have assessed Leicester as the best team in the league. And
               indeed, if you look at FootballPace for{" "}
-              <Anchor component={Link} href="/E0/2015/team/Sunderland">
+              <AnchorLink href="/E0/2015/team/Sunderland">
                 that completed season for Sunderland
-              </Anchor>
+              </AnchorLink>
               , you will see MD1 listed as {'"'}Away to 2{'"'}.
             </Text>
             <Text>
@@ -246,9 +223,9 @@ export default function AboutPage() {
       <Title order={3}>Contact</Title>
       <Text>
         For feedback, comments, questions, or bug reports, please{" "}
-        <Anchor component={Link} href="mailto:feedback@footballpace.com">
+        <AnchorLink href="mailto:feedback@footballpace.com">
           contact us
-        </Anchor>
+        </AnchorLink>
         .
       </Text>
     </Stack>

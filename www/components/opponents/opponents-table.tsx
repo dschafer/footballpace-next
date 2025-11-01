@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Stack,
   Table,
   TableScrollContainer,
@@ -10,7 +9,7 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
-import Link from "next/link";
+import AnchorLink from "@/components/anchor-link/anchor-link";
 import LinkableHeader from "../header/linkable-header";
 import OpponentsTableCell from "./opponents-table-cell";
 import type { PaceTeam } from "@/lib/pace/pace";
@@ -55,9 +54,9 @@ export default async function OpponentsTable({
       <LinkableHeader order={3} title="Opponents" />
       <Text size="sm">
         This shows all opponents in their{" "}
-        <Anchor component={Link} href={`/${league}/${year}/explanation`}>
+        <AnchorLink href={`/${league}/${year}/explanation`}>
           projected order of finish
-        </Anchor>{" "}
+        </AnchorLink>{" "}
         (assuming that {paceTeam.team} wins the league), and shows the results
         of the matches played thus far, including the points taken from the
         match (
