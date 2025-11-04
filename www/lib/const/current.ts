@@ -2,8 +2,20 @@ import { type LeagueInfo, leagues } from "@/lib/const/leagues";
 import { notFound } from "next/navigation";
 import year from "@/lib/const/year";
 
+/**
+ * Helper type derived from `PageProps<"/[league]/[year]">`
+ * that just contains league and year.
+ */
 export type LeagueYearParam = Awaited<
   Awaited<PageProps<"/[league]/[year]">>["params"]
+>;
+
+/**
+ * Helper type derived from `PageProps<"/[league]/[year]/team/[team]">`
+ * that just contains league, year, and team.
+ */
+export type SeasonPageParam = Awaited<
+  Awaited<PageProps<"/[league]/[year]/team/[team]">>["params"]
 >;
 
 export const currentSeasons: LeagueYearParam[] = Array.from(

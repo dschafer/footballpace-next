@@ -1,10 +1,9 @@
+import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
 import {
   genOpenGraphImage,
   imageMetadata,
 } from "@/components/opengraph-image/opengraph-image";
 import type { ImageResponse } from "next/og";
-import type { SeasonPageParam } from "./params";
-import { validateLeagueYear } from "@/lib/const/current";
 
 function getSubtitle(params: SeasonPageParam): string {
   const [leagueInfo, yearInt] = validateLeagueYear(params);

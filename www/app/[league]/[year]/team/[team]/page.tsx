@@ -1,4 +1,5 @@
 import type { Metadata, ResolvingMetadata } from "next/types";
+import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
 import { Stack, Text, Title } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import AnchorLink from "@/components/anchor-link/anchor-link";
@@ -7,12 +8,10 @@ import OpponentsTable from "@/components/opponents/opponents-table";
 import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
-import type { SeasonPageParam } from "./params";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
 import prisma from "@/lib/prisma";
-import { validateLeagueYear } from "@/lib/const/current";
 import year from "@/lib/const/year";
 
 export async function generateStaticParams(): Promise<SeasonPageParam[]> {
