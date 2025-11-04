@@ -37,11 +37,7 @@ export const metadata: Metadata = {
   twitter: twitterMetadata,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout(props: LayoutProps<"/">) {
   return (
     <html
       lang="en"
@@ -57,7 +53,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Shell navLinks={<NavLinks />}>{children}</Shell>
+          <Shell navLinks={<NavLinks />}>{props.children}</Shell>
         </MantineProvider>
       </body>
     </html>

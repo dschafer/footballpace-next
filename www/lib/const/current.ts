@@ -2,10 +2,9 @@ import { type LeagueInfo, leagues } from "@/lib/const/leagues";
 import { notFound } from "next/navigation";
 import year from "@/lib/const/year";
 
-export interface LeagueYearParam {
-  league: string;
-  year: string;
-}
+export type LeagueYearParam = Awaited<
+  Awaited<PageProps<"/[league]/[year]">>["params"]
+>;
 
 export const currentSeasons: LeagueYearParam[] = Array.from(
   Array.from(leagues.keys()).map((league) => ({

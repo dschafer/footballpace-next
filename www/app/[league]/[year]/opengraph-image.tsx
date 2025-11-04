@@ -17,11 +17,9 @@ export function generateImageMetadata({ params }: { params: LeagueYearParam }) {
   return imageMetadata(getSubtitle(params));
 }
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<LeagueYearParam>;
-}): Promise<ImageResponse> {
-  const leagueYearParam = await params;
+export default async function Image(
+  props: PageProps<"/[league]/[year]">,
+): Promise<ImageResponse> {
+  const leagueYearParam = await props.params;
   return await genOpenGraphImage(getSubtitle(leagueYearParam));
 }

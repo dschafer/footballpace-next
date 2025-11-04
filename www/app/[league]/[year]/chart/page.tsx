@@ -11,12 +11,10 @@ export function generateStaticParams(): LeagueYearParam[] {
   return currentSeasons;
 }
 
-export default async function ChartPage({
-  params,
-}: {
-  params: Promise<LeagueYearParam>;
-}) {
-  const { league, year } = await params;
+export default async function ChartPage(
+  props: PageProps<"/[league]/[year]/chart">,
+) {
+  const { league, year } = await props.params;
   const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return (
     <Stack>

@@ -1,5 +1,3 @@
-import type { LeagueYearParam } from "@/lib/const/current";
-
-export type SeasonPageParam = LeagueYearParam & {
-  team: string;
-};
+export type SeasonPageParam = Awaited<
+  Awaited<PageProps<"/[league]/[year]/team/[team]">>["params"]
+>;
