@@ -9,8 +9,8 @@ import {
   TableTr,
 } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
+import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
-import PaceNumber from "../pace-display/pace-number";
 import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
 import { fetchPaceTeams } from "@/lib/pace/pace";
@@ -83,9 +83,7 @@ export default async function RecentPaceTable({
                   {paceTeam.points}
                 </TableTd>
                 <TableTd ta="right" p="0" fw={700}>
-                  <Box w="100%" h="100%" p="xs">
-                    <PaceNumber pace={paceTeam.delta} />
-                  </Box>
+                  <DeltaTableCell paceTeam={paceTeam} />
                 </TableTd>
               </TableTr>
             );

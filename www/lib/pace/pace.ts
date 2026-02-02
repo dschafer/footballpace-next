@@ -32,6 +32,8 @@ export interface PaceTeam {
   points: number;
   pace: number;
   delta: number;
+  gap: { gapAmount: number; gapTeam: string } | null;
+  interval: { intervalAmount: number; intervalTeam: string } | null;
   league: string;
   year: number;
 }
@@ -53,7 +55,7 @@ export async function fetchPaceTeams(
     projectedStandings.map(({ team }, i) => [team, i + 1]),
   );
 
-  const paceTeams: PaceTeam[] = projectedStandings
+  const paceTeams = projectedStandings
     .map(({ team }) => {
       const teamFinish = teamToFinish.get(team)!;
       const paceMatches = [];
@@ -107,7 +109,23 @@ export async function fetchPaceTeams(
     })
     .sort((a, b) => b.delta - a.delta || b.points - a.points);
 
-  return paceTeams;
+  return paceTeams.map((team, i) => ({
+    gap:
+      i == 0
+        ? null
+        : {
+            gapAmount: team.delta - paceTeams[0].delta,
+            gapTeam: paceTeams[0].team,
+          },
+    interval:
+      i == 0
+        ? null
+        : {
+            intervalAmount: team.delta - paceTeams[i - 1].delta,
+            intervalTeam: paceTeams[i - 1].team,
+          },
+    ...team,
+  }));
 }
 
 export function matchDescription({ home, opponentFinish }: PaceMatch): string {
