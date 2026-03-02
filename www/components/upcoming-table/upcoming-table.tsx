@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Box,
   Group,
@@ -17,12 +18,14 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import { useMemo, useState } from "react";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
 import type { ExtendedStandingsRow } from "@/lib/pace/standings";
+import type { Fixture } from "@prisma/client";
 import type { PaceFixture } from "@/lib/pace/pace";
+import UpcomingTableBlankCell from "./upcoming-table-blank-cell";
 import UpcomingTableCell from "./upcoming-table-cell";
-import { useState } from "react";
 
 export default function UpcomingTable({
   standings,
@@ -31,25 +34,99 @@ export default function UpcomingTable({
   standings: ExtendedStandingsRow[];
   fixtures: Map<string, PaceFixture[]>;
 }) {
+  // Unique fixture key (match-level), ignoring date
+  const fixtureKey = (f: Fixture) =>
+    [f.league, f.year, f.homeTeam, f.awayTeam].join("|");
   const league = standings[0].league;
   const year = standings[0].year;
   const allTeams = standings.map(({ team }) => team);
-  const maxFixtures = Math.max(
-    0,
-    ...Array.from(fixtures.values()).map((f) => f.length),
-  );
 
   const [teams, setTeams] = useState(allTeams.slice(0, 4));
   const [matchCount, setMatchCount] = useState<string | number>(6);
 
-  const filteredFixtures: PaceFixture[][] = teams.map((t) =>
-    fixtures.get(t)!.slice(0, +matchCount),
-  );
-  const numFixtures = Math.max(0, ...filteredFixtures.map((f) => f.length));
+  // Build unique fixture list across selected teams and assign clustered rows
+  const {
+    totalRows,
+    teamRowToFixture,
+  }: {
+    totalRows: number;
+    teamRowToFixture: Map<string, Map<number, PaceFixture>>;
+  } = useMemo(() => {
+    // Collect unique fixtures (match-level) across selected teams
+    const uniqueFixtures = new Map<string, Fixture>();
 
-  if (maxFixtures == 0) {
+    for (const team of teams) {
+      const list = fixtures.get(team) ?? [];
+      for (const pf of list) {
+        const key = fixtureKey(pf.fixture);
+        if (!uniqueFixtures.has(key)) {
+          uniqueFixtures.set(key, pf.fixture);
+        }
+      }
+    }
+
+    // Sort by kickoff time
+    const sortedFixtures = Array.from(uniqueFixtures.values()).sort(
+      (a, b) => a.kickoffTime.getTime() - b.kickoffTime.getTime(),
+    );
+
+    // Assign rows based on 2-day gaps and team conflicts within a row
+    const keyToRow = new Map<string, number>();
+    let currentRow = 0;
+    let lastInRowDate: Date | null = null;
+    let teamsInRow = new Set<string>();
+
+    for (const f of sortedFixtures) {
+      const timeGapOk =
+        lastInRowDate === null
+          ? true
+          : f.kickoffTime.getTime() - lastInRowDate.getTime() <
+            60 * 60 * 60 * 1000; // < 60 hours continues same row
+      const teamConflict =
+        teamsInRow.has(f.homeTeam) || teamsInRow.has(f.awayTeam);
+
+      if (!timeGapOk || teamConflict) {
+        // start new row
+        currentRow += 1;
+        teamsInRow = new Set<string>();
+        lastInRowDate = null;
+      }
+
+      keyToRow.set(fixtureKey(f), currentRow);
+      teamsInRow.add(f.homeTeam);
+      teamsInRow.add(f.awayTeam);
+      lastInRowDate = f.kickoffTime;
+    }
+
+    const totalRows =
+      sortedFixtures.length === 0
+        ? 0
+        : Math.max(...Array.from(keyToRow.values())) + 1;
+
+    // For each selected team, map row -> that team's PaceFixture in that row
+    const teamRowToFixture = new Map<string, Map<number, PaceFixture>>();
+    for (const team of teams) {
+      const rowMap = new Map<number, PaceFixture>();
+      const list = fixtures.get(team) ?? [];
+      for (const pf of list) {
+        const row = keyToRow.get(fixtureKey(pf.fixture));
+        if (row !== undefined) {
+          if (!rowMap.has(row)) {
+            rowMap.set(row, pf);
+          }
+        }
+      }
+      teamRowToFixture.set(team, rowMap);
+    }
+
+    return { totalRows, teamRowToFixture };
+  }, [teams, fixtures]);
+
+  if (totalRows == 0) {
     return <ErrorAlert />;
   }
+
+  const rowsToShow = Math.min(+matchCount, totalRows);
 
   return (
     <Stack>
@@ -64,7 +141,7 @@ export default function UpcomingTable({
           label="Matches"
           allowDecimal={false}
           min={1}
-          max={maxFixtures}
+          max={totalRows}
           onChange={setMatchCount}
           value={matchCount}
           hideControls
@@ -115,12 +192,24 @@ export default function UpcomingTable({
             </TableTr>
           </TableThead>
           <TableTbody>
-            {[...Array(numFixtures)].map((_, matchNum) => (
-              <TableTr key={matchNum} bd={0}>
-                {teams.map((team, teamNum) => {
-                  const paceFixture = filteredFixtures[teamNum][matchNum];
+            {[...Array(rowsToShow)].map((_, rowIdx) => (
+              <TableTr key={rowIdx} bd={0}>
+                {teams.map((team) => {
+                  const rowMap = teamRowToFixture.get(team)!;
+                  const paceFixture = rowMap.get(rowIdx);
                   if (!paceFixture) {
-                    return <TableTd key={team} ml="xs" pl="xs" />;
+                    return (
+                      <UpcomingTableBlankCell
+                        key={team}
+                        label={rowIdx === 0 ? "Already Played" : "No Match"}
+                        style={{
+                          borderTopLeftRadius:
+                            rowIdx == 0 ? "var(--mantine-radius-lg)" : 0,
+                          borderTopRightRadius:
+                            rowIdx == 0 ? "var(--mantine-radius-lg)" : 0,
+                        }}
+                      />
+                    );
                   }
                   return (
                     <UpcomingTableCell
@@ -128,9 +217,9 @@ export default function UpcomingTable({
                       key={team}
                       style={{
                         borderTopLeftRadius:
-                          matchNum == 0 ? "var(--mantine-radius-lg)" : 0,
+                          rowIdx == 0 ? "var(--mantine-radius-lg)" : 0,
                         borderTopRightRadius:
-                          matchNum == 0 ? "var(--mantine-radius-lg)" : 0,
+                          rowIdx == 0 ? "var(--mantine-radius-lg)" : 0,
                       }}
                     />
                   );
@@ -140,7 +229,7 @@ export default function UpcomingTable({
           </TableTbody>
           <TableTfoot>
             <TableTr bd={0}>
-              {teams.map((team, teamNum) => (
+              {teams.map((team) => (
                 <TableTd
                   ta="center"
                   key={team}
@@ -157,10 +246,15 @@ export default function UpcomingTable({
                     </Text>
                     <Text span fw={700} size="lg">
                       <NumberFormatter
-                        value={filteredFixtures[teamNum].reduce(
-                          (a, f) => a + 3 - f.expectedPoints,
-                          0,
-                        )}
+                        value={(() => {
+                          const rowMap = teamRowToFixture.get(team)!;
+                          return Array.from(rowMap.entries())
+                            .filter(([i]) => i < rowsToShow)
+                            .reduce(
+                              (sum, [_, f]) => sum + (3 - f.expectedPoints),
+                              0,
+                            );
+                        })()}
                         decimalScale={2}
                         fixedDecimalScale
                       />
