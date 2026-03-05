@@ -15,5 +15,11 @@ export default async function StandingsPaceChart({
   ]);
   const slicedPaceTeams = paceTeams.slice(0, 5);
 
-  return <PaceChart paceTeams={slicedPaceTeams} teamColorMap={teamColorMap} />;
+  return (
+    <PaceChart
+      paceTeams={slicedPaceTeams}
+      teamColorMap={teamColorMap}
+      showAxisToggle
+    />
+  );
 }

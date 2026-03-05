@@ -1,16 +1,22 @@
-import { LineChart, type LineChartSeries } from "@mantine/charts";
+import PaceChartClient, {
+  type DateRow,
+  type MatchdayRow,
+} from "./pace-chart-client";
 import ErrorAlert from "../error/error-alert";
+import type { LineChartSeries } from "@mantine/charts";
 import type { PaceTeam } from "@/lib/pace/pace";
 import type { TeamColor } from "@prisma/client";
 
-export default async function PaceChart({
+export default function PaceChart({
   paceTeams,
   teamColorMap,
+  showAxisToggle = false,
 }: {
   paceTeams: PaceTeam[];
   teamColorMap: Map<string, TeamColor>;
+  showAxisToggle?: boolean;
 }) {
-  if (paceTeams.length == 0) {
+  if (paceTeams.length === 0) {
     return <ErrorAlert />;
   }
 
@@ -24,37 +30,69 @@ export default async function PaceChart({
     };
   });
 
+  // Build matchday-based data on the server
   const maxMatchday = Math.max(
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
-
-  const mappedData = [...Array(maxMatchday)].map((_, md) => {
-    return new Map([["matchday", md + 1]]);
+  const matchdayData: MatchdayRow[] = [...Array(maxMatchday)].map((_, md) => {
+    return { matchday: md + 1 };
   });
-
-  paceTeams.forEach((paceTeam) => {
-    const { team, paceMatches } = paceTeam;
+  paceTeams.forEach(({ team, paceMatches }) => {
     let cumDelta = 0;
     paceMatches.forEach((paceMatch, md) => {
       cumDelta += paceMatch.delta;
-      mappedData[md].set(team, Math.round(cumDelta * 100) / 100);
+      matchdayData[md][team] = Math.round(cumDelta * 100) / 100;
     });
   });
 
-  const data = mappedData.map((m) => Object.fromEntries(m.entries()));
+  // Build date-based data with daily gap filling on the server
+  const fmt = (d: Date) =>
+    new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))
+      .toISOString()
+      .slice(0, 10);
+
+  const allDates: Date[] = paceTeams.flatMap(({ paceMatches }) =>
+    paceMatches.map(({ match }) => match.date),
+  );
+
+  if (allDates.length === 0) {
+    return <ErrorAlert />;
+  }
+
+  const minTime = Math.min(...allDates.map((d) => d.getTime()));
+  const maxTime = Math.max(...allDates.map((d) => d.getTime()));
+  const dayMs = 24 * 60 * 60 * 1000;
+  const days: string[] = [];
+  for (let t = minTime; t <= maxTime; t += dayMs) {
+    days.push(fmt(new Date(t)));
+  }
+
+  const teamDateCum: Map<string, Map<string, number>> = new Map();
+  paceTeams.forEach(({ team, paceMatches }) => {
+    let cumDelta = 0;
+    const m = new Map<string, number>();
+    paceMatches.forEach(({ delta, match }) => {
+      cumDelta += delta;
+      m.set(fmt(match.date), Math.round(cumDelta * 100) / 100);
+    });
+    teamDateCum.set(team, m);
+  });
+
+  const dateData = days.map((day) => {
+    const row: DateRow = { date: day };
+    paceTeams.forEach(({ team }) => {
+      const m = teamDateCum.get(team)!;
+      row[team] = m.get(day) ?? null;
+    });
+    return row;
+  });
 
   return (
-    <LineChart
-      h={300}
-      data={data}
+    <PaceChartClient
       series={series}
-      dataKey="matchday"
-      curveType="linear"
-      withLegend
-      xAxisLabel="Matchday"
-      yAxisLabel="vs. Championship Pace"
-      tooltipAnimationDuration={200}
-      referenceLines={[{ y: 0, label: "Championship Pace", color: "red.3" }]}
+      matchdayData={matchdayData}
+      dateData={dateData}
+      showAxisToggle={showAxisToggle}
     />
   );
 }
