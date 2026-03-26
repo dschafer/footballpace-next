@@ -20,7 +20,7 @@ AWAY_POINTS = {"A": 3, "D": 1, "H": 0}
     group_name="PaceSheet",
     kinds={"Polars"},
     partitions_def=all_predicted_seasons_leagues_partition,
-    code_version="v2",
+    code_version="v3",
     dagster_type=PaceSheetEntryDagsterType,
     ins={
         "match_results_with_finish_df": dg.AssetIn(
@@ -68,7 +68,9 @@ def pace_sheet_entries_df(
     summarized_results = (
         all_results.group_by(["league", "team_finish", "opponent_finish", "home"])
         .agg(pl.col("expected_points").mean())
-        .filter(pl.col("team_finish") == 1)
+        .filter(
+            pl.col("team_finish").is_in([1, 4, 17])
+        )  # Champion, Champions League, Safe from relegation
         .group_by("league", "home", "team_finish")
         .agg(
             pl.col("opponent_finish").sort(descending=False),
