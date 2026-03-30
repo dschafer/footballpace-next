@@ -25,6 +25,7 @@ export default function usePaceDeltaColor(paceDelta: number): [string, string] {
     "#1b7837", // [1.5, 2.0)
     "#1b7837", // [2.0, 2.5)
     "#1b7837", // [2.5, 3.0)
+    "#1b7837", // [3.0, 3.5)
   ];
 
   if (computedColorScheme == "dark") {
@@ -44,9 +45,13 @@ export default function usePaceDeltaColor(paceDelta: number): [string, string] {
       "#1b7837", // [1.5, 2.0)
       "#1b7837", // [2.0, 2.5)
       "#1b7837", // [2.5, 3.0)
+      "#1b7837", // [3.0, 3.5)
     ];
   }
   const bg = bgColors[Math.floor(paceDelta * 2) + 6];
+  if (bg === undefined) {
+    throw new Error(`No color found for pace delta ${paceDelta}`);
+  }
   const fg = isLightColor(bg) ? "black" : "white";
 
   return [bg, fg];
