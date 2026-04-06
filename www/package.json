@@ -8,7 +8,9 @@
     "dev": "prisma generate --no-hints && next dev",
     "build": "prisma generate --no-hints && prisma db push && next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typegen": "next typegen",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@mantine/charts": "^8.3.6",
