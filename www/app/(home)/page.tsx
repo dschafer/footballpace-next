@@ -45,7 +45,7 @@ export default function Home() {
             >
               {leagues.get(leagueCode)?.name} {year}
             </Title>
-            <RecentPaceTable rowCount={5} league={leagueCode} year={year} />
+            <RecentPaceTable rowCount={5} league={leagueCode} year={year} targetFinish={1} />
             <Group
               style={{
                 alignSelf: "flex-end",

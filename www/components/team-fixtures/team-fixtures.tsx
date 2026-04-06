@@ -19,12 +19,14 @@ export default async function TeamFixtures({
   league,
   year,
   team,
+  targetFinish = 1,
 }: {
   league: string;
   year: number;
   team: string;
+  targetFinish?: number;
 }) {
-  const fixtures = await fetchPaceFixtures(league, year, team);
+  const fixtures = await fetchPaceFixtures(league, year, team, targetFinish);
   const upcomingFixtures = fixtures.filter(
     (f) => f.fixture.kickoffTime > new Date(),
   );

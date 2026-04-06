@@ -41,6 +41,7 @@ export interface PaceTeam {
 export async function fetchPaceTeams(
   league: string,
   year: number,
+  targetFinish: number = 1,
 ): Promise<PaceTeam[]> {
   const [projectedStandings, allMatches, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
@@ -48,7 +49,7 @@ export async function fetchPaceTeams(
       where: { league: league, year: year },
       orderBy: { date: "asc" },
     }),
-    fetchPaceSheetMap(league, year),
+    fetchPaceSheetMap(league, year, targetFinish),
   ]);
 
   const teamToFinish = new Map(
@@ -135,9 +136,10 @@ export function matchDescription({ home, opponentFinish }: PaceMatch): string {
 async function fetchPaceSheetMap(
   league: string,
   year: number,
+  targetFinish: number = 1,
 ): Promise<Map<string, number>> {
   const allPaceSheets = await prisma.paceSheetEntry.findMany({
-    where: { league: league, year: year, teamFinish: 1 },
+    where: { league: league, year: year, teamFinish: targetFinish },
   });
   if (allPaceSheets.length == 0) {
     throw new Error(
@@ -156,6 +158,7 @@ export async function fetchPaceFixtures(
   league: string,
   year: number,
   team: string,
+  targetFinish: number = 1,
 ): Promise<PaceFixture[]> {
   const [projectedStandings, allFixtures, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
@@ -163,7 +166,7 @@ export async function fetchPaceFixtures(
       where: { league: league, year: year },
       orderBy: { kickoffTime: "asc" },
     }),
-    fetchPaceSheetMap(league, year),
+    fetchPaceSheetMap(league, year, targetFinish),
   ]);
 
   const teamToFinish = new Map(

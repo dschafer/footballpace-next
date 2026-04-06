@@ -20,10 +20,12 @@ export default async function OpponentsTable({
   league,
   year,
   paceTeam,
+  targetFinish = 1,
 }: {
   league: string;
   year: number;
   paceTeam: PaceTeam;
+  targetFinish?: number;
 }) {
   const [fixtures, paceSheetEntries, projectedStandings] = await Promise.all([
     prisma.fixture.findMany({
@@ -35,7 +37,7 @@ export default async function OpponentsTable({
       orderBy: { kickoffTime: "asc" },
     }),
     prisma.paceSheetEntry.findMany({
-      where: { league: league, year: year, teamFinish: 1 },
+      where: { league: league, year: year, teamFinish: targetFinish },
     }),
     fetchProjectedStandings(league, year),
   ]);

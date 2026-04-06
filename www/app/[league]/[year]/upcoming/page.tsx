@@ -20,7 +20,7 @@ async function standingsRowToFixturesMapEntry(
   esr: ExtendedStandingsRow,
 ): Promise<[string, PaceFixture[]]> {
   const team = esr.team;
-  const pfs = await fetchPaceFixtures(esr.league, esr.year, team);
+  const pfs = await fetchPaceFixtures(esr.league, esr.year, team, 1);
   return [team, pfs.filter((pf) => pf.fixture.kickoffTime > new Date())];
 }
 

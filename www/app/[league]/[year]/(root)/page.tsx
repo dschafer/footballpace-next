@@ -21,7 +21,7 @@ export default async function PacePage(props: PageProps<"/[league]/[year]">) {
       <Title order={2}>
         {leagues.get(league)?.name} {yearInt}
       </Title>
-      <StandingsPaceTable league={league} year={yearInt} />
+      <StandingsPaceTable league={league} year={yearInt} targetFinish={1} />
       <Group
         style={{
           alignSelf: "flex-end",

@@ -5,12 +5,14 @@ import prisma from "@/lib/prisma";
 export default async function HistoricalPacePreamble({
   league,
   year,
+  targetFinish = 1,
 }: {
   league: string;
   year: number;
+  targetFinish?: number;
 }) {
   const paceSheetEntries = await prisma.paceSheetEntry.findMany({
-    where: { league: league, year: year, teamFinish: 1 },
+    where: { league: league, year: year, teamFinish: targetFinish },
   });
   if (paceSheetEntries.length == 0) {
     return <ErrorAlert />;

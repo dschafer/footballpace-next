@@ -56,7 +56,7 @@ export default async function SeasonPage(
   const teamDecoded = decodeURIComponent(team);
 
   const [paceTeams, teamColorMap] = await Promise.all([
-    fetchPaceTeams(league, yearInt),
+    fetchPaceTeams(league, yearInt, 1),
     fetchTeamColorMap(),
   ]);
   const paceTeam = paceTeams.find((pt) => pt.team == teamDecoded)!;
@@ -92,14 +92,24 @@ export default async function SeasonPage(
       />
       <LinkableHeader order={3} title="Pace Chart" />
       <PaceChart paceTeams={[paceTeam]} teamColorMap={teamColorMap} />
-      <OpponentsTable league={league} year={yearInt} paceTeam={paceTeam} />
+      <OpponentsTable
+        league={league}
+        year={yearInt}
+        paceTeam={paceTeam}
+        targetFinish={1}
+      />
       <LinkableHeader order={3} title="Full Results" />
       <ResultsTable
         paceMatches={paceTeam.paceMatches}
         league={league}
         team={teamDecoded}
       />
-      <TeamFixtures league={league} year={yearInt} team={teamDecoded} />
+      <TeamFixtures
+        league={league}
+        year={yearInt}
+        team={teamDecoded}
+        targetFinish={1}
+      />
     </Stack>
   );
 }

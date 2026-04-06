@@ -21,8 +21,8 @@ export default async function ExplanationPage(
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>
-      <HistoricalPacePreamble league={league} year={yearInt} />
-      <HistoricalPaceTable league={league} year={yearInt} />
+      <HistoricalPacePreamble league={league} year={yearInt} targetFinish={1} />
+      <HistoricalPaceTable league={league} year={yearInt} targetFinish={1} />
       <Title order={2}>Estimated Standings</Title>
       <ProjectedStandingsPreamble />
       <ProjectedStandingsTable league={league} year={yearInt} />

@@ -21,7 +21,7 @@ export default async function ChartPage(
       <Title order={2}>
         {leagueInfo.name} {yearInt}
       </Title>
-      <StandingsPaceChart league={league} year={yearInt} />
+      <StandingsPaceChart league={league} year={yearInt} targetFinish={1} />
       <AnchorLink
         href={`/${league}/${yearInt}`}
         ta="right"

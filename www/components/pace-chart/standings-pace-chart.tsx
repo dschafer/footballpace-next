@@ -5,12 +5,14 @@ import { fetchTeamColorMap } from "@/lib/color";
 export default async function StandingsPaceChart({
   league,
   year,
+  targetFinish = 1,
 }: {
   league: string;
   year: number;
+  targetFinish?: number;
 }) {
   const [paceTeams, teamColorMap] = await Promise.all([
-    fetchPaceTeams(league, year),
+    fetchPaceTeams(league, year, targetFinish),
     fetchTeamColorMap(),
   ]);
   const slicedPaceTeams = paceTeams.slice(0, 5);
