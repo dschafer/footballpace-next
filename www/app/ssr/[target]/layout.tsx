@@ -13,8 +13,8 @@ import Shell from "@/components/shell/shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import TargetFinishSelect from "@/components/header/target-finish-select";
-import { TargetProvider } from "@/context/target-context";
 import type { TargetKey } from "@/lib/pace/target-key";
+import { TargetProvider } from "@/context/target-context";
 import theme from "@/lib/theme";
 
 export const metadata: Metadata = {
