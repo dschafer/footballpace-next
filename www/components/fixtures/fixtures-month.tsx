@@ -1,6 +1,6 @@
 import { List, ListItem, Stack, Title } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
-import type { Fixture } from "@prisma/client";
+import type { Fixture } from "@/prisma/generated/client";
 import leagues from "@/lib/const/leagues";
 
 export default async function FixturesMonth({

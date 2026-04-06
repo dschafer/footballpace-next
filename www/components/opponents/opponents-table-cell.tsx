@@ -1,5 +1,5 @@
 "use client";
-import type { Fixture, PaceSheetEntry } from "@prisma/client";
+import type { Fixture, PaceSheetEntry } from "@/prisma/generated/client";
 import {
   NumberFormatter,
   Stack,

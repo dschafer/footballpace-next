@@ -1,4 +1,4 @@
-import type { Fixture, Match } from "@prisma/client";
+import type { Fixture, Match } from "@/prisma/generated/client";
 
 export interface PaceFixture {
   fixture: Fixture;

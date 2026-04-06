@@ -9,7 +9,7 @@ import {
   Title,
 } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
-import type { Match } from "@prisma/client";
+import type { Match } from "@/prisma/generated/client";
 import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";

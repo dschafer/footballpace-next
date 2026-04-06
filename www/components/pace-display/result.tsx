@@ -1,5 +1,5 @@
 import AnchorLink from "@/components/anchor-link/anchor-link";
-import type { Match } from "@prisma/client";
+import type { Match } from "@/prisma/generated/client";
 import { Text } from "@mantine/core";
 
 export default function Result({

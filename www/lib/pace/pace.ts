@@ -1,5 +1,5 @@
 import type { PaceFixture, PaceTeam } from "./pace-types";
-import type { PaceSheetEntry } from "@prisma/client";
+import type { PaceSheetEntry } from "@/prisma/generated/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
 
