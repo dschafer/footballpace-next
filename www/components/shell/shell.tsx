@@ -18,9 +18,11 @@ import { usePathname } from "next/navigation";
 export default function Shell({
   navLinks,
   children,
+  targetFinishSelect,
 }: {
   navLinks: React.ReactNode;
   children: React.ReactNode;
+  targetFinishSelect?: React.ReactNode;
 }) {
   const [opened, { close, toggle }] = useDisclosure();
   const pathname = usePathname();
@@ -39,17 +41,22 @@ export default function Shell({
       padding="xs"
     >
       <AppShellHeader p="xs">
-        <Group h="100%">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <AnchorLink
-            size="inherit"
-            href={`/`}
-            underline="never"
-            c="var(--mantine-color-text)"
-          >
-            <Title order={1}>Football Pace</Title>
-          </AnchorLink>
-          <IconSoccerField size="2rem" />
+        <Group h="100%" justify="space-between">
+          <Group>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <AnchorLink
+              size="inherit"
+              href={`/`}
+              underline="never"
+              c="var(--mantine-color-text)"
+            >
+              <Title order={1}>Football Pace</Title>
+            </AnchorLink>
+            <IconSoccerField size="2rem" />
+          </Group>
+          <Group gap="xs" align="center">
+            {targetFinishSelect}
+          </Group>
         </Group>
       </AppShellHeader>
       <AppShellNavbar p="xs">{navLinks}</AppShellNavbar>

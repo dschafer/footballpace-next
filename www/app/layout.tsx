@@ -12,6 +12,7 @@ import NavLinks from "@/components/shell/nav-links";
 import Shell from "@/components/shell/shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import TargetFinishSelect from "@/components/header/target-finish-select";
 import theme from "@/lib/theme";
 
 export const metadata: Metadata = {
@@ -53,7 +54,12 @@ export default function RootLayout(props: LayoutProps<"/">) {
         <Analytics />
         <SpeedInsights />
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Shell navLinks={<NavLinks />}>{props.children}</Shell>
+          <Shell
+            navLinks={<NavLinks />}
+            targetFinishSelect={<TargetFinishSelect initialValue={1} />}
+          >
+            {props.children}
+          </Shell>
         </MantineProvider>
       </body>
     </html>
