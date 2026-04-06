@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 
 import PaceNumber from "./pace-number";
-import { type PaceTeam } from "@/lib/pace/pace";
+import { type PaceTeam } from "@/lib/pace/pace-types";
 
 export default function DeltaTableCell({ paceTeam }: { paceTeam: PaceTeam }) {
   const { delta, gap, interval } = paceTeam;

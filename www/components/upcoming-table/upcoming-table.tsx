@@ -23,7 +23,7 @@ import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
 import type { ExtendedStandingsRow } from "@/lib/pace/standings";
 import type { Fixture } from "@prisma/client";
-import type { PaceFixture } from "@/lib/pace/pace";
+import type { PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTableBlankCell from "./upcoming-table-blank-cell";
 import UpcomingTableCell from "./upcoming-table-cell";
 

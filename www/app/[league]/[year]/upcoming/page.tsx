@@ -7,9 +7,10 @@ import {
   currentSeasons,
   validateLeagueYear,
 } from "@/lib/const/current";
-import { type PaceFixture, fetchPaceFixtures } from "@/lib/pace/pace";
 import { Stack, Title } from "@mantine/core";
+import { type PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
+import { fetchPaceFixtures } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 
 export function generateStaticParams(): LeagueYearParam[] {

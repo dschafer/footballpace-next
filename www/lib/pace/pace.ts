@@ -1,47 +1,12 @@
-import type { Fixture, Match } from "@prisma/client";
+import type { PaceFixture, PaceTeam } from "./pace-types";
+import type { PaceSheetEntry } from "@prisma/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
-
-export interface PaceFixture {
-  fixture: Fixture;
-  expectedPoints: number;
-  cumulativeExpectedPoints: number;
-  home: boolean;
-  team: string;
-  opponent: string;
-  opponentFinish: number;
-}
-
-export interface PaceMatch {
-  match: Match;
-  delta: number;
-  cumulativeDelta: number;
-  points: number;
-  cumulativePoints: number;
-  expectedPoints: number;
-  cumulativeExpectedPoints: number;
-  home: boolean;
-  team: string;
-  opponent: string;
-  opponentFinish: number;
-}
-
-export interface PaceTeam {
-  team: string;
-  paceMatches: PaceMatch[];
-  points: number;
-  pace: number;
-  delta: number;
-  gap: { gapAmount: number; gapTeam: string } | null;
-  interval: { intervalAmount: number; intervalTeam: string } | null;
-  league: string;
-  year: number;
-}
 
 export async function fetchPaceTeams(
   league: string,
   year: number,
-  targetFinish: number = 1,
+  targetFinish: number,
 ): Promise<PaceTeam[]> {
   const [projectedStandings, allMatches, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
@@ -78,10 +43,15 @@ export async function fetchPaceTeams(
                 (match.ftResult == "A" && !home)
               ? 3
               : 0;
-        const opponentFinish =
+        const opponentFinishShift =
+          targetFinish <= opponentActualFinish &&
           opponentActualFinish < teamFinish
-            ? opponentActualFinish + 1
-            : opponentActualFinish;
+            ? 1
+            : targetFinish >= opponentActualFinish &&
+                opponentActualFinish > teamFinish
+              ? -1
+              : 0;
+        const opponentFinish = opponentActualFinish + opponentFinishShift;
         const expectedPoints = paceSheetMap.get(`${opponentFinish}_${home}`)!;
         const delta = points - expectedPoints;
         cumulativePoints += points;
@@ -129,18 +99,22 @@ export async function fetchPaceTeams(
   }));
 }
 
-export function matchDescription({ home, opponentFinish }: PaceMatch): string {
-  return (home ? "Home vs " : "Away to ") + opponentFinish;
+export async function fetchPaceSheets(
+  league: string,
+  year: number,
+  targetFinish: number,
+): Promise<PaceSheetEntry[]> {
+  return prisma.paceSheetEntry.findMany({
+    where: { league: league, year: year, teamFinish: targetFinish },
+  });
 }
 
 async function fetchPaceSheetMap(
   league: string,
   year: number,
-  targetFinish: number = 1,
+  targetFinish: number,
 ): Promise<Map<string, number>> {
-  const allPaceSheets = await prisma.paceSheetEntry.findMany({
-    where: { league: league, year: year, teamFinish: targetFinish },
-  });
+  const allPaceSheets = await fetchPaceSheets(league, year, targetFinish);
   if (allPaceSheets.length == 0) {
     throw new Error(
       `fetchPaceSheetMap() failed for league ${league} and year ${year}`,
@@ -158,7 +132,7 @@ export async function fetchPaceFixtures(
   league: string,
   year: number,
   team: string,
-  targetFinish: number = 1,
+  targetFinish: number,
 ): Promise<PaceFixture[]> {
   const [projectedStandings, allFixtures, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
@@ -184,10 +158,14 @@ export async function fetchPaceFixtures(
       team == fixture.homeTeam ? fixture.awayTeam : fixture.homeTeam;
     const home = team == fixture.homeTeam;
     const opponentActualFinish = teamToFinish.get(opponent)!;
-    const opponentFinish =
-      opponentActualFinish < teamFinish
-        ? opponentActualFinish + 1
-        : opponentActualFinish;
+    const opponentFinishShift =
+      targetFinish <= opponentActualFinish && opponentActualFinish < teamFinish
+        ? 1
+        : targetFinish >= opponentActualFinish &&
+            opponentActualFinish > teamFinish
+          ? -1
+          : 0;
+    const opponentFinish = opponentActualFinish + opponentFinishShift;
     const expectedPoints = paceSheetMap.get(`${opponentFinish}_${home}`)!;
     cumulativeExpectedPoints += expectedPoints;
     paceFixtures.push({

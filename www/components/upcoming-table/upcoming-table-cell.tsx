@@ -7,7 +7,7 @@ import {
   Text,
 } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
-import type { PaceFixture } from "@/lib/pace/pace";
+import type { PaceFixture } from "@/lib/pace/pace-types";
 import leagues from "@/lib/const/leagues";
 import useFixtureDifficultyColor from "../pace-display/use-fixture-difficulty-color";
 

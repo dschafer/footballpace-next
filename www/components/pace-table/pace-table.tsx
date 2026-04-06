@@ -12,7 +12,7 @@ import AnchorLink from "@/components/anchor-link/anchor-link";
 import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
 import PaceTableCell from "../pace-display/pace-table-cell";
-import type { PaceTeam } from "@/lib/pace/pace";
+import type { PaceTeam } from "@/lib/pace/pace-types";
 
 export default async function PaceTable({
   paceTeams,

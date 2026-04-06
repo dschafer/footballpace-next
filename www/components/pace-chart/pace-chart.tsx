@@ -4,7 +4,7 @@ import PaceChartClient, {
 } from "./pace-chart-client";
 import ErrorAlert from "../error/error-alert";
 import type { LineChartSeries } from "@mantine/charts";
-import type { PaceTeam } from "@/lib/pace/pace";
+import type { PaceTeam } from "@/lib/pace/pace-types";
 import type { TeamColor } from "@prisma/client";
 
 export default function PaceChart({

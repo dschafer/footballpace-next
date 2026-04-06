@@ -10,7 +10,7 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 
-import type { PaceTeam } from "@/lib/pace/pace";
+import type { PaceTeam } from "@/lib/pace/pace-types";
 import type { ProjectedStandingsRow } from "@/lib/pace/projections";
 import Result from "../pace-display/result";
 import leagues from "@/lib/const/leagues";
