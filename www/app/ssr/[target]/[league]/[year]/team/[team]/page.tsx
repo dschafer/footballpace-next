@@ -25,8 +25,9 @@ export async function generateStaticParams(): Promise<
     target: TargetKey;
   })[]
 > {
+  // Only statically generate the EPL teams since that's most used.
   const matches = await prisma.match.findMany({
-    where: { year: year },
+    where: { year: year, league: "E0" },
   });
   const params = new Set<SeasonPageParam>();
   for (const m of matches) {
