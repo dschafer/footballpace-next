@@ -3,19 +3,21 @@ import { notFound } from "next/navigation";
 import year from "@/lib/const/year";
 
 /**
- * Helper type derived from `PageProps<"/[league]/[year]">`
- * that just contains league and year.
+ * Helper type that just contains league and year.
  */
-export type LeagueYearParam = Awaited<
-  Awaited<PageProps<"/[league]/[year]">>["params"]
+export type LeagueYearParam = Omit<
+  Awaited<Awaited<PageProps<"/ssr/[target]/[league]/[year]">>["params"]>,
+  "target"
 >;
 
 /**
- * Helper type derived from `PageProps<"/[league]/[year]/team/[team]">`
- * that just contains league, year, and team.
+ * Helper type that just contains league, year, and team.
  */
-export type SeasonPageParam = Awaited<
-  Awaited<PageProps<"/[league]/[year]/team/[team]">>["params"]
+export type SeasonPageParam = Omit<
+  Awaited<
+    Awaited<PageProps<"/ssr/[target]/[league]/[year]/team/[team]">>["params"]
+  >,
+  "target"
 >;
 
 export const currentSeasons: LeagueYearParam[] = Array.from(
