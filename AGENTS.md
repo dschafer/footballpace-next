@@ -25,8 +25,8 @@
   - Prefer explicit props and narrow types over `any`.
   - Server components by default; `"use client"` only when necessary.
   - Import order (enforced):
-    1) Group multi‑specifier imports (e.g., `import { A, B } from ...`) before single‑specifier imports (e.g., `import A from ...`).
-    2) Within each group, sort by the first imported identifier (ignore the `type` keyword for sorting).
+    1) Group all multi‑specifier imports (e.g., `import { A, B } from ...`) before all single‑specifier imports (e.g., `import A from ...`). Single-specifier non-default imports like `import { A } from ...` are treated the same as single-specifier default imports.
+    2) Within each group, sort alphabetically by the first imported identifier (ignore the `type` keyword for sorting), where  capital letters are sorted before lower case letters.
 - Python: idiomatic, black‑style formatting (PEP8) and pytest naming `test_*.py`.
 
 ## Testing Guidelines
