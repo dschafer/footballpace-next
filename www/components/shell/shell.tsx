@@ -43,7 +43,12 @@ export default function Shell({
       <AppShellHeader p="xs">
         <Group h="100%" justify="space-between">
           <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="sm"
+              size="sm"
+            />
             <AnchorLink
               size="inherit"
               href={`/`}

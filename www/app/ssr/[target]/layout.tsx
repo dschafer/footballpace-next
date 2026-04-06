@@ -13,6 +13,8 @@ import Shell from "@/components/shell/shell";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import TargetFinishSelect from "@/components/header/target-finish-select";
+import { TargetProvider } from "@/context/target-context";
+import type { TargetKey } from "@/lib/pace/target-key";
 import theme from "@/lib/theme";
 
 export const metadata: Metadata = {
@@ -38,7 +40,8 @@ export const metadata: Metadata = {
   twitter: twitterMetadata,
 };
 
-export default function RootLayout(props: LayoutProps<"/ssr/[target]">) {
+export default async function RootLayout(props: LayoutProps<"/ssr/[target]">) {
+  const target = ((await props.params).target ?? "champion") as TargetKey;
   return (
     <html
       lang="en"
@@ -54,12 +57,14 @@ export default function RootLayout(props: LayoutProps<"/ssr/[target]">) {
         <Analytics />
         <SpeedInsights />
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Shell
-            navLinks={<NavLinks />}
-            targetFinishSelect={<TargetFinishSelect initialValue={1} />}
-          >
-            {props.children}
-          </Shell>
+          <TargetProvider targetKey={target}>
+            <Shell
+              navLinks={<NavLinks />}
+              targetFinishSelect={<TargetFinishSelect initialValue={1} />}
+            >
+              {props.children}
+            </Shell>
+          </TargetProvider>
         </MantineProvider>
       </body>
     </html>
