@@ -16,11 +16,33 @@ HOME_POINTS = {"H": 3, "D": 1, "A": 0}
 AWAY_POINTS = {"A": 3, "D": 1, "H": 0}
 
 
+def league_team_finish_df() -> pl.DataFrame:
+    """
+    Returns a Polars DataFrame enumerating the (league, team_finish)
+    pairs we compute pace sheets for.
+
+    - For E0, SP1, I1 use finishes 1, 4, 17
+    - For F1, D1 use finishes 1, 4, 15
+    """
+    entries: list[dict[str, object]] = []
+    for league in ["E0", "SP1", "I1"]:
+        for finish in (1, 4, 17):
+            entries.append({"league": league, "team_finish": finish})
+    for league in ["F1", "D1"]:
+        for finish in (1, 4, 15):
+            entries.append({"league": league, "team_finish": finish})
+
+    return pl.DataFrame(entries, schema={"league": pl.String, "team_finish": pl.UInt32})
+
+
+LEAGUE_TEAM_FINISH_DF = league_team_finish_df()
+
+
 @dg.asset(
     group_name="PaceSheet",
     kinds={"Polars"},
     partitions_def=all_predicted_seasons_leagues_partition,
-    code_version="v3",
+    code_version="v4",
     dagster_type=PaceSheetEntryDagsterType,
     ins={
         "match_results_with_finish_df": dg.AssetIn(
@@ -68,9 +90,7 @@ def pace_sheet_entries_df(
     summarized_results = (
         all_results.group_by(["league", "team_finish", "opponent_finish", "home"])
         .agg(pl.col("expected_points").mean())
-        .filter(
-            pl.col("team_finish").is_in([1, 4, 17])
-        )  # Champion, Champions League, Safe from relegation
+        .join(LEAGUE_TEAM_FINISH_DF, on=["league", "team_finish"], how="semi")
         .group_by("league", "home", "team_finish")
         .agg(
             pl.col("opponent_finish").sort(descending=False),

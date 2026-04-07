@@ -68,3 +68,30 @@ def test_pace_sheet_entries():
         check_column_order=False,
         check_row_order=False,
     )
+
+
+def test_pace_sheet_entries_other_league_relegation():
+    # Replace the league with D1 to test that we're correctly using their relegation rules.
+    match_results_with_finish_21 = helper_get_match_results_with_finish(
+        "2021", "E0_2021.csv"
+    ).with_columns(pl.lit("D1").alias("league"))
+    match_results_with_finish_22 = helper_get_match_results_with_finish(
+        "2022", "E0_2022.csv"
+    ).with_columns(pl.lit("D1").alias("league"))
+
+    context_23 = dg.build_asset_context(
+        partition_key=dg.MultiPartitionKey({"predicted_season": "2023"})
+    )
+    pace_sheet_entries_df_output = pace_sheet_entries_df(
+        context_23,
+        {"2021": match_results_with_finish_21, "2022": match_results_with_finish_22},
+    )
+    assert isinstance(pace_sheet_entries_df_output, dg.Output)
+    pace_sheet_entries = pace_sheet_entries_df_output.value
+    assert isinstance(pace_sheet_entries, pl.DataFrame)
+    assert len(pace_sheet_entries) == (19 * 6)
+    assert_series_equal(
+        pace_sheet_entries["team_finish"].unique(),
+        pl.Series("team_finish", [1, 4, 15]),  # 15 here because D1 has only 18 teams
+        check_dtypes=False,
+    )
