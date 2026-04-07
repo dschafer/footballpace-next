@@ -4,6 +4,7 @@ export interface LeagueInfo {
   flagImage: string;
   tz: string;
   fixtures: boolean;
+  relegationSafetyPosition: number;
 }
 
 export const leagues = new Map<string, LeagueInfo>([
@@ -11,10 +12,11 @@ export const leagues = new Map<string, LeagueInfo>([
     "E0",
     {
       name: "English Premier League",
-      flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      flag: "🏴",
       flagImage: "/flags/E0.png",
       tz: "Europe/London",
       fixtures: true,
+      relegationSafetyPosition: 17,
     },
   ],
   [
@@ -25,6 +27,7 @@ export const leagues = new Map<string, LeagueInfo>([
       flagImage: "/flags/SP1.png",
       tz: "Europe/Madrid",
       fixtures: false,
+      relegationSafetyPosition: 17,
     },
   ],
   [
@@ -35,6 +38,7 @@ export const leagues = new Map<string, LeagueInfo>([
       flagImage: "/flags/D1.png",
       tz: "Europe/Berlin",
       fixtures: false,
+      relegationSafetyPosition: 15,
     },
   ],
   [
@@ -45,6 +49,7 @@ export const leagues = new Map<string, LeagueInfo>([
       flagImage: "/flags/F1.png",
       tz: "Europe/Paris",
       fixtures: false,
+      relegationSafetyPosition: 15,
     },
   ],
   [
@@ -55,6 +60,7 @@ export const leagues = new Map<string, LeagueInfo>([
       flagImage: "/flags/I1.png",
       tz: "Europe/Rome",
       fixtures: false,
+      relegationSafetyPosition: 17,
     },
   ],
 ]);

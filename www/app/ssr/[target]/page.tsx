@@ -30,7 +30,6 @@ export const metadata: Metadata = {
 
 export default async function HomeSSR(props: PageProps<"/ssr/[target]">) {
   const { target } = await props.params;
-  const tf = targetKeyToFinish[target as TargetKey];
   return (
     <Stack>
       <Title order={2} style={{ alignSelf: "flex-start" }}>
@@ -56,7 +55,7 @@ export default async function HomeSSR(props: PageProps<"/ssr/[target]">) {
               rowCount={5}
               league={leagueCode}
               year={year}
-              targetFinish={tf}
+              targetFinish={targetKeyToFinish(leagueCode)[target as TargetKey]}
             />
             <Group style={{ alignSelf: "flex-end" }}>
               <Breadcrumbs separator=" · ">

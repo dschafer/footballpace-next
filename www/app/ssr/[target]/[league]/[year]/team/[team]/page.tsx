@@ -64,7 +64,7 @@ export default async function TeamSSR(
   const { league, year, team, target } = await props.params;
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
   const teamDecoded = decodeURIComponent(team);
-  const tf = targetKeyToFinish[target as TargetKey];
+  const tf = targetKeyToFinish(league)[target as TargetKey];
   const [paceTeams, teamColorMap] = await Promise.all([
     fetchPaceTeams(league, yearInt, tf),
     fetchTeamColorMap(),

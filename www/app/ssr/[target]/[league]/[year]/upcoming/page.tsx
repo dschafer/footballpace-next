@@ -47,7 +47,7 @@ export default async function UpcomingSSR(
 ) {
   const { league, year, target } = await props.params;
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
-  const tf = targetKeyToFinish[target as TargetKey];
+  const tf = targetKeyToFinish(league)[target as TargetKey];
   const standings = await fetchStandings(league, yearInt);
   const fixtures = await Promise.all(
     standings.map((esr) => rowToFixtures(esr, tf)),

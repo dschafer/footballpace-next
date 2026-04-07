@@ -3,13 +3,22 @@
 
 export type TargetKey = "champion" | "ucl" | "safe";
 
-export const TARGET_KEYS = ["champion", "ucl", "safe"] as const satisfies readonly TargetKey[];
+export const TARGET_KEYS = [
+  "champion",
+  "ucl",
+  "safe",
+] as const satisfies readonly TargetKey[];
 
-export const targetKeyToFinish: Record<TargetKey, number> = {
-  champion: 1,
-  ucl: 4,
-  safe: 17,
-} as const;
+import leagues from "@/lib/const/leagues";
+
+export function targetKeyToFinish(league: string): Record<TargetKey, number> {
+  const safety = leagues.get(league)?.relegationSafetyPosition ?? 17;
+  return {
+    champion: 1,
+    ucl: 4,
+    safe: safety,
+  } as const;
+}
 
 export const targetKeyLabels: Record<TargetKey, string> = {
   champion: "Champion",
@@ -17,16 +26,19 @@ export const targetKeyLabels: Record<TargetKey, string> = {
   safe: "Safe from Relegation",
 } as const;
 
-export function asTargetKey(v: string | null | undefined): TargetKey | undefined {
+export function asTargetKey(
+  v: string | null | undefined,
+): TargetKey | undefined {
   if (!v) return undefined;
   const s = v.toLowerCase();
-  return (TARGET_KEYS as readonly string[]).includes(s) ? (s as TargetKey) : undefined;
+  return (TARGET_KEYS as readonly string[]).includes(s)
+    ? (s as TargetKey)
+    : undefined;
 }
 
 export function finishToTargetKey(finish: number): TargetKey {
-  for (const key of TARGET_KEYS) {
-    if (targetKeyToFinish[key] === finish) return key;
-  }
+  if (finish === 1) return "champion";
+  if (finish === 4) return "ucl";
+  if (finish === 15 || finish === 17) return "safe";
   return "champion";
 }
-

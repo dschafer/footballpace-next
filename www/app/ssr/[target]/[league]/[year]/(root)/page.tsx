@@ -34,7 +34,7 @@ export default async function LeagueRootSSR(
 ) {
   const { league, year, target } = await props.params;
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
-  const tf = targetKeyToFinish[target as TargetKey];
+  const tf = targetKeyToFinish(league)[target as TargetKey];
   return (
     <Stack>
       <Title order={2}>
