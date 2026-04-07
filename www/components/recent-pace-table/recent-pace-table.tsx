@@ -26,13 +26,26 @@ export default async function RecentPaceTable({
   year: number;
   targetFinish?: number;
 }) {
-  let paceTeams = await fetchPaceTeams(league, year, targetFinish);
+  const paceTeams = await fetchPaceTeams(league, year, targetFinish);
+  let pacePosTeams = paceTeams.map((pt, i) => ({ position: i + 1, ...pt }));
 
   if (rowCount) {
-    paceTeams = paceTeams.slice(0, rowCount);
+    if (!targetFinish || targetFinish - rowCount < 0) {
+      pacePosTeams = pacePosTeams.slice(0, rowCount);
+    } else if (targetFinish + rowCount > paceTeams.length) {
+      pacePosTeams = pacePosTeams.slice(
+        paceTeams.length - rowCount,
+        paceTeams.length,
+      );
+    } else {
+      pacePosTeams = pacePosTeams.slice(
+        targetFinish - rowCount / 2,
+        targetFinish + rowCount / 2,
+      );
+    }
   }
 
-  if (paceTeams.length == 0) {
+  if (pacePosTeams.length == 0) {
     return <ErrorAlert />;
   }
 
@@ -58,12 +71,12 @@ export default async function RecentPaceTable({
           </TableTr>
         </TableThead>
         <TableTbody>
-          {paceTeams.map((paceTeam, rowNum) => {
+          {pacePosTeams.map((paceTeam) => {
             const lastMatch =
               paceTeam.paceMatches[paceTeam.paceMatches.length - 1];
             return (
               <TableTr key={paceTeam.team}>
-                <TableTd ta="center">{rowNum + 1}</TableTd>
+                <TableTd ta="center">{paceTeam.position}</TableTd>
                 <TableTh ta="left" scope="row">
                   <AnchorLink
                     href={`/${league}/${year}/team/${paceTeam.team}`}
