@@ -16,6 +16,11 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    settings: {
+      // Fix for ESLint 10+: eslint-plugin-react uses context.getFilename() (legacy API)
+      // which was removed in ESLint 10 flat config. Declaring the version explicitly
+      react: { version: "19" },
+    },
   },
   ...nextTs,
   ...nextVitals,
