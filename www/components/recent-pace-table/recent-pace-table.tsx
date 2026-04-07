@@ -8,12 +8,12 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import { fetchPaceTeams, slicePaceTeams } from "@/lib/pace/pace";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
 import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
-import { fetchPaceTeams } from "@/lib/pace/pace";
 
 export default async function RecentPaceTable({
   rowCount,
@@ -21,29 +21,14 @@ export default async function RecentPaceTable({
   year,
   targetFinish = 1,
 }: {
-  rowCount?: number;
+  rowCount: number;
   league: string;
   year: number;
-  targetFinish?: number;
+  targetFinish: number;
 }) {
   const paceTeams = await fetchPaceTeams(league, year, targetFinish);
   let pacePosTeams = paceTeams.map((pt, i) => ({ position: i + 1, ...pt }));
-
-  if (rowCount) {
-    if (!targetFinish || targetFinish - rowCount < 0) {
-      pacePosTeams = pacePosTeams.slice(0, rowCount);
-    } else if (targetFinish + rowCount > paceTeams.length) {
-      pacePosTeams = pacePosTeams.slice(
-        paceTeams.length - rowCount,
-        paceTeams.length,
-      );
-    } else {
-      pacePosTeams = pacePosTeams.slice(
-        targetFinish - rowCount / 2,
-        targetFinish + rowCount / 2,
-      );
-    }
-  }
+  pacePosTeams = slicePaceTeams(pacePosTeams, rowCount, targetFinish);
 
   const bgColor = (pos: number): string | undefined => {
     if (targetFinish > 10 && pos > targetFinish) {

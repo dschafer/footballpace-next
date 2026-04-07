@@ -1,5 +1,5 @@
+import { fetchPaceTeams, slicePaceTeams } from "@/lib/pace/pace";
 import PaceChart from "./pace-chart";
-import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
 
 export default async function StandingsPaceChart({
@@ -15,7 +15,7 @@ export default async function StandingsPaceChart({
     fetchPaceTeams(league, year, targetFinish),
     fetchTeamColorMap(),
   ]);
-  const slicedPaceTeams = paceTeams.slice(0, 5);
+  const slicedPaceTeams = slicePaceTeams(paceTeams, 5, targetFinish);
 
   return (
     <PaceChart
