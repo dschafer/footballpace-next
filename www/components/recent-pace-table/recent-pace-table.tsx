@@ -45,6 +45,15 @@ export default async function RecentPaceTable({
     }
   }
 
+  const bgColor = (pos: number): string | undefined => {
+    if (targetFinish > 10 && pos > targetFinish) {
+      return "relegation-row";
+    }
+    if (targetFinish < 10 && pos <= targetFinish) {
+      return "promotion-row";
+    }
+  };
+
   if (pacePosTeams.length == 0) {
     return <ErrorAlert />;
   }
@@ -76,7 +85,9 @@ export default async function RecentPaceTable({
               paceTeam.paceMatches[paceTeam.paceMatches.length - 1];
             return (
               <TableTr key={paceTeam.team}>
-                <TableTd ta="center">{paceTeam.position}</TableTd>
+                <TableTd ta="center" bg={bgColor(paceTeam.position)}>
+                  {paceTeam.position}
+                </TableTd>
                 <TableTh ta="left" scope="row">
                   <AnchorLink
                     href={`/${league}/${year}/team/${paceTeam.team}`}

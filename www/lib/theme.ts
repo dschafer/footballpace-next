@@ -26,6 +26,20 @@ const theme = createTheme({
       dark: "summary-row-dark",
       light: "summary-row-light",
     }),
+    "promotion-row-light": colorsTuple("#40c057"), // green.6
+    "promotion-row-dark": colorsTuple("#2f9e44"), // green.8
+    "promotion-row": virtualColor({
+      name: "promotion-row",
+      dark: "promotion-row-dark",
+      light: "promotion-row-light",
+    }),
+    "relegation-row-light": colorsTuple("#fa5252"), // red.6
+    "relegation-row-dark": colorsTuple("#e03131"), // red.8
+    "relegation-row": virtualColor({
+      name: "relegation-row",
+      dark: "relegation-row-dark",
+      light: "relegation-row-light",
+    }),
   },
 });
 
