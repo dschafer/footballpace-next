@@ -1,5 +1,6 @@
 import dagster as dg
 import polars as pl
+from polars.testing import assert_frame_equal, assert_series_equal
 
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.match_with_finish import match_results_with_finish_df
@@ -43,8 +44,27 @@ def test_pace_sheet_entries():
     assert isinstance(pace_sheet_entries_df_output, dg.Output)
     pace_sheet_entries = pace_sheet_entries_df_output.value
     assert isinstance(pace_sheet_entries, pl.DataFrame)
-    assert len(pace_sheet_entries) == (19 * 2)
-    assert pace_sheet_entries["TeamFinish"][0] == 1
-    assert pace_sheet_entries["OpponentFinish"][0] == 2
-    assert pace_sheet_entries["Home"][0] == False  # noqa: E712
-    assert pace_sheet_entries["ExpectedPoints"][0] == 0.5
+    assert len(pace_sheet_entries) == (19 * 6)
+    assert_series_equal(
+        pace_sheet_entries["team_finish"].unique(),
+        pl.Series("team_finish", [1, 4, 17]),
+        check_dtypes=False,
+    )
+    assert_frame_equal(
+        pace_sheet_entries.filter(
+            (pl.col("team_finish") == 1) & (pl.col("opponent_finish") == 2)
+        ),
+        pl.DataFrame(
+            {
+                "league": ["E0", "E0"],
+                "year": [2023, 2023],
+                "team_finish": [1, 1],
+                "opponent_finish": [2, 2],
+                "home": [False, True],
+                "expected_points": [0.5, 1.5],
+            }
+        ),
+        check_dtypes=False,
+        check_column_order=False,
+        check_row_order=False,
+    )
