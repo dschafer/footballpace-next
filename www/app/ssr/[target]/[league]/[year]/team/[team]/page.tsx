@@ -99,7 +99,11 @@ export default async function TeamSSR(
         startPlace={Math.max(pacePlace - 2, 0)}
       />
       <LinkableHeader order={3} title="Pace Chart" />
-      <PaceChart paceTeams={[paceTeam]} teamColorMap={teamColorMap} />
+      <PaceChart
+        paceTeams={[paceTeam]}
+        teamColorMap={teamColorMap}
+        targetFinish={tf}
+      />
       <OpponentsTable
         league={league}
         year={yearInt}

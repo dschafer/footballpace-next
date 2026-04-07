@@ -14,11 +14,13 @@ export default function PaceChartClient({
   matchdayData,
   dateData,
   showAxisToggle = false,
+  paceLabel,
 }: {
   series: LineChartSeries[];
   matchdayData: MatchdayRow[];
   dateData: DateRow[];
   showAxisToggle?: boolean;
+  paceLabel: string;
 }) {
   const [axisMode, setAxisMode] = useState<AxisMode>("matchday");
 
@@ -50,9 +52,9 @@ export default function PaceChartClient({
         connectNulls
         withLegend
         xAxisLabel={xAxisLabel}
-        yAxisLabel="vs. Championship Pace"
+        yAxisLabel={`vs. ${paceLabel} Pace`}
         tooltipAnimationDuration={200}
-        referenceLines={[{ y: 0, label: "Championship Pace", color: "red.3" }]}
+        referenceLines={[{ y: 0, label: `${paceLabel} Pace`, color: "red.3" }]}
       />
     </>
   );

@@ -21,6 +21,7 @@ export default async function StandingsPaceChart({
     <PaceChart
       paceTeams={slicedPaceTeams}
       teamColorMap={teamColorMap}
+      targetFinish={targetFinish}
       showAxisToggle
     />
   );

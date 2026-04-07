@@ -1,7 +1,5 @@
-import PaceChartClient, {
-  type DateRow,
-  type MatchdayRow,
-} from "./pace-chart-client";
+import PaceChartClient, { type DateRow, type MatchdayRow } from "./pace-chart-client";
+import { finishToTargetKey, targetKeyLabels } from "@/lib/pace/target-key";
 import ErrorAlert from "../error/error-alert";
 import type { LineChartSeries } from "@mantine/charts";
 import type { PaceTeam } from "@/lib/pace/pace-types";
@@ -11,10 +9,12 @@ export default function PaceChart({
   paceTeams,
   teamColorMap,
   showAxisToggle = false,
+  targetFinish = 1,
 }: {
   paceTeams: PaceTeam[];
   teamColorMap: Map<string, TeamColor>;
   showAxisToggle?: boolean;
+  targetFinish?: number;
 }) {
   if (paceTeams.length === 0) {
     return <ErrorAlert />;
@@ -87,12 +87,15 @@ export default function PaceChart({
     return row;
   });
 
+  const paceLabel = targetKeyLabels[finishToTargetKey(targetFinish)];
+
   return (
     <PaceChartClient
       series={series}
       matchdayData={matchdayData}
       dateData={dateData}
       showAxisToggle={showAxisToggle}
+      paceLabel={paceLabel}
     />
   );
 }
