@@ -1,3 +1,5 @@
+export const dynamic = "error";
+
 import { List, ListItem, Stack, Text, Title } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import AnchorLink from "@/components/anchor-link/anchor-link";
