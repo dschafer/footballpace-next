@@ -5,6 +5,7 @@ import {
   AppShellHeader,
   AppShellMain,
   AppShellNavbar,
+  Box,
   Burger,
   Group,
   Title,
@@ -59,12 +60,17 @@ export default function Shell({
             </AnchorLink>
             <IconSoccerField size="2rem" />
           </Group>
-          <Group gap="xs" align="center">
+          <Group gap="xs" align="center" visibleFrom="sm">
             {targetFinishSelect}
           </Group>
         </Group>
       </AppShellHeader>
-      <AppShellNavbar p="xs">{navLinks}</AppShellNavbar>
+      <AppShellNavbar p="xs">
+        <Box hiddenFrom="sm" mb="sm">
+          {targetFinishSelect}
+        </Box>
+        {navLinks}
+      </AppShellNavbar>
       <AppShellMain>{children}</AppShellMain>
     </AppShell>
   );
