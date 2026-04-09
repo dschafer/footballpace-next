@@ -49,7 +49,7 @@ export default async function OpponentsTable({
   const arrangedProjectedStandings = projectedStandings.filter(
     (psr) => psr.team != paceTeam.team,
   );
-  arrangedProjectedStandings.unshift(teamPsr);
+  arrangedProjectedStandings.splice(targetFinish - 1, 0, teamPsr);
 
   return (
     <Stack>
