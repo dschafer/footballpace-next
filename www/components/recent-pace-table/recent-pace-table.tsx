@@ -8,12 +8,13 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
-import { fetchPaceTeams, slicePaceTeams } from "@/lib/pace/pace";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
 import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
+import { fetchPaceTeams } from "@/lib/pace/pace";
+import { slicePaceTeams } from "@/lib/pace/pace-types";
 
 export default async function RecentPaceTable({
   rowCount,

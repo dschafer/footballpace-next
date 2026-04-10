@@ -39,3 +39,26 @@ export interface PaceTeam {
 export function matchDescription({ home, opponentFinish }: PaceMatch): string {
   return (home ? "Home vs " : "Away to ") + opponentFinish;
 }
+
+export function slicePaceTeamsStart<T>(
+  paceTeams: T[],
+  teamCount: number,
+  targetFinish: number,
+): number {
+  if (targetFinish - teamCount < 0) {
+    return 0;
+  } else if (targetFinish + teamCount > paceTeams.length) {
+    return paceTeams.length - teamCount;
+  } else {
+    return targetFinish - teamCount / 2;
+  }
+}
+
+export function slicePaceTeams<T>(
+  paceTeams: T[],
+  teamCount: number,
+  targetFinish: number,
+): T[] {
+  const start = slicePaceTeamsStart(paceTeams, teamCount, targetFinish);
+  return paceTeams.slice(start, start + teamCount);
+}

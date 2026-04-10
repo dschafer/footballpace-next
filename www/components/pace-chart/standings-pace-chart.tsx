@@ -1,6 +1,7 @@
-import { fetchPaceTeams, slicePaceTeams } from "@/lib/pace/pace";
 import PaceChart from "./pace-chart";
+import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
+import { slicePaceTeams } from "@/lib/pace/pace-types";
 
 export default async function StandingsPaceChart({
   league,

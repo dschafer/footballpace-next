@@ -56,7 +56,11 @@ export default async function UpcomingSSR(
   return (
     <Stack>
       <Title order={2}>Upcoming Fixtures</Title>
-      <UpcomingTable standings={standings} fixtures={fixturesMap} />
+      <UpcomingTable
+        standings={standings}
+        fixtures={fixturesMap}
+        targetFinish={tf}
+      />
     </Stack>
   );
 }

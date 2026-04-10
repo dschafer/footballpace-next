@@ -5,6 +5,7 @@ import {
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
+import { slicePaceTeams, slicePaceTeamsStart } from "@/lib/pace/pace-types";
 
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import LinkableHeader from "@/components/header/linkable-header";
@@ -70,7 +71,6 @@ export default async function TeamSSR(
     fetchTeamColorMap(),
   ]);
   const paceTeam = paceTeams.find((pt) => pt.team == teamDecoded)!;
-  const pacePlace = paceTeams.findIndex((pt) => pt.team == teamDecoded);
   const previewMatches = Array.from(paceTeam.paceMatches).reverse().slice(0, 3);
 
   return (
@@ -92,11 +92,8 @@ export default async function TeamSSR(
       />
       <LinkableHeader order={3} title="Table" />
       <PaceTable
-        paceTeams={paceTeams.slice(
-          Math.max(pacePlace - 2, 0),
-          Math.min(pacePlace + 3, paceTeams.length),
-        )}
-        startPlace={Math.max(pacePlace - 2, 0)}
+        paceTeams={slicePaceTeams(paceTeams, 5, tf)}
+        startPlace={slicePaceTeamsStart(paceTeams, 5, tf)}
       />
       <LinkableHeader order={3} title="Pace Chart" />
       <PaceChart

@@ -99,23 +99,6 @@ export async function fetchPaceTeams(
   }));
 }
 
-export function slicePaceTeams<T>(
-  paceTeams: T[],
-  teamCount: number,
-  targetFinish: number,
-): T[] {
-  if (targetFinish - teamCount < 0) {
-    return paceTeams.slice(0, teamCount);
-  } else if (targetFinish + teamCount > paceTeams.length) {
-    return paceTeams.slice(paceTeams.length - teamCount, paceTeams.length);
-  } else {
-    return paceTeams.slice(
-      targetFinish - teamCount / 2,
-      targetFinish + teamCount / 2,
-    );
-  }
-}
-
 export async function fetchPaceSheets(
   league: string,
   year: number,

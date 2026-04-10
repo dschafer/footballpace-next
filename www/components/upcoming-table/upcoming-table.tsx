@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert,
   Box,
   Group,
   MultiSelect,
@@ -23,16 +24,20 @@ import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
 import type { ExtendedStandingsRow } from "@/lib/pace/standings";
 import type { Fixture } from "@/prisma/generated/client";
+import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import type { PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTableBlankCell from "./upcoming-table-blank-cell";
 import UpcomingTableCell from "./upcoming-table-cell";
+import { slicePaceTeams } from "@/lib/pace/pace-types";
 
 export default function UpcomingTable({
   standings,
   fixtures,
+  targetFinish,
 }: {
   standings: ExtendedStandingsRow[];
   fixtures: Map<string, PaceFixture[]>;
+  targetFinish: number;
 }) {
   // Unique fixture key (match-level), ignoring date
   const fixtureKey = (f: Fixture) =>
@@ -41,7 +46,7 @@ export default function UpcomingTable({
   const year = standings[0].year;
   const allTeams = standings.map(({ team }) => team);
 
-  const [teams, setTeams] = useState(allTeams.slice(0, 4));
+  const [teams, setTeams] = useState(slicePaceTeams(allTeams, 3, targetFinish));
   const [matchCount, setMatchCount] = useState<string | number>(6);
 
   // Build unique fixture list across selected teams and assign clustered rows
@@ -122,6 +127,51 @@ export default function UpcomingTable({
     return { totalRows, teamRowToFixture };
   }, [teams, fixtures]);
 
+  const teamSelector = (
+    <Group
+      preventGrowOverflow={false}
+      gap="xs"
+      grow
+      wrap="nowrap"
+      align="start"
+    >
+      <NumberInput
+        label="Matches"
+        allowDecimal={false}
+        min={1}
+        max={totalRows}
+        onChange={setMatchCount}
+        value={matchCount}
+        hideControls
+        maw="6em"
+        miw="4em"
+      />
+      <MultiSelect
+        label="Teams"
+        data={allTeams}
+        maxValues={6}
+        searchable
+        onChange={setTeams}
+        value={teams}
+      />
+    </Group>
+  );
+
+  if (teams.length == 0) {
+    return (
+      <Stack>
+        {teamSelector}
+        <Alert
+          variant="light"
+          color="yellow"
+          title="No teams selected"
+          icon={<IconAlertTriangleFilled />}
+        >
+          Please select at least one team in the box above.
+        </Alert>
+      </Stack>
+    );
+  }
   if (totalRows == 0) {
     return <ErrorAlert />;
   }
@@ -130,33 +180,7 @@ export default function UpcomingTable({
 
   return (
     <Stack>
-      <Group
-        preventGrowOverflow={false}
-        gap="xs"
-        grow
-        wrap="nowrap"
-        align="start"
-      >
-        <NumberInput
-          label="Matches"
-          allowDecimal={false}
-          min={1}
-          max={totalRows}
-          onChange={setMatchCount}
-          value={matchCount}
-          hideControls
-          maw="6em"
-          miw="4em"
-        />
-        <MultiSelect
-          label="Teams"
-          data={allTeams}
-          maxValues={6}
-          searchable
-          onChange={setTeams}
-          value={teams}
-        />
-      </Group>
+      {teamSelector}
       <TableScrollContainer minWidth={0}>
         <Table
           style={{
