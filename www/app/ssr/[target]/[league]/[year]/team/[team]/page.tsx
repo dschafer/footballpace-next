@@ -63,7 +63,7 @@ export default async function TeamSSR(
   props: PageProps<"/ssr/[target]/[league]/[year]/team/[team]">,
 ) {
   const { league, year, team, target } = await props.params;
-  const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
+  const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   const teamDecoded = decodeURIComponent(team);
   const tf = targetKeyToFinish(league)[target as TargetKey];
   const [paceTeams, teamColorMap] = await Promise.all([
@@ -81,7 +81,7 @@ export default async function TeamSSR(
         style={{ alignSelf: "flex-start" }}
       >
         <Text fs="italic">
-          {league} {yearInt}
+          {leagueInfo.name} {yearInt}
         </Text>
       </AnchorLink>
       <LinkableHeader order={3} title="Recent Matches" />
