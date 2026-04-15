@@ -98,10 +98,11 @@ export default function OpponentsTableCell({
   } else {
     let dateInfo = <>&nbsp;</>;
     if (maybeFixture) {
-      const dateStr = maybeFixture.kickoffTime.toLocaleDateString([], {
-        timeZone: leagues.get(maybeFixture.league)?.tz,
-        dateStyle: "short",
-      });
+      const dateStr =
+        maybeFixture.kickoffTime?.toLocaleDateString([], {
+          timeZone: leagues.get(maybeFixture.league)?.tz,
+          dateStyle: "short",
+        }) ?? "Rescheduled";
       dateInfo = <>{dateStr}</>;
     }
     let matchDesc = (

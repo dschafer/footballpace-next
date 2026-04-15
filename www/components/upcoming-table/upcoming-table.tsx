@@ -71,9 +71,11 @@ export default function UpcomingTable({
     }
 
     // Sort by kickoff time
-    const sortedFixtures = Array.from(uniqueFixtures.values()).sort(
-      (a, b) => a.kickoffTime.getTime() - b.kickoffTime.getTime(),
-    );
+    const sortedFixtures = Array.from(uniqueFixtures.values()).sort((a, b) => {
+      if (a.kickoffTime === null) return 1;
+      if (b.kickoffTime === null) return -1;
+      return a.kickoffTime.getTime() - b.kickoffTime.getTime();
+    });
 
     // Assign rows based on 2-day gaps and team conflicts within a row
     const keyToRow = new Map<string, number>();
@@ -85,8 +87,10 @@ export default function UpcomingTable({
       const timeGapOk =
         lastInRowDate === null
           ? true
-          : f.kickoffTime.getTime() - lastInRowDate.getTime() <
-            60 * 60 * 60 * 1000; // < 60 hours continues same row
+          : f.kickoffTime === null
+            ? false
+            : f.kickoffTime.getTime() - lastInRowDate.getTime() <
+              60 * 60 * 60 * 1000; // < 60 hours continues same row
       const teamConflict =
         teamsInRow.has(f.homeTeam) || teamsInRow.has(f.awayTeam);
 

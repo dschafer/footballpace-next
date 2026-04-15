@@ -28,7 +28,9 @@ export default async function Fixtures({
   // This is just Map.groupBy but that's not available in Node 20.
   const fixturesByDay = new Map<string, Fixture[]>();
   for (const fixture of fixtures) {
-    const key = dateFormat.format(fixture.kickoffTime);
+    const key = fixture.kickoffTime
+      ? dateFormat.format(fixture.kickoffTime)
+      : "Rescheduled";
     if (!fixturesByDay.has(key)) {
       fixturesByDay.set(key, []);
     }
@@ -37,7 +39,9 @@ export default async function Fixtures({
 
   const fixturesByMonth = new Map<string, Map<string, Fixture[]>>();
   for (const [day, fixtures] of Array.from(fixturesByDay.entries())) {
-    const key = monthFormat.format(fixtures[0].kickoffTime);
+    const key = fixtures[0].kickoffTime
+      ? monthFormat.format(fixtures[0].kickoffTime)
+      : "Rescheduled";
     if (!fixturesByMonth.has(key)) {
       fixturesByMonth.set(key, new Map());
     }

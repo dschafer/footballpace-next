@@ -33,7 +33,11 @@ export default async function FixturesMonth({
             <List listStyleType="none" pb="md">
               {fixtures.map((fixture, j) => (
                 <ListItem key={j}>
-                  ({timeFormat.format(fixture.kickoffTime)}){" "}
+                  (
+                  {fixture.kickoffTime
+                    ? timeFormat.format(fixture.kickoffTime)
+                    : "Rescheduled"}
+                  ){" "}
                   <AnchorLink
                     href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
                     underline="never"
@@ -81,7 +85,11 @@ export default async function FixturesMonth({
             >
               {fixture.awayTeam}
             </AnchorLink>{" "}
-            ({dateTimeFormat.format(fixture.kickoffTime)})
+            (
+            {fixture.kickoffTime
+              ? dateTimeFormat.format(fixture.kickoffTime)
+              : "Rescheduled"}
+            )
           </ListItem>
         ))}
       </List>

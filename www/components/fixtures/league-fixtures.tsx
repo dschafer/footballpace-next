@@ -17,7 +17,7 @@ export default async function LeagueFixtures({
       // eslint-disable-next-line react-hooks/purity
       kickoffTime: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // Only show today and future fixtures
     },
-    orderBy: { kickoffTime: "asc" },
+    orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
   });
   if (fixtures.length == 0) {
     return null;

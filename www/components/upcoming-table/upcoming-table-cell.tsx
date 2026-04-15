@@ -22,10 +22,10 @@ export default function UpcomingTableCell(
     <TableTd ta="center" bg={bg} c={fg} {...rest}>
       <Stack gap="0">
         <Text span size="xs">
-          {paceFixture.fixture.kickoffTime.toLocaleDateString([], {
+          {paceFixture.fixture.kickoffTime?.toLocaleDateString([], {
             timeZone: leagues.get(paceFixture.fixture.league)?.tz,
             dateStyle: "short",
-          })}
+          }) ?? "Rescheduled"}
         </Text>
         <Text span size="md">
           <AnchorLink

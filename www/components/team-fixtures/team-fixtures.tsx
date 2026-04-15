@@ -28,7 +28,7 @@ export default async function TeamFixtures({
 }) {
   const fixtures = await fetchPaceFixtures(league, year, team, targetFinish);
   const upcomingFixtures = fixtures.filter(
-    (f) => f.fixture.kickoffTime > new Date(),
+    (f) => f.fixture.kickoffTime === null || f.fixture.kickoffTime > new Date(),
   );
   if (fixtures.length == 0) {
     return null;
@@ -54,7 +54,9 @@ export default async function TeamFixtures({
             {upcomingFixtures.map((pf, i) => (
               <TableTr key={i}>
                 <TableTd ta="right">
-                  {dateTimeFormat.format(pf.fixture.kickoffTime)}
+                  {pf.fixture.kickoffTime
+                    ? dateTimeFormat.format(pf.fixture.kickoffTime)
+                    : "Rescheduled"}
                 </TableTd>
                 <TableTd ta="right">
                   {pf.home ? "vs " + pf.opponent : "at " + pf.opponent}

@@ -39,7 +39,13 @@ async function rowToFixtures(
   tf: number,
 ): Promise<[string, PaceFixture[]]> {
   const pfs = await fetchPaceFixtures(esr.league, esr.year, esr.team, tf);
-  return [esr.team, pfs.filter((pf) => pf.fixture.kickoffTime > new Date())];
+  return [
+    esr.team,
+    pfs.filter(
+      (pf) =>
+        pf.fixture.kickoffTime === null || pf.fixture.kickoffTime > new Date(),
+    ),
+  ];
 }
 
 export default async function UpcomingSSR(

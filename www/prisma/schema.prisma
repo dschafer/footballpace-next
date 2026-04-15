@@ -35,9 +35,9 @@ model Match {
 model Fixture {
   league      String
   year        Int
-  kickoffTime DateTime @map("kickoff_time") @db.Timestamptz(3)
-  homeTeam    String   @map("home_team")
-  awayTeam    String   @map("away_team")
+  kickoffTime DateTime? @map("kickoff_time") @db.Timestamptz(3)
+  homeTeam    String    @map("home_team")
+  awayTeam    String    @map("away_team")
 
   @@id([league, year, homeTeam, awayTeam])
   @@map("fixtures")
