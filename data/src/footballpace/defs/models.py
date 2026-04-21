@@ -22,7 +22,7 @@ MatchDagsterType = patito_model_to_dagster_type(Match)
 class Fixture(pt.Model):
     league: str
     year: int
-    kickoff_time: datetime.datetime
+    kickoff_time: Optional[datetime.datetime]
     home_team: str
     away_team: str
 

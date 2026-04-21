@@ -18,6 +18,22 @@ def test_fpl_fixtures_df():
     assert df["finished_provisional"][0]
     assert df["league"][0] == "E0"
     assert df["year"][0] == 2024
+    assert df["kickoff_time"][0] is not None
+
+
+def test_fpl_fixtures_rescheduled_df():
+    bootstrap = read_fpl_bytes("bootstrap-static.json")
+    fixtures = read_fpl_bytes("fixtures-rescheduled.json")
+
+    df_output = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
+    assert isinstance(df_output, dg.Output)
+    df = df_output.value
+    assert isinstance(df, pl.DataFrame)
+    assert len(df) == (20 * 19)
+    assert df["finished_provisional"][0]
+    assert df["league"][0] == "E0"
+    assert df["year"][0] == 2024
+    assert df["kickoff_time"][0] is None
 
 
 def test_fpl_results_df():

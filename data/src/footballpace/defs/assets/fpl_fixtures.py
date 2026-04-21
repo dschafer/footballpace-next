@@ -101,9 +101,6 @@ def fpl_fixtures_df(
     team_idents_dict = team_idents(fpl_bootstrap_obj)
 
     df = pl.DataFrame(fpl_fixtures_obj)
-    df = df.filter(
-        pl.col("kickoff_time").is_not_null()
-    )  # Filter null values, for fixtures that are postponed.
     df = (
         df.with_columns(
             league=pl.lit("E0"),
