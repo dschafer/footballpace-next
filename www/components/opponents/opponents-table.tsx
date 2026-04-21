@@ -34,7 +34,7 @@ export default async function OpponentsTable({
         year: year,
         OR: [{ homeTeam: paceTeam.team }, { awayTeam: paceTeam.team }],
       },
-      orderBy: { kickoffTime: "asc" },
+      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
     }),
     prisma.paceSheetEntry.findMany({
       where: { league: league, year: year, teamFinish: targetFinish },

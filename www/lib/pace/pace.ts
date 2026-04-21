@@ -138,7 +138,7 @@ export async function fetchPaceFixtures(
     fetchProjectedStandings(league, year),
     prisma.fixture.findMany({
       where: { league: league, year: year },
-      orderBy: { kickoffTime: "asc" },
+      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
     }),
     fetchPaceSheetMap(league, year, targetFinish),
   ]);

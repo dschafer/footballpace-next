@@ -13,9 +13,13 @@ export default async function LeagueFixtures({
     where: {
       league: league,
       year: year,
-      // Yes, this is impure. But it's rounding to the nearest day, so we can live with it.
-      // eslint-disable-next-line react-hooks/purity
-      kickoffTime: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // Only show today and future fixtures
+      OR: [
+        // Only show today, future fixtures, and null (rescheduled) fixtures
+        // Yes, this is impure. But it's rounding to the nearest day, so we can live with it.
+        // eslint-disable-next-line react-hooks/purity
+        { kickoffTime: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        { kickoffTime: null },
+      ],
     },
     orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
   });
