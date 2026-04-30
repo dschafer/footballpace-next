@@ -10,10 +10,15 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import {
+  isUnplayedFixture,
+  playedFixtureKeys,
+} from "@/lib/pace/fixtures";
 import FixtureDifficultyCell from "../pace-display/fixture-difficulty-cell";
 import LinkableHeader from "../header/linkable-header";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
+import prisma from "@/lib/prisma";
 
 export default async function TeamFixtures({
   league,
@@ -26,9 +31,13 @@ export default async function TeamFixtures({
   team: string;
   targetFinish?: number;
 }) {
-  const fixtures = await fetchPaceFixtures(league, year, team, targetFinish);
-  const upcomingFixtures = fixtures.filter(
-    (f) => f.fixture.kickoffTime === null || f.fixture.kickoffTime > new Date(),
+  const [fixtures, matches] = await Promise.all([
+    fetchPaceFixtures(league, year, team, targetFinish),
+    prisma.match.findMany({ where: { league: league, year: year } }),
+  ]);
+  const playedKeys = playedFixtureKeys(matches);
+  const upcomingFixtures = fixtures.filter((f) =>
+    isUnplayedFixture(f.fixture, playedKeys),
   );
   if (fixtures.length == 0) {
     return null;

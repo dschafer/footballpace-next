@@ -14,10 +14,15 @@ import {
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
+import {
+  isUnplayedFixture,
+  playedFixtureKeys,
+} from "@/lib/pace/fixtures";
 import type { Metadata } from "next/types";
 import { type PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
+import prisma from "@/lib/prisma";
 
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
@@ -37,14 +42,12 @@ export async function generateMetadata(
 async function rowToFixtures(
   esr: ExtendedStandingsRow,
   tf: number,
+  playedKeys: Set<string>,
 ): Promise<[string, PaceFixture[]]> {
   const pfs = await fetchPaceFixtures(esr.league, esr.year, esr.team, tf);
   return [
     esr.team,
-    pfs.filter(
-      (pf) =>
-        pf.fixture.kickoffTime === null || pf.fixture.kickoffTime > new Date(),
-    ),
+    pfs.filter((pf) => isUnplayedFixture(pf.fixture, playedKeys)),
   ];
 }
 
@@ -54,9 +57,13 @@ export default async function UpcomingSSR(
   const { league, year, target } = await props.params;
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
   const tf = targetKeyToFinish(league)[target as TargetKey];
-  const standings = await fetchStandings(league, yearInt);
+  const [standings, matches] = await Promise.all([
+    fetchStandings(league, yearInt),
+    prisma.match.findMany({ where: { league: league, year: yearInt } }),
+  ]);
+  const playedKeys = playedFixtureKeys(matches);
   const fixtures = await Promise.all(
-    standings.map((esr) => rowToFixtures(esr, tf)),
+    standings.map((esr) => rowToFixtures(esr, tf, playedKeys)),
   );
   const fixturesMap = new Map(fixtures);
   return (
