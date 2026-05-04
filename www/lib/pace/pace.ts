@@ -1,4 +1,13 @@
 import type { PaceFixture, PaceTeam } from "./pace-types";
+import { cacheLife, cacheTag } from "next/cache";
+import {
+  fixturesCacheTag,
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+  paceSheetsCacheTag,
+  targetPaceSheetsCacheTag,
+} from "@/lib/cache-tags";
 import type { PaceSheetEntry } from "@/prisma/generated/client";
 import { fetchProjectedStandings } from "./projections";
 import prisma from "@/lib/prisma";
@@ -8,6 +17,17 @@ export async function fetchPaceTeams(
   year: number,
   targetFinish: number,
 ): Promise<PaceTeam[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+    matchesCacheTag(league, year - 1),
+    paceSheetsCacheTag(league, year),
+    targetPaceSheetsCacheTag(league, year, targetFinish),
+  );
+
   const [projectedStandings, allMatches, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
     prisma.match.findMany({
@@ -104,6 +124,14 @@ export async function fetchPaceSheets(
   year: number,
   targetFinish: number,
 ): Promise<PaceSheetEntry[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    paceSheetsCacheTag(league, year),
+    targetPaceSheetsCacheTag(league, year, targetFinish),
+  );
+
   return prisma.paceSheetEntry.findMany({
     where: { league: league, year: year, teamFinish: targetFinish },
   });
@@ -134,6 +162,18 @@ export async function fetchPaceFixtures(
   team: string,
   targetFinish: number,
 ): Promise<PaceFixture[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+    matchesCacheTag(league, year - 1),
+    fixturesCacheTag(league, year),
+    paceSheetsCacheTag(league, year),
+    targetPaceSheetsCacheTag(league, year, targetFinish),
+  );
+
   const [projectedStandings, allFixtures, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
     prisma.fixture.findMany({

@@ -1,5 +1,12 @@
+import {
+  fixturesCacheTag,
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+  paceSheetsCacheTag,
+} from "@/lib/cache-tags";
 import { type NextRequest } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
@@ -16,11 +23,13 @@ export async function POST(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams;
   const league = searchParams.get("query");
-  const year = searchParams.get("year");
-  if (league && year) {
-    revalidatePath("/");
-    revalidatePath(`/${league}/${year}`, "layout");
-    revalidatePath(`/${league}/${year}/team`, "layout");
+  const yearParam = searchParams.get("year");
+  const year = yearParam == null ? null : Number(yearParam);
+  if (league && year != null && Number.isInteger(year)) {
+    revalidateTag(leagueCacheTag(league, year), "max");
+    revalidateTag(matchesCacheTag(league, year), "max");
+    revalidateTag(fixturesCacheTag(league, year), "max");
+    revalidateTag(paceSheetsCacheTag(league, year), "max");
     return Response.json(
       { message: `Revalidated league ${league} and year ${year}.` },
       {
@@ -28,9 +37,7 @@ export async function POST(request: NextRequest) {
       },
     );
   } else {
-    // If league and year are not both passed, revalidate the entire thing.
-    revalidatePath("/");
-    revalidatePath("/", "layout");
+    revalidateTag(globalDataCacheTag, "max");
     return Response.json(
       { message: "Revalidated entire site." },
       {

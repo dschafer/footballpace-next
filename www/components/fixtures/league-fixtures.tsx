@@ -1,4 +1,12 @@
 import { Stack, Title } from "@mantine/core";
+import { cacheLife, cacheTag } from "next/cache";
+import {
+  fixturesCacheTag,
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+} from "@/lib/cache-tags";
+import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
 import Fixtures from "./fixtures";
 import prisma from "@/lib/prisma";
 
@@ -9,27 +17,37 @@ export default async function LeagueFixtures({
   league: string;
   year: number;
 }) {
-  const fixtures = await prisma.fixture.findMany({
-    where: {
-      league: league,
-      year: year,
-      OR: [
-        // Only show today, future fixtures, and null (rescheduled) fixtures
-        // Yes, this is impure. But it's rounding to the nearest day, so we can live with it.
-        // eslint-disable-next-line react-hooks/purity
-        { kickoffTime: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-        { kickoffTime: null },
-      ],
-    },
-    orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-  });
-  if (fixtures.length == 0) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    fixturesCacheTag(league, year),
+    matchesCacheTag(league, year),
+  );
+
+  const [fixtures, matches] = await Promise.all([
+    prisma.fixture.findMany({
+      where: { league: league, year: year },
+      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
+    }),
+    prisma.match.findMany({ where: { league: league, year: year } }),
+  ]);
+  const playedKeys = playedFixtureKeys(matches);
+  const unplayedFixtures = fixtures.filter((fixture) =>
+    isUnplayedFixture(fixture, playedKeys),
+  );
+  if (unplayedFixtures.length == 0) {
     return null;
   }
   return (
     <Stack>
       <Title order={3}>Fixtures</Title>
-      <Fixtures league={league} fixtures={fixtures} dateHeadings={true} />
+      <Fixtures
+        league={league}
+        fixtures={unplayedFixtures}
+        dateHeadings={true}
+      />
     </Stack>
   );
 }

@@ -1,15 +1,18 @@
-export const dynamic = "error";
-
 import { List, ListItem, Stack, Text, Title } from "@mantine/core";
 import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Metadata } from "next/types";
+import { TARGET_KEYS } from "@/lib/pace/target-key";
 
 export const metadata: Metadata = {
   title: "About",
   openGraph: { ...openGraphMetadata, title: "About" },
   twitter: { ...twitterMetadata, title: "About" },
 };
+
+export function generateStaticParams() {
+  return TARGET_KEYS.map((target) => ({ target }));
+}
 
 export default function AboutPage() {
   return (

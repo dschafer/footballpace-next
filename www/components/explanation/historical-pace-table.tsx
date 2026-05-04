@@ -11,7 +11,7 @@ import {
   Text,
 } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
-import prisma from "@/lib/prisma";
+import { fetchPaceSheets } from "@/lib/pace/pace";
 
 export default async function HistoricalPaceTable({
   league,
@@ -22,9 +22,7 @@ export default async function HistoricalPaceTable({
   year: number;
   targetFinish?: number;
 }) {
-  const paceSheetEntries = await prisma.paceSheetEntry.findMany({
-    where: { league: league, year: year, teamFinish: targetFinish },
-  });
+  const paceSheetEntries = await fetchPaceSheets(league, year, targetFinish);
   if (paceSheetEntries.length == 0) {
     return <ErrorAlert />;
   }

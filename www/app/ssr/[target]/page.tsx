@@ -1,5 +1,3 @@
-export const dynamic = "error";
-
 import {
   Breadcrumbs,
   Group,

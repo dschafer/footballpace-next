@@ -9,12 +9,43 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import { cacheLife, cacheTag } from "next/cache";
+import {
+  fixturesCacheTag,
+  globalDataCacheTag,
+  leagueCacheTag,
+} from "@/lib/cache-tags";
 import AnchorLink from "@/components/anchor-link/anchor-link";
+import type { Fixture } from "@/prisma/generated/client";
 import LinkableHeader from "../header/linkable-header";
 import OpponentsTableCell from "./opponents-table-cell";
 import type { PaceTeam } from "@/lib/pace/pace-types";
+import { fetchPaceSheets } from "@/lib/pace/pace";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
 import prisma from "@/lib/prisma";
+
+async function fetchOpponentFixtures(
+  league: string,
+  year: number,
+  team: string,
+): Promise<Fixture[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    fixturesCacheTag(league, year),
+  );
+
+  return prisma.fixture.findMany({
+    where: {
+      league: league,
+      year: year,
+      OR: [{ homeTeam: team }, { awayTeam: team }],
+    },
+    orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
+  });
+}
 
 export default async function OpponentsTable({
   league,
@@ -28,17 +59,8 @@ export default async function OpponentsTable({
   targetFinish?: number;
 }) {
   const [fixtures, paceSheetEntries, projectedStandings] = await Promise.all([
-    prisma.fixture.findMany({
-      where: {
-        league: league,
-        year: year,
-        OR: [{ homeTeam: paceTeam.team }, { awayTeam: paceTeam.team }],
-      },
-      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-    }),
-    prisma.paceSheetEntry.findMany({
-      where: { league: league, year: year, teamFinish: targetFinish },
-    }),
+    fetchOpponentFixtures(league, year, paceTeam.team),
+    fetchPaceSheets(league, year, targetFinish),
     fetchProjectedStandings(league, year),
   ]);
   if (paceSheetEntries.length == 0) {

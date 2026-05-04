@@ -10,15 +10,31 @@ import {
   TableThead,
   TableTr,
 } from "@mantine/core";
+import { cacheLife, cacheTag } from "next/cache";
 import {
-  isUnplayedFixture,
-  playedFixtureKeys,
-} from "@/lib/pace/fixtures";
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+} from "@/lib/cache-tags";
+import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
 import FixtureDifficultyCell from "../pace-display/fixture-difficulty-cell";
 import LinkableHeader from "../header/linkable-header";
+import type { Match } from "@/prisma/generated/client";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
+
+async function fetchMatches(league: string, year: number): Promise<Match[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+  );
+
+  return prisma.match.findMany({ where: { league: league, year: year } });
+}
 
 export default async function TeamFixtures({
   league,
@@ -33,7 +49,7 @@ export default async function TeamFixtures({
 }) {
   const [fixtures, matches] = await Promise.all([
     fetchPaceFixtures(league, year, team, targetFinish),
-    prisma.match.findMany({ where: { league: league, year: year } }),
+    fetchMatches(league, year),
   ]);
   const playedKeys = playedFixtureKeys(matches);
   const upcomingFixtures = fixtures.filter((f) =>

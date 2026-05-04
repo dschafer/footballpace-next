@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from "next/cache";
+import { globalDataCacheTag, matchesCacheTag } from "@/lib/cache-tags";
 import type { MetadataRoute } from "next";
 
 import leagues from "@/lib/const/leagues";
@@ -5,6 +7,13 @@ import prisma from "@/lib/prisma";
 import year from "@/lib/const/year";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(globalDataCacheTag);
+  for (const [leagueCode] of leagues) {
+    cacheTag(matchesCacheTag(leagueCode, year));
+  }
+
   const leagueSitemaps: MetadataRoute.Sitemap[] = await Promise.all(
     Array.from(leagues).map(async ([leagueCode]) => {
       const matches = await prisma.match.findMany({

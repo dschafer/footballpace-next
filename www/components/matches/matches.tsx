@@ -8,6 +8,12 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
+import { cacheLife, cacheTag } from "next/cache";
+import {
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+} from "@/lib/cache-tags";
 import ErrorAlert from "../error/error-alert";
 import type { Match } from "@/prisma/generated/client";
 import Result from "../pace-display/result";
@@ -21,6 +27,14 @@ export default async function Matches({
   league: string;
   year: number;
 }) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+  );
+
   const matches = await prisma.match.findMany({
     where: { league: league, year: year },
     orderBy: { date: "desc" },

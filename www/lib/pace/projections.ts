@@ -1,4 +1,10 @@
 import { type ExtendedStandingsRow, fetchStandings } from "./standings";
+import { cacheLife, cacheTag } from "next/cache";
+import {
+  globalDataCacheTag,
+  leagueCacheTag,
+  matchesCacheTag,
+} from "@/lib/cache-tags";
 
 export interface ProjectedStandingsRow {
   team: string;
@@ -51,6 +57,15 @@ export async function fetchProjectedStandings(
   league: string,
   year: number,
 ): Promise<ProjectedStandingsRow[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(
+    globalDataCacheTag,
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+    matchesCacheTag(league, year - 1),
+  );
+
   const [currentStandings, prevStandings] = await Promise.all([
     fetchStandings(league, year),
     fetchStandings(league, year - 1),
