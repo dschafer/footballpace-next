@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Select } from "@mantine/core";
+import { Box, Select, Skeleton } from "@mantine/core";
 import { LineChart, type LineChartSeries } from "@mantine/charts";
+import { useIsClient } from "@/lib/use-is-client";
 import { useState } from "react";
 
 export type MatchdayRow = { matchday: number; [key: string]: number | string };
@@ -23,10 +24,15 @@ export default function PaceChartClient({
   paceLabel: string;
 }) {
   const [axisMode, setAxisMode] = useState<AxisMode>("matchday");
+  const isClient = useIsClient();
 
   const data = axisMode === "matchday" ? matchdayData : dateData;
   const dataKey = axisMode === "matchday" ? "matchday" : "date";
   const xAxisLabel = axisMode === "matchday" ? "Matchday" : "Date";
+
+  if (!isClient) {
+    return <Skeleton h={300} />;
+  }
 
   return (
     <>
