@@ -27,9 +27,7 @@ export default async function PaceTable({
   const maxMatchday = Math.max(
     ...paceTeams.map(({ paceMatches }) => paceMatches.length),
   );
-  if (!startPlace) {
-    startPlace = 0;
-  }
+  const startingPlace = startPlace || 0;
 
   return (
     <TableScrollContainer minWidth={0}>
@@ -51,7 +49,7 @@ export default async function PaceTable({
         <TableTbody>
           {paceTeams.map((paceTeam, rowNum) => (
             <TableTr key={paceTeam.team}>
-              <TableTd ta="center">{rowNum + startPlace + 1}</TableTd>
+              <TableTd ta="center">{rowNum + startingPlace + 1}</TableTd>
               <TableTh ta="left" scope="row">
                 <AnchorLink
                   href={`/${paceTeam.league}/${paceTeam.year}/team/${paceTeam.team}`}
