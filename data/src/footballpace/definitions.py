@@ -27,6 +27,7 @@ def defs() -> dg.Definitions:
     )
     return dg.Definitions(
         assets=augment_assets_with_references(folder_defs.assets),
+        asset_checks=folder_defs.asset_checks,
         schedules=folder_defs.schedules,
         sensors=folder_defs.sensors,
         jobs=folder_defs.jobs,
