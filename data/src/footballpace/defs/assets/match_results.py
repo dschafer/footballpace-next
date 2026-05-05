@@ -142,7 +142,7 @@ def match_results_df(
             "dagster/partition_row_count": len(df),
             "preview": markdown_metadata(pl.concat([df.head(), df.tail()])),
             "most_recent_match_date": dg.MetadataValue.text(
-                str(max(df["kickoff_time"])) if not df.is_empty else "N/A"
+                str(max(df["date"])) if not df.is_empty else "N/A"
             ),
             "teams": metadata_teams,
         },
