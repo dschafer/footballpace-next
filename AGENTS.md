@@ -38,4 +38,4 @@
 - Messages: imperative mood, concise subject (e.g., "Add target key enum"), optional body for rationale.
 - PRs: describe scope and intent, link issues, and include before/after screenshots when UI changes.
 - For changes in `www`, *always* run `pnpm -C www lint` and `pnpm -C www typegen && pnpm -C www typecheck`. These two commands *must* pass before any commit is made.
-
+- For changes in `data`, *always* run `PYTHONPATH=data/src pnpx pyright --pythonpath data/.venv/bin/python` and `cd data && dg check defs`. These *must* pass before any commit is made.
