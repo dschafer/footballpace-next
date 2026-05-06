@@ -1,14 +1,10 @@
 import { Stack, Title } from "@mantine/core";
-import { cacheLife, cacheTag } from "next/cache";
 import {
-  fixturesCacheTag,
-  globalDataCacheTag,
-  leagueCacheTag,
-  matchesCacheTag,
-} from "@/lib/cache-tags";
+  fetchFixtures,
+  fetchMatches,
+} from "@/lib/pace/data";
 import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
 import Fixtures from "./fixtures";
-import prisma from "@/lib/prisma";
 
 export default async function LeagueFixtures({
   league,
@@ -17,21 +13,11 @@ export default async function LeagueFixtures({
   league: string;
   year: number;
 }) {
-  "use cache";
-  cacheLife("max");
-  cacheTag(
-    globalDataCacheTag,
-    leagueCacheTag(league, year),
-    fixturesCacheTag(league, year),
-    matchesCacheTag(league, year),
-  );
-
   const [fixtures, matches] = await Promise.all([
-    prisma.fixture.findMany({
-      where: { league: league, year: year },
+    fetchFixtures(league, year, {
       orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
     }),
-    prisma.match.findMany({ where: { league: league, year: year } }),
+    fetchMatches(league, year),
   ]);
   const playedKeys = playedFixtureKeys(matches);
   const unplayedFixtures = fixtures.filter((fixture) =>

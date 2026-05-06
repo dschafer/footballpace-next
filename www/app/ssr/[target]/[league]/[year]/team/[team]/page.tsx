@@ -15,9 +15,9 @@ import PaceChart from "@/components/pace-chart/pace-chart";
 import PaceTable from "@/components/pace-table/pace-table";
 import ResultsTable from "@/components/results-table/results-table";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
+import { fetchMatches } from "@/lib/pace/data";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
-import prisma from "@/lib/prisma";
 import year from "@/lib/const/year";
 
 export async function generateStaticParams(): Promise<
@@ -26,9 +26,7 @@ export async function generateStaticParams(): Promise<
   })[]
 > {
   // Only statically generate the EPL teams since that's most used.
-  const matches = await prisma.match.findMany({
-    where: { year: year, league: "E0" },
-  });
+  const matches = await fetchMatches("E0", year);
   const params = new Set<SeasonPageParam>();
   for (const m of matches) {
     params.add({

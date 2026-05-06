@@ -1,10 +1,4 @@
-import { cacheLife, cacheTag } from "next/cache";
-import {
-  globalDataCacheTag,
-  leagueCacheTag,
-  matchesCacheTag,
-} from "@/lib/cache-tags";
-import prisma from "@/lib/prisma";
+import { fetchMatches } from "@/lib/pace/data";
 
 export interface ExtendedStandingsRow {
   league: string;
@@ -32,17 +26,7 @@ export async function fetchStandings(
   league: string,
   year: number,
 ): Promise<ExtendedStandingsRow[]> {
-  "use cache";
-  cacheLife("max");
-  cacheTag(
-    globalDataCacheTag,
-    leagueCacheTag(league, year),
-    matchesCacheTag(league, year),
-  );
-
-  const allMatches = await prisma.match.findMany({
-    where: { league: league, year: year },
-  });
+  const allMatches = await fetchMatches(league, year);
   const standingsMap = new Map<string, ExtendedStandingsRow>();
   for (const match of allMatches) {
     for (const team of [match.homeTeam, match.awayTeam]) {

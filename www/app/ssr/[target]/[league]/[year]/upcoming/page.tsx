@@ -14,32 +14,12 @@ import {
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
-import { cacheLife, cacheTag } from "next/cache";
-
-import {
-  globalDataCacheTag,
-  leagueCacheTag,
-  matchesCacheTag,
-} from "@/lib/cache-tags";
 import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
-import type { Match } from "@/prisma/generated/client";
 import type { Metadata } from "next/types";
 import { type PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
+import { fetchMatches } from "@/lib/pace/data";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
-import prisma from "@/lib/prisma";
-
-async function fetchMatches(league: string, year: number): Promise<Match[]> {
-  "use cache";
-  cacheLife("max");
-  cacheTag(
-    globalDataCacheTag,
-    leagueCacheTag(league, year),
-    matchesCacheTag(league, year),
-  );
-
-  return prisma.match.findMany({ where: { league: league, year: year } });
-}
 
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
