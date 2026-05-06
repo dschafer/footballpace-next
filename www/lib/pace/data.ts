@@ -5,6 +5,7 @@ import type {
   Prisma,
   TeamColor,
 } from "@/prisma/generated/client";
+import { cacheLife, cacheTag } from "next/cache";
 import {
   fixturesCacheTag,
   globalDataCacheTag,
@@ -14,9 +15,6 @@ import {
   targetPaceSheetsCacheTag,
   teamColorsCacheTag,
 } from "@/lib/cache-tags";
-import { cacheSeasonData } from "@/lib/cache-policy";
-import { cacheTag } from "next/cache";
-import currentYear from "@/lib/const/year";
 import prisma from "@/lib/prisma";
 
 type MatchFindManyArgs = Omit<
@@ -38,7 +36,7 @@ export async function fetchMatches(
   args: MatchFindManyArgs = {},
 ): Promise<Match[]> {
   "use cache";
-  cacheSeasonData(year);
+  cacheLife("max");
   cacheTag(
     globalDataCacheTag,
     leagueCacheTag(league, year),
@@ -57,7 +55,7 @@ export async function fetchFixtures(
   args: FixtureFindManyArgs = {},
 ): Promise<Fixture[]> {
   "use cache";
-  cacheSeasonData(year);
+  cacheLife("max");
   cacheTag(
     globalDataCacheTag,
     leagueCacheTag(league, year),
@@ -77,7 +75,7 @@ export async function fetchPaceSheetEntries(
   args: PaceSheetEntryFindManyArgs = {},
 ): Promise<PaceSheetEntry[]> {
   "use cache";
-  cacheSeasonData(year);
+  cacheLife("max");
   cacheTag(
     globalDataCacheTag,
     paceSheetsCacheTag(league, year),
@@ -92,7 +90,7 @@ export async function fetchPaceSheetEntries(
 
 export async function fetchTeamColors(): Promise<TeamColor[]> {
   "use cache";
-  cacheSeasonData(currentYear);
+  cacheLife("max");
   cacheTag(globalDataCacheTag, teamColorsCacheTag);
 
   return prisma.teamColor.findMany();
