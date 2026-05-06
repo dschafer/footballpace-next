@@ -9,11 +9,11 @@ import {
 } from "@mantine/core";
 
 import PaceNumber from "./pace-number";
-import { type PaceTeam } from "@/lib/pace/pace-types";
+import type { PaceTeam } from "@/lib/pace/pace-types";
 
-export default function DeltaTableCell({ paceTeam }: { paceTeam: PaceTeam }) {
-  const { delta, gap, interval } = paceTeam;
+type DeltaInfo = Pick<PaceTeam, "delta" | "gap" | "interval">;
 
+export default function DeltaTableCell({ delta, gap, interval }: DeltaInfo) {
   if (gap == null || interval == null) {
     return (
       <Box w="100%" h="100%" p="0.5rem">

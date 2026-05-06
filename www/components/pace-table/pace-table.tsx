@@ -69,7 +69,11 @@ export default async function PaceTable({
                 />
               </TableTd>
               <TableTd ta="right" fw={700}>
-                <DeltaTableCell paceTeam={paceTeam} />
+                <DeltaTableCell
+                  delta={paceTeam.delta}
+                  gap={paceTeam.gap}
+                  interval={paceTeam.interval}
+                />
               </TableTd>
               {paceTeam.paceMatches.map((paceMatch, matchNum) => (
                 <PaceTableCell paceMatch={paceMatch} key={matchNum} />
