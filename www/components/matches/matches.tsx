@@ -53,13 +53,14 @@ export default async function Matches({
     }
     matchesByMonth.get(key)!.set(day, matches);
   }
+  const defaultMonth = Array.from(matchesByMonth.keys())[0];
   return (
     <Stack>
       <Title order={3}>Matches</Title>
       <Accordion
         variant="separated"
         multiple={true}
-        defaultValue={[monthFormat.format(new Date())]}
+        defaultValue={defaultMonth ? [defaultMonth] : []}
       >
         {Array.from(matchesByMonth).map(([month, matchesDict]) => (
           <AccordionItem key={month} value={month}>

@@ -47,11 +47,12 @@ export default async function Fixtures({
     }
     fixturesByMonth.get(key)!.set(day, fixtures);
   }
+  const defaultMonth = Array.from(fixturesByMonth.keys())[0];
   return (
     <Accordion
       variant="separated"
       multiple={true}
-      defaultValue={[monthFormat.format(new Date())]}
+      defaultValue={defaultMonth ? [defaultMonth] : []}
     >
       {Array.from(fixturesByMonth).map(([month, fixturesDict]) => (
         <AccordionItem key={month} value={month}>
