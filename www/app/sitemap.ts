@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   cacheTag(globalDataCacheTag);
 
   const leagueSitemaps: MetadataRoute.Sitemap[] = await Promise.all(
-    Array.from(leagues).map(async ([leagueCode]) => {
+    Array.from(leagues).map(async ([leagueCode, league]) => {
       const matches = await fetchMatches(leagueCode, year, {
         orderBy: { date: "desc" },
       });
@@ -23,11 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const teamSitemaps: MetadataRoute.Sitemap = Array.from(
         new Set(teamList),
       ).map((team) => ({
-        url: `https://footballpace.com/${leagueCode}/${year}/team/${team}`,
+        url: `https://footballpace.com/${leagueCode}/${year}/team/${encodeURIComponent(team)}`,
         changeFrequency: "daily",
         lastModified,
       }));
-      return [
+      const leagueUrls: MetadataRoute.Sitemap = [
         {
           url: `https://footballpace.com/${leagueCode}/${year}`,
           changeFrequency: "daily",
@@ -48,13 +48,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: "daily",
           lastModified,
         },
-        {
+      ];
+      if (league.fixtures) {
+        leagueUrls.push({
           url: `https://footballpace.com/${leagueCode}/${year}/upcoming`,
           changeFrequency: "daily",
           lastModified,
-        },
-        ...teamSitemaps,
-      ];
+        });
+      }
+      return [...leagueUrls, ...teamSitemaps];
     }),
   );
   const allLeagueSitemaps = leagueSitemaps.flat();
