@@ -13,6 +13,7 @@ import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
 import PaceTableCell from "../pace-display/pace-table-cell";
 import type { PaceTeam } from "@/lib/pace/pace-types";
+import { teamPath } from "@/lib/url/team-links";
 
 export default async function PaceTable({
   paceTeams,
@@ -52,7 +53,7 @@ export default async function PaceTable({
               <TableTd ta="center">{rowNum + startingPlace + 1}</TableTd>
               <TableTh ta="left" scope="row">
                 <AnchorLink
-                  href={`/${paceTeam.league}/${paceTeam.year}/team/${paceTeam.team}`}
+                  href={teamPath(paceTeam.league, paceTeam.year, paceTeam.team)}
                   inherit
                 >
                   {paceTeam.team}

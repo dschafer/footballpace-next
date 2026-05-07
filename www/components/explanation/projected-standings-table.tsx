@@ -11,6 +11,7 @@ import {
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
+import { teamPath } from "@/lib/url/team-links";
 
 export default async function ProjectedStandingsTable({
   league,
@@ -62,7 +63,7 @@ export default async function ProjectedStandingsTable({
               <TableTd ta="center">{i + 1}</TableTd>
               <TableTh ta="left" scope="row">
                 <AnchorLink
-                  href={`/${league}/${year}/team/${row.team}`}
+                  href={teamPath(league, year, row.team)}
                   inherit
                 >
                   {row.team}

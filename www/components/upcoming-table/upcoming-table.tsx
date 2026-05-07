@@ -29,6 +29,7 @@ import type { PaceFixture } from "@/lib/pace/pace-types";
 import UpcomingTableBlankCell from "./upcoming-table-blank-cell";
 import UpcomingTableCell from "./upcoming-table-cell";
 import { slicePaceTeams } from "@/lib/pace/pace-types";
+import { teamPath } from "@/lib/url/team-links";
 
 export default function UpcomingTable({
   standings,
@@ -207,7 +208,7 @@ export default function UpcomingTable({
                 <TableTh ta="center" key={team}>
                   <Text span size="lg" fw={700}>
                     <AnchorLink
-                      href={`/${league}/${year}/team/${team}`}
+                      href={teamPath(league, year, team)}
                       inherit
                       c="var(--mantine-color-text)"
                       underline="never"

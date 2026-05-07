@@ -1,6 +1,7 @@
 import { IconUsers, IconUsersGroup } from "@tabler/icons-react";
 import { ActiveNavLink } from "./active-nav-link";
 import { fetchStandings } from "@/lib/pace/standings";
+import { teamPath } from "@/lib/url/team-links";
 
 export async function TeamNavLinks({
   league,
@@ -17,15 +18,18 @@ export async function TeamNavLinks({
       prefixUrl={`/${league}/${year}/team`}
       leftSection={<IconUsersGroup />}
     >
-      {teams.map((team: string) => (
-        <ActiveNavLink
-          key={team}
-          href={`/${league}/${year}/team/${team}`}
-          label={team}
-          pageUrl={`/${league}/${year}/team/${team}`}
-          leftSection={<IconUsers />}
-        />
-      ))}
+      {teams.map((team: string) => {
+        const href = teamPath(league, year, team);
+        return (
+          <ActiveNavLink
+            key={team}
+            href={href}
+            label={team}
+            pageUrl={href}
+            leftSection={<IconUsers />}
+          />
+        );
+      })}
     </ActiveNavLink>
   );
 }

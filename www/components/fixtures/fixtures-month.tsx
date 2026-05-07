@@ -2,6 +2,7 @@ import { List, ListItem, Stack, Title } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Fixture } from "@/prisma/generated/client";
 import leagues from "@/lib/const/leagues";
+import { teamPath } from "@/lib/url/team-links";
 
 export default async function FixturesMonth({
   league,
@@ -39,7 +40,11 @@ export default async function FixturesMonth({
                     : "Rescheduled"}
                   ){" "}
                   <AnchorLink
-                    href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
+                    href={teamPath(
+                      fixture.league,
+                      fixture.year,
+                      fixture.homeTeam,
+                    )}
                     underline="never"
                     c="var(--mantine-color-text)"
                     inherit
@@ -48,7 +53,11 @@ export default async function FixturesMonth({
                   </AnchorLink>{" "}
                   vs.{" "}
                   <AnchorLink
-                    href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
+                    href={teamPath(
+                      fixture.league,
+                      fixture.year,
+                      fixture.awayTeam,
+                    )}
                     underline="never"
                     c="var(--mantine-color-text)"
                     inherit
@@ -69,7 +78,7 @@ export default async function FixturesMonth({
         {allFixtures.map((fixture, i) => (
           <ListItem key={i}>
             <AnchorLink
-              href={`/${fixture.league}/${fixture.year}/team/${fixture.homeTeam}`}
+              href={teamPath(fixture.league, fixture.year, fixture.homeTeam)}
               underline="never"
               c="var(--mantine-color-text)"
               inherit
@@ -78,7 +87,7 @@ export default async function FixturesMonth({
             </AnchorLink>{" "}
             vs.{" "}
             <AnchorLink
-              href={`/${fixture.league}/${fixture.year}/team/${fixture.awayTeam}`}
+              href={teamPath(fixture.league, fixture.year, fixture.awayTeam)}
               underline="never"
               c="var(--mantine-color-text)"
               inherit

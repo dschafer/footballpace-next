@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 import { fetchMatches } from "@/lib/pace/data";
 import { globalDataCacheTag } from "@/lib/cache-tags";
 import leagues from "@/lib/const/leagues";
+import { teamPath } from "@/lib/url/team-links";
 import year from "@/lib/const/year";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -23,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const teamSitemaps: MetadataRoute.Sitemap = Array.from(
         new Set(teamList),
       ).map((team) => ({
-        url: `https://footballpace.com/${leagueCode}/${year}/team/${encodeURIComponent(team)}`,
+        url: `https://footballpace.com${teamPath(leagueCode, year, team)}`,
         changeFrequency: "daily",
         lastModified,
       }));

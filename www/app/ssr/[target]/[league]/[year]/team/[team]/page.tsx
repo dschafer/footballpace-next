@@ -18,6 +18,7 @@ import TeamFixtures from "@/components/team-fixtures/team-fixtures";
 import { fetchMatches } from "@/lib/pace/data";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
+import { teamPath } from "@/lib/url/team-links";
 import year from "@/lib/const/year";
 
 export async function generateStaticParams(): Promise<
@@ -51,7 +52,7 @@ export async function generateMetadata(
   const { league, year, team } = await props.params;
   return {
     alternates: {
-      canonical: `/${league}/${year}/team/${encodeURIComponent(team)}`,
+      canonical: teamPath(league, year, team),
     },
   };
 }

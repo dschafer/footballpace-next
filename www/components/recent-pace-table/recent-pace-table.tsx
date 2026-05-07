@@ -15,6 +15,7 @@ import PaceTableCell from "../pace-display/pace-table-cell";
 import Result from "../pace-display/result";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { slicePaceTeams } from "@/lib/pace/pace-types";
+import { teamPath } from "@/lib/url/team-links";
 
 export default async function RecentPaceTable({
   rowCount,
@@ -76,7 +77,7 @@ export default async function RecentPaceTable({
                 </TableTd>
                 <TableTh ta="left" scope="row">
                   <AnchorLink
-                    href={`/${league}/${year}/team/${paceTeam.team}`}
+                    href={teamPath(league, year, paceTeam.team)}
                     inherit
                   >
                     {paceTeam.team}

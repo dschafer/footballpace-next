@@ -1,6 +1,7 @@
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Match } from "@/prisma/generated/client";
 import { Text } from "@mantine/core";
+import { teamPath } from "@/lib/url/team-links";
 
 export default function Result({
   match,
@@ -40,7 +41,7 @@ export default function Result({
   if (link) {
     homeTeam = (
       <AnchorLink
-        href={`/${match.league}/${match.year}/team/${match.homeTeam}`}
+        href={teamPath(match.league, match.year, match.homeTeam)}
         underline="never"
         c={homeC}
         fw={homeFw}
@@ -51,7 +52,7 @@ export default function Result({
     );
     awayTeam = (
       <AnchorLink
-        href={`/${match.league}/${match.year}/team/${match.awayTeam}`}
+        href={teamPath(match.league, match.year, match.awayTeam)}
         underline="never"
         c={awayC}
         fw={awayFw}

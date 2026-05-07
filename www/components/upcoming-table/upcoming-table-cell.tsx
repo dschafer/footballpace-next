@@ -9,6 +9,7 @@ import {
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { PaceFixture } from "@/lib/pace/pace-types";
 import leagues from "@/lib/const/leagues";
+import { teamPath } from "@/lib/url/team-links";
 import useFixtureDifficultyColor from "../pace-display/use-fixture-difficulty-color";
 
 export default function UpcomingTableCell(
@@ -29,7 +30,11 @@ export default function UpcomingTableCell(
         </Text>
         <Text span size="md">
           <AnchorLink
-            href={`/${paceFixture.fixture.league}/${paceFixture.fixture.year}/team/${paceFixture.opponent}`}
+            href={teamPath(
+              paceFixture.fixture.league,
+              paceFixture.fixture.year,
+              paceFixture.opponent,
+            )}
             inherit
             c={fg}
             underline="never"
