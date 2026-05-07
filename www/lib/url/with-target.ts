@@ -1,12 +1,20 @@
 import type { TargetKey } from "@/lib/pace/target-key";
 
-function isExternal(href: string) {
-  return /^(https?:)?\/\//.test(href) || href.startsWith("mailto:") || href.startsWith("tel:");
+export function isExternalHref(href: string) {
+  return (
+    /^(https?:)?\/\//.test(href) ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:")
+  );
+}
+
+export function isLocalPathHref(href: string) {
+  return href.startsWith("/") && !href.startsWith("//");
 }
 
 export function withTargetParam(href: string, targetKey: TargetKey): string {
   // Only decorate internal, relative links
-  if (!href || isExternal(href) || href.startsWith("#")) return href;
+  if (!href || isExternalHref(href) || href.startsWith("#")) return href;
 
   // Do not include param for default target
   if (targetKey === "champion") return href;
@@ -30,4 +38,3 @@ export function withTargetParam(href: string, targetKey: TargetKey): string {
     return `${href}${join}target=${encodeURIComponent(targetKey)}`;
   }
 }
-
