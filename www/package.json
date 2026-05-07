@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate --no-hints && next dev",
-    "build": "prisma generate --no-hints && prisma db push && next build",
+    "build": "prisma generate --no-hints && next build",
+    "db:push": "prisma db push",
     "start": "next start",
     "lint": "eslint .",
     "typegen": "prisma generate && next typegen",
