@@ -8,9 +8,24 @@ import {
 import { type NextRequest } from "next/server";
 import { revalidateTag } from "next/cache";
 
+function revalidateTags(tags: string[]) {
+  for (const tag of tags) {
+    revalidateTag(tag, "max");
+  }
+}
+
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
   const expectedToken = process.env.UPDATE_BEARER_TOKEN;
+
+  if (!expectedToken) {
+    return Response.json(
+      { message: "Update token is not configured." },
+      {
+        status: 500,
+      },
+    );
+  }
 
   if (authHeader !== `Bearer ${expectedToken}`) {
     return Response.json(
@@ -24,25 +39,46 @@ export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const league = searchParams.get("query");
   const yearParam = searchParams.get("year");
-  const year = yearParam == null ? null : Number(yearParam);
-  if (league && year != null && Number.isInteger(year)) {
-    revalidateTag(leagueCacheTag(league, year), "max");
-    revalidateTag(matchesCacheTag(league, year), "max");
-    revalidateTag(fixturesCacheTag(league, year), "max");
-    revalidateTag(paceSheetsCacheTag(league, year), "max");
+  if (league == null && yearParam == null) {
+    revalidateTags([globalDataCacheTag]);
     return Response.json(
-      { message: `Revalidated league ${league} and year ${year}.` },
-      {
-        status: 200,
-      },
-    );
-  } else {
-    revalidateTag(globalDataCacheTag, "max");
-    return Response.json(
-      { message: "Revalidated entire site." },
+      { message: "Revalidated entire site.", tags: [globalDataCacheTag] },
       {
         status: 200,
       },
     );
   }
+
+  if (!league || yearParam == null) {
+    return Response.json(
+      { message: "Scoped revalidation requires query and year parameters." },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  const year = Number(yearParam);
+  if (!/^\d+$/.test(yearParam) || year <= 0) {
+    return Response.json(
+      { message: "Scoped revalidation year must be a positive integer." },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  const tags = [
+    leagueCacheTag(league, year),
+    matchesCacheTag(league, year),
+    fixturesCacheTag(league, year),
+    paceSheetsCacheTag(league, year),
+  ];
+  revalidateTags(tags);
+  return Response.json(
+    { message: `Revalidated league ${league} and year ${year}.`, tags },
+    {
+      status: 200,
+    },
+  );
 }
