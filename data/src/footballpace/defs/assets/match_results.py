@@ -20,7 +20,7 @@ from footballpace.partitions import all_seasons_leagues_partition
 )
 def match_results_csv(
     context: dg.AssetExecutionContext, football_data: FootballDataResource
-) -> dg.Output[bytes]:
+) -> dg.MaterializeResult[bytes]:
     """Scrapes the latest CSV results from football-data.co.uk.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -36,8 +36,8 @@ def match_results_csv(
 
     data_version = bytes_data_version(results_data)
 
-    return dg.Output(
-        results_data,
+    return dg.MaterializeResult(
+        value=results_data,
         metadata={
             "size": len(results_data),
             "dagster/uri": football_data.url(season, league),
@@ -67,7 +67,7 @@ csv_dtypes = {
 )
 def match_results_df(
     context: dg.AssetExecutionContext, match_results_csv: bytes
-) -> dg.Output[pl.DataFrame]:
+) -> dg.MaterializeResult[pl.DataFrame]:
     """Convert the CSV from football-data.co.uk into a Polars DataFrame.
 
     API Docs: https://www.football-data.co.uk/notes.txt
@@ -136,8 +136,8 @@ def match_results_df(
         pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
 
-    return dg.Output(
-        df,
+    return dg.MaterializeResult(
+        value=df,
         metadata={
             "dagster/partition_row_count": len(df),
             "preview": markdown_metadata(pl.concat([df.head(), df.tail()])),
@@ -164,7 +164,7 @@ def match_results_df(
 )
 def match_results_postgres(
     match_results_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.Output[None]:
+) -> dg.MaterializeResult:
     """Writes the match results from football-data.co.uk into Postgres."""
     rowcount = vercel_postgres.upsert_matches(match_results_df.to_dicts())
-    return dg.Output(None, metadata={"dagster/partition_row_count": rowcount})
+    return dg.MaterializeResult(metadata={"dagster/partition_row_count": rowcount})

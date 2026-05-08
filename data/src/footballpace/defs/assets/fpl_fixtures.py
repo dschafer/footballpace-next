@@ -25,7 +25,7 @@ from footballpace.markdown import markdown_metadata
     code_version="v1",
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/bootstrap-static/"},
 )
-def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
+def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.MaterializeResult[bytes]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/bootstrap-static/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -37,8 +37,8 @@ def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
 
     data_version = bytes_data_version(bootstrap_json)
 
-    return dg.Output(
-        bootstrap_json,
+    return dg.MaterializeResult(
+        value=bootstrap_json,
         metadata={"size": len(bootstrap_json)},
         data_version=dg.DataVersion(data_version),
     )
@@ -50,7 +50,7 @@ def fpl_bootstrap_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     code_version="v1",
     metadata={"dagster/uri": "https://fantasy.premierleague.com/api/fixtures/"},
 )
-def fpl_fixtures_json(http_resource: HTTPResource) -> dg.Output[bytes]:
+def fpl_fixtures_json(http_resource: HTTPResource) -> dg.MaterializeResult[bytes]:
     """Pulls the bootstrap JSON from https://fantasy.premierleague.com/api/fixtures/.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -62,8 +62,8 @@ def fpl_fixtures_json(http_resource: HTTPResource) -> dg.Output[bytes]:
 
     data_version = bytes_data_version(fixtures_json)
 
-    return dg.Output(
-        fixtures_json,
+    return dg.MaterializeResult(
+        value=fixtures_json,
         metadata={"size": len(fixtures_json)},
         data_version=dg.DataVersion(data_version),
     )
@@ -83,7 +83,7 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
 def fpl_fixtures_df(
     fpl_bootstrap_json: bytes,
     fpl_fixtures_json: bytes,
-) -> dg.Output[pl.DataFrame]:
+) -> dg.MaterializeResult[pl.DataFrame]:
     """
     Convert the JSON from https://fantasy.premierleague.com into a Polars DataFrame.
 
@@ -133,8 +133,8 @@ def fpl_fixtures_df(
     metadata_teams = (
         pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
-    return dg.Output(
-        df,
+    return dg.MaterializeResult(
+        value=df,
         metadata={
             "dagster/row_count": len(df),
             "preview": markdown_metadata(pl.concat([df.head(), df.tail()])),
@@ -161,10 +161,10 @@ def fpl_fixtures_df(
 )
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.Output[None]:
+) -> dg.MaterializeResult:
     """Writes the fixtures from FPL into Postgres."""
     rowcount = vercel_postgres.upsert_fixtures(fpl_fixtures_df.to_dicts())
-    return dg.Output(None, metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})
 
 
 @dg.asset(
@@ -175,7 +175,9 @@ def fpl_fixtures_postgres(
     dagster_type=MatchDagsterType,
     automation_condition=eager_respecting_data_version,
 )
-def fpl_results_df(fpl_fixtures_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
+def fpl_results_df(
+    fpl_fixtures_df: pl.DataFrame,
+) -> dg.MaterializeResult[pl.DataFrame]:
     """
     Convert the JSON from https://fantasy.premierleague.com into completed matches,
     then convert them to our standard results format for eventual DB writes.
@@ -207,8 +209,8 @@ def fpl_results_df(fpl_fixtures_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
     metadata_teams = (
         pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )
-    return dg.Output(
-        df,
+    return dg.MaterializeResult(
+        value=df,
         metadata={
             "dagster/row_count": len(df),
             "preview": markdown_metadata(df.head()),
@@ -235,7 +237,7 @@ def fpl_results_df(fpl_fixtures_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
 )
 def fpl_results_postgres(
     fpl_results_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.Output[None]:
+) -> dg.MaterializeResult:
     """Writes the results from FPL into Postgres."""
     rowcount = vercel_postgres.upsert_matches(fpl_results_df.to_dicts())
-    return dg.Output(None, metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})

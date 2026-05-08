@@ -26,7 +26,7 @@ from footballpace.markdown import markdown_metadata
 def match_results_with_finish_df(
     match_results_df: pl.DataFrame,
     standings_rows_df: pl.DataFrame,
-) -> dg.Output[pl.DataFrame]:
+) -> dg.MaterializeResult[pl.DataFrame]:
     """Annotate match results with each team's finish. Note that this isn't needed
     for match results themselves, only for pace sheets, but it needs to live in the
     match results group because it shares a partition structure with that group and
@@ -51,8 +51,8 @@ def match_results_with_finish_df(
         on="away_team",
     )
 
-    return dg.Output(
-        match_results_finish_df,
+    return dg.MaterializeResult(
+        value=match_results_finish_df,
         metadata={
             "dagster/partition_row_count": len(match_results_finish_df),
             "preview": markdown_metadata(match_results_finish_df.head()),

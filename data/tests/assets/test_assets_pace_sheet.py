@@ -16,13 +16,13 @@ def helper_get_match_results_with_finish(year: str, filename: str) -> pl.DataFra
         partition_key=dg.MultiPartitionKey({"season": year})
     )
     match_results_df_output = match_results_df(context_year, bytes)
-    assert isinstance(match_results_df_output, dg.Output)
+    assert isinstance(match_results_df_output, dg.MaterializeResult)
     standings_rows_df_output = standings_rows_df(match_results_df_output.value)
-    assert isinstance(standings_rows_df_output, dg.Output)
+    assert isinstance(standings_rows_df_output, dg.MaterializeResult)
     match_results_with_finish_df_output = match_results_with_finish_df(
         match_results_df_output.value, standings_rows_df_output.value
     )
-    assert isinstance(match_results_with_finish_df_output, dg.Output)
+    assert isinstance(match_results_with_finish_df_output, dg.MaterializeResult)
     return match_results_with_finish_df_output.value
 
 
@@ -41,7 +41,7 @@ def test_pace_sheet_entries():
         context_23,
         {"2021": match_results_with_finish_21, "2022": match_results_with_finish_22},
     )
-    assert isinstance(pace_sheet_entries_df_output, dg.Output)
+    assert isinstance(pace_sheet_entries_df_output, dg.MaterializeResult)
     pace_sheet_entries = pace_sheet_entries_df_output.value
     assert isinstance(pace_sheet_entries, pl.DataFrame)
     assert len(pace_sheet_entries) == (19 * 6)
@@ -86,7 +86,7 @@ def test_pace_sheet_entries_other_league_relegation():
         context_23,
         {"2021": match_results_with_finish_21, "2022": match_results_with_finish_22},
     )
-    assert isinstance(pace_sheet_entries_df_output, dg.Output)
+    assert isinstance(pace_sheet_entries_df_output, dg.MaterializeResult)
     pace_sheet_entries = pace_sheet_entries_df_output.value
     assert isinstance(pace_sheet_entries, pl.DataFrame)
     assert len(pace_sheet_entries) == (19 * 6)

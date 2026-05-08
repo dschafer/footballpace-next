@@ -16,7 +16,7 @@ def test_match_results_df_93():
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "1993"})),
         bytes,
     )
-    assert isinstance(df_output, dg.Output)
+    assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
     assert isinstance(df, pl.DataFrame)
     assert len(df) == (22 * 21)
@@ -30,7 +30,7 @@ def test_match_results_df_22():
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
         bytes,
     )
-    assert isinstance(df_output, dg.Output)
+    assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
     assert isinstance(df, pl.DataFrame)
     assert len(df) == (20 * 19)
@@ -44,7 +44,7 @@ def test_match_results_postgres():
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
         bytes,
     )
-    assert isinstance(df_output, dg.Output)
+    assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
 
     class FakeVercelPostgresResource:
@@ -53,5 +53,6 @@ def test_match_results_postgres():
             return 20 * 19
 
     output = match_results_postgres(df, FakeVercelPostgresResource())
-    assert isinstance(output, dg.Output)
-    assert output.metadata["dagster/partition_row_count"].value == (20 * 19)
+    assert isinstance(output, dg.MaterializeResult)
+    assert output.metadata is not None
+    assert output.metadata["dagster/partition_row_count"] == (20 * 19)

@@ -15,13 +15,13 @@ def test_match_results_with_finish():
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
         bytes,
     )
-    assert isinstance(match_results_df_output, dg.Output)
+    assert isinstance(match_results_df_output, dg.MaterializeResult)
     standings_rows_df_output = standings_rows_df(match_results_df_output.value)
-    assert isinstance(standings_rows_df_output, dg.Output)
+    assert isinstance(standings_rows_df_output, dg.MaterializeResult)
     match_results_with_finish_df_output = match_results_with_finish_df(
         match_results_df_output.value, standings_rows_df_output.value
     )
-    assert isinstance(match_results_with_finish_df_output, dg.Output)
+    assert isinstance(match_results_with_finish_df_output, dg.MaterializeResult)
     df = match_results_with_finish_df_output.value
     assert isinstance(df, pl.DataFrame)
     assert len(df) == (20 * 19)

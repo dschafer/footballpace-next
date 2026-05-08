@@ -8,7 +8,7 @@ from .read_file import read_teamcolors_bytes
 
 def test_team_colors_df():
     df_output = team_colors_df(read_teamcolors_bytes("teams.json"))
-    assert isinstance(df_output, dg.Output)
+    assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
     assert isinstance(df, pl.DataFrame)
     assert len(df) == 20

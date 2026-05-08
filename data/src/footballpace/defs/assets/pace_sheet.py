@@ -54,7 +54,7 @@ LEAGUE_TEAM_FINISH_DF = league_team_finish_df()
 def pace_sheet_entries_df(
     context: dg.AssetExecutionContext,
     match_results_with_finish_df: dict[str, pl.DataFrame],
-) -> dg.Output[pl.DataFrame]:
+) -> dg.MaterializeResult[pl.DataFrame]:
     """Determine the expected pace for each match in each league and season."""
     assert isinstance(context.partition_key, dg.MultiPartitionKey)
     season = int(context.partition_key.keys_by_dimension["predicted_season"])
@@ -100,8 +100,8 @@ def pace_sheet_entries_df(
         .with_columns(year=season)
     )
 
-    return dg.Output(
-        summarized_results,
+    return dg.MaterializeResult(
+        value=summarized_results,
         metadata={
             "dagster/partition_row_count": len(summarized_results),
             "preview": markdown_metadata(summarized_results.head()),
@@ -123,9 +123,9 @@ def pace_sheet_entries_df(
 )
 def pace_sheet_entries_postgres(
     pace_sheet_entries_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.Output[None]:
+) -> dg.MaterializeResult:
     """Writes the pace sheet entires into Postgres."""
     rowcount = vercel_postgres.upsert_pace_sheet_entries(
         pace_sheet_entries_df.to_dicts()
     )
-    return dg.Output(None, metadata={"dagster/partition_row_count": rowcount})
+    return dg.MaterializeResult(metadata={"dagster/partition_row_count": rowcount})

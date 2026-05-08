@@ -19,7 +19,7 @@ from footballpace.markdown import markdown_metadata
         "dagster/uri": "https://raw.githubusercontent.com/jimniels/teamcolors/refs/heads/main/src/teams.json"
     },
 )
-def team_colors_json(http_resource: HTTPResource) -> dg.Output[bytes]:
+def team_colors_json(http_resource: HTTPResource) -> dg.MaterializeResult[bytes]:
     """Scrapes the latest JSON colors from jimniels/teamcolors.
 
     Business logic here should be kept to an absolute minimum, so that the
@@ -31,8 +31,8 @@ def team_colors_json(http_resource: HTTPResource) -> dg.Output[bytes]:
 
     data_version = bytes_data_version(teams_json)
 
-    return dg.Output(
-        teams_json,
+    return dg.MaterializeResult(
+        value=teams_json,
         metadata={"size": len(teams_json)},
         data_version=dg.DataVersion(data_version),
     )
@@ -46,7 +46,7 @@ def team_colors_json(http_resource: HTTPResource) -> dg.Output[bytes]:
     metadata=TeamColorsDagsterType.metadata,
     automation_condition=eager_respecting_data_version,
 )
-def team_colors_df(team_colors_json: bytes) -> dg.Output[pl.DataFrame]:
+def team_colors_df(team_colors_json: bytes) -> dg.MaterializeResult[pl.DataFrame]:
     """Convert the JSON from jimniels/teamcolors into a Polars DataFrame."""
 
     all_teams_obj = json.loads(team_colors_json)
@@ -58,8 +58,8 @@ def team_colors_df(team_colors_json: bytes) -> dg.Output[pl.DataFrame]:
     )
     metadata_teams = epl_teams.get_column("team").sort().unique().to_list()
 
-    return dg.Output(
-        epl_teams,
+    return dg.MaterializeResult(
+        value=epl_teams,
         metadata={
             "dagster/row_count": len(epl_teams),
             "preview": markdown_metadata(epl_teams.head()),
@@ -82,7 +82,7 @@ def team_colors_df(team_colors_json: bytes) -> dg.Output[pl.DataFrame]:
 )
 def team_colors_postgres(
     team_colors_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.Output[None]:
+) -> dg.MaterializeResult:
     """Writes the team colors into Postgres."""
     rowcount = vercel_postgres.upsert_team_colors(team_colors_df.to_dicts())
-    return dg.Output(None, metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})

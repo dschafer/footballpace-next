@@ -19,7 +19,9 @@ from footballpace.partitions import all_seasons_leagues_partition
     ins={"match_results_df": dg.AssetIn(dagster_type=MatchDagsterType)},
     automation_condition=eager_respecting_data_version,
 )
-def standings_rows_df(match_results_df: pl.DataFrame) -> dg.Output[pl.DataFrame]:
+def standings_rows_df(
+    match_results_df: pl.DataFrame,
+) -> dg.MaterializeResult[pl.DataFrame]:
     """Transform the Match Results data frame into a Standings Table."""
 
     home_df = match_results_df.rename(
@@ -57,8 +59,8 @@ def standings_rows_df(match_results_df: pl.DataFrame) -> dg.Output[pl.DataFrame]
         .sort(by=["points", "goal_difference", "goals_for"], descending=True)
     )
 
-    return dg.Output(
-        standings_df,
+    return dg.MaterializeResult(
+        value=standings_df,
         metadata={
             "dagster/partition_row_count": len(standings_df),
             "preview": markdown_metadata(standings_df.head()),
