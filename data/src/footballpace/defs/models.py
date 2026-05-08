@@ -57,7 +57,7 @@ class TeamColors(pt.Model):
     secondary_color: str | None = pt.Field(min_length=6, max_length=6)
 
     @staticmethod
-    def from_json(team_json) -> "TeamColors":
+    def from_json(team_json) -> TeamColors:
         colors = team_json["colors"]["hex"]
         return TeamColors(
             team=team_json["name"],
