@@ -11,10 +11,10 @@ from .read_file import read_csv_bytes
 
 
 def test_match_results_df_93():
-    bytes = read_csv_bytes("E0_1993.csv")
+    csv_bytes = read_csv_bytes("E0_1993.csv")
     df_output = match_results_df(
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "1993"})),
-        bytes,
+        csv_bytes,
     )
     assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
@@ -25,10 +25,10 @@ def test_match_results_df_93():
 
 
 def test_match_results_df_22():
-    bytes = read_csv_bytes("E0_2022.csv")
+    csv_bytes = read_csv_bytes("E0_2022.csv")
     df_output = match_results_df(
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
-        bytes,
+        csv_bytes,
     )
     assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value
@@ -39,10 +39,10 @@ def test_match_results_df_22():
 
 
 def test_match_results_postgres():
-    bytes = read_csv_bytes("E0_2022.csv")
+    csv_bytes = read_csv_bytes("E0_2022.csv")
     df_output = match_results_df(
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
-        bytes,
+        csv_bytes,
     )
     assert isinstance(df_output, dg.MaterializeResult)
     df = df_output.value

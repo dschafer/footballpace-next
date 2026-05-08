@@ -70,7 +70,7 @@ def fpl_fixtures_json(http_resource: HTTPResource) -> dg.MaterializeResult[bytes
 
 
 def team_idents(bootstrap_obj) -> dict[int, str]:
-    return dict([(team["id"], team["name"]) for team in bootstrap_obj["teams"]])
+    return {team["id"]: team["name"] for team in bootstrap_obj["teams"]}
 
 
 @dg.asset(

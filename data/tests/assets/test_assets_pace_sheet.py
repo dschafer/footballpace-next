@@ -11,11 +11,11 @@ from .read_file import read_csv_bytes
 
 
 def helper_get_match_results_with_finish(year: str, filename: str) -> pl.DataFrame:
-    bytes = read_csv_bytes(filename)
+    csv_bytes = read_csv_bytes(filename)
     context_year = dg.build_asset_context(
         partition_key=dg.MultiPartitionKey({"season": year})
     )
-    match_results_df_output = match_results_df(context_year, bytes)
+    match_results_df_output = match_results_df(context_year, csv_bytes)
     assert isinstance(match_results_df_output, dg.MaterializeResult)
     standings_rows_df_output = standings_rows_df(match_results_df_output.value)
     assert isinstance(standings_rows_df_output, dg.MaterializeResult)

@@ -10,10 +10,10 @@ from .read_file import read_csv_bytes
 
 
 def test_match_results_with_finish():
-    bytes = read_csv_bytes("E0_2022.csv")
+    csv_bytes = read_csv_bytes("E0_2022.csv")
     match_results_df_output = match_results_df(
         dg.build_asset_context(partition_key=dg.MultiPartitionKey({"season": "2022"})),
-        bytes,
+        csv_bytes,
     )
     assert isinstance(match_results_df_output, dg.MaterializeResult)
     standings_rows_df_output = standings_rows_df(match_results_df_output.value)

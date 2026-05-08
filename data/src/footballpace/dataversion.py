@@ -9,9 +9,9 @@ def df_data_version(df: pl.DataFrame) -> str:
     return str(df.hash_rows().implode().hash().item())
 
 
-def bytes_data_version(bytes: bytes) -> str:
-    """Helper function to compute the data version of a bytes."""
-    return sha256(bytes).hexdigest()
+def bytes_data_version(data: bytes) -> str:
+    """Helper function to compute the data version of bytes."""
+    return sha256(data).hexdigest()
 
 
 eager_respecting_data_version = (
