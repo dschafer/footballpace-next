@@ -1,5 +1,7 @@
+from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
+from typing import Self
 
 import dagster as dg
 import psycopg
@@ -17,7 +19,7 @@ class VercelPostgresResource(dg.ConfigurableResource):
     _db_connection: psycopg.Connection = PrivateAttr()
 
     @contextmanager
-    def yield_for_execution(self, context: dg.InitResourceContext):
+    def yield_for_execution(self, context: dg.InitResourceContext) -> Iterator[Self]:
         with psycopg.connect(
             host=self.host,
             dbname=self.dbname,

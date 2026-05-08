@@ -1,4 +1,6 @@
+from collections.abc import Iterator
 from contextlib import contextmanager
+from typing import Self
 
 import dagster as dg
 import httpx
@@ -11,11 +13,11 @@ class HTTPResource(dg.ConfigurableResource):
     _httpx_client: httpx.Client = PrivateAttr()
 
     @contextmanager
-    def yield_for_execution(self, context: dg.InitResourceContext):
+    def yield_for_execution(self, context: dg.InitResourceContext) -> Iterator[Self]:
         with httpx.Client() as c:
             self._httpx_client = c
             yield self
 
-    def get(self, url) -> httpx.Response:
+    def get(self, url: str) -> httpx.Response:
         """Get the provided URL."""
         return self._httpx_client.get(url).raise_for_status()
