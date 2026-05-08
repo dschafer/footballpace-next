@@ -1,6 +1,7 @@
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import date
+import warnings
 
 import dagster as dg
 
@@ -55,20 +56,27 @@ def seasons_to_predicted_seasons(
     return {k: list(v) for k, v in mapping.items()}
 
 
-predicted_seasons_of_league_mapping = dg.MultiPartitionMapping(
-    {
-        "season": dg.DimensionPartitionMapping(
-            dimension_name="predicted_season",
-            partition_mapping=dg.StaticPartitionMapping(
-                {
-                    str(k): list(map(str, v))
-                    for k, v in seasons_to_predicted_seasons(ALL_SEASONS, 10).items()
-                }
+with warnings.catch_warnings():
+    warnings.filterwarnings(
+        "ignore",
+        category=dg.BetaWarning,
+    )
+    predicted_seasons_of_league_mapping = dg.MultiPartitionMapping(
+        {
+            "season": dg.DimensionPartitionMapping(
+                dimension_name="predicted_season",
+                partition_mapping=dg.StaticPartitionMapping(
+                    {
+                        str(k): list(map(str, v))
+                        for k, v in seasons_to_predicted_seasons(
+                            ALL_SEASONS, 10
+                        ).items()
+                    }
+                ),
             ),
-        ),
-        "league": dg.DimensionPartitionMapping(
-            dimension_name="league",
-            partition_mapping=dg.IdentityPartitionMapping(),
-        ),
-    }
-)
+            "league": dg.DimensionPartitionMapping(
+                dimension_name="league",
+                partition_mapping=dg.IdentityPartitionMapping(),
+            ),
+        }
+    )
