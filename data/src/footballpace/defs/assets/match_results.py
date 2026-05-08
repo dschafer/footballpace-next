@@ -131,7 +131,9 @@ def match_results_df(
     ).collect()
 
     # We need to use strict=False above, hence this check
-    assert not df["date"].has_nulls()
+    if df["date"].has_nulls():
+        raise dg.Failure(description="CSV contained at least one invalid match date.")
+
     metadata_teams = (
         pl.concat([df["home_team"], df["away_team"]]).sort().unique().to_list()
     )

@@ -60,7 +60,8 @@ def pace_sheet_entries_df(
     season = int(context.partition_key.keys_by_dimension["predicted_season"])
 
     all_match_results_with_finish = pl.concat(match_results_with_finish_df.values())
-    assert season not in all_match_results_with_finish["year"]
+    if season in all_match_results_with_finish["year"]:
+        raise dg.Failure(description="Pace sheet inputs included predicted season.")
 
     home_results = (
         all_match_results_with_finish.clone()
