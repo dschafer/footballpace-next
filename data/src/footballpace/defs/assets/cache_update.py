@@ -1,11 +1,7 @@
-import os
-
 import dagster as dg
-import httpx
 
+from footballpace.defs.resources.cache_update import CacheUpdateResource
 from footballpace.row_count import has_nonzero_row_count
-
-API_UPDATE_URL = "https://footballpace.com/api/update"
 
 
 @dg.asset(
@@ -22,7 +18,9 @@ API_UPDATE_URL = "https://footballpace.com/api/update"
         "team_colors_postgres",
     ],
 )
-def cache_update(context: dg.AssetExecutionContext) -> None:
+def cache_update(
+    context: dg.AssetExecutionContext, cache_update_resource: CacheUpdateResource
+) -> None:
     """
     Make sure that Next.js updates its caches.
 
@@ -30,8 +28,5 @@ def cache_update(context: dg.AssetExecutionContext) -> None:
     write to a DB and hence require a downstream effect.
     """
 
-    bearer_token = os.getenv("UPDATE_BEARER_TOKEN")
-    headers = {"Authorization": f"Bearer {bearer_token}"}
-
-    response = httpx.post(API_UPDATE_URL, headers=headers).raise_for_status()
-    context.log.info(response.text)
+    response = cache_update_resource.update()
+    context.log.info(response)
