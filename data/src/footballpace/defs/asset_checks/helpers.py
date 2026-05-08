@@ -1,7 +1,8 @@
 import json
 import re
+from collections.abc import Iterable
 from io import StringIO
-from typing import Any, Iterable
+from typing import Any
 
 import dagster as dg
 import polars as pl

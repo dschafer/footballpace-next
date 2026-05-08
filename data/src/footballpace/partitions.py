@@ -1,6 +1,6 @@
 from collections import defaultdict
+from collections.abc import Mapping, Sequence
 from datetime import date
-from typing import Mapping, Sequence
 
 import dagster as dg
 

@@ -1,5 +1,5 @@
 import datetime
-from typing import Literal, Optional
+from typing import Literal
 
 from dagster_polars.patito import patito_model_to_dagster_type
 import patito as pt
@@ -22,7 +22,7 @@ MatchDagsterType = patito_model_to_dagster_type(Match)
 class Fixture(pt.Model):
     league: str
     year: int
-    kickoff_time: Optional[datetime.datetime]
+    kickoff_time: datetime.datetime | None
     home_team: str
     away_team: str
 
@@ -32,8 +32,8 @@ FixtureDagsterType = patito_model_to_dagster_type(Fixture)
 
 class FPLFixture(Fixture):
     finished_provisional: bool
-    ft_home_goals: Optional[int] = pt.Field(ge=0)
-    ft_away_goals: Optional[int] = pt.Field(ge=0)
+    ft_home_goals: int | None = pt.Field(ge=0)
+    ft_away_goals: int | None = pt.Field(ge=0)
 
 
 FPLFixtureDagsterType = patito_model_to_dagster_type(FPLFixture)
@@ -54,7 +54,7 @@ PaceSheetEntryDagsterType = patito_model_to_dagster_type(PaceSheetEntry)
 class TeamColors(pt.Model):
     team: str = pt.Field(unique=True)
     primary_color: str = pt.Field(min_length=6, max_length=6)
-    secondary_color: Optional[str] = pt.Field(min_length=6, max_length=6)
+    secondary_color: str | None = pt.Field(min_length=6, max_length=6)
 
     @staticmethod
     def from_json(team_json) -> "TeamColors":
