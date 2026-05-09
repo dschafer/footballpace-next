@@ -1,6 +1,10 @@
 import { ImageResponse } from "next/og";
+import { cacheLife } from "next/cache";
 
 async function loadInterFont(weight: number): Promise<ArrayBuffer> {
+  "use cache";
+  cacheLife("max");
+
   const url = `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`;
   const css = await (await fetch(url)).text();
   const resource = /src: url\((.+)\) format\('(opentype|truetype)'\)/.exec(css);
