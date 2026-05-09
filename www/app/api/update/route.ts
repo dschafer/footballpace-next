@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   }
 
   const searchParams = request.nextUrl.searchParams;
-  const league = searchParams.get("query");
+  const league = searchParams.get("league");
   const yearParam = searchParams.get("year");
   if (league == null && yearParam == null) {
     revalidateTags([globalDataCacheTag]);
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
   if (!league || yearParam == null) {
     return Response.json(
-      { message: "Scoped revalidation requires query and year parameters." },
+      { message: "Scoped revalidation requires league and year parameters." },
       {
         status: 400,
       },
