@@ -8,7 +8,7 @@ import {
   Title,
 } from "@mantine/core";
 import {
-  TARGET_KEYS,
+  PRERENDER_TARGET_KEYS,
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
@@ -19,7 +19,7 @@ import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
 
 export function generateStaticParams() {
-  return TARGET_KEYS.map((target) => ({ target }));
+  return PRERENDER_TARGET_KEYS.map((target) => ({ target }));
 }
 
 export const metadata: Metadata = {

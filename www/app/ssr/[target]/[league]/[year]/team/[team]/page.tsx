@@ -1,10 +1,10 @@
-import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
-import { Stack, Text, Title } from "@mantine/core";
 import {
-  TARGET_KEYS,
+  PRERENDER_TARGET_KEYS,
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
+import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
+import { Stack, Text, Title } from "@mantine/core";
 import { slicePaceTeams, slicePaceTeamsStart } from "@/lib/pace/pace-types";
 
 import AnchorLink from "@/components/anchor-link/anchor-link";
@@ -26,23 +26,20 @@ export async function generateStaticParams(): Promise<
     target: TargetKey;
   })[]
 > {
-  // Only statically generate the EPL teams since that's most used.
+  // Only statically generate EPL champion pages since those are most used.
   const matches = await fetchMatches("E0", year);
-  const params = new Set<SeasonPageParam>();
+  const params = new Map<string, SeasonPageParam>();
   for (const m of matches) {
-    params.add({
-      league: m.league,
-      year: "" + m.year,
-      team: m.homeTeam,
-    });
-    params.add({
-      league: m.league,
-      year: "" + m.year,
-      team: m.awayTeam,
-    });
+    for (const team of [m.homeTeam, m.awayTeam]) {
+      params.set(`${m.league}/${m.year}/${team}`, {
+        league: m.league,
+        year: "" + m.year,
+        team,
+      });
+    }
   }
-  return TARGET_KEYS.flatMap((target) =>
-    Array.from(params).map((p) => ({ ...p, target })),
+  return PRERENDER_TARGET_KEYS.flatMap((target) =>
+    Array.from(params.values()).map((p) => ({ ...p, target })),
   );
 }
 

@@ -9,6 +9,10 @@ export const TARGET_KEYS = [
   "safe",
 ] as const satisfies readonly TargetKey[];
 
+export const PRERENDER_TARGET_KEYS = [
+  "champion",
+] as const satisfies readonly TargetKey[];
+
 import leagues from "@/lib/const/leagues";
 
 export function targetKeyToFinish(league: string): Record<TargetKey, number> {

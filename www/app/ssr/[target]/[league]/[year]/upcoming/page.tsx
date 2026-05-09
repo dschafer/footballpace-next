@@ -4,16 +4,15 @@ import {
 } from "@/lib/pace/standings";
 import {
   type LeagueYearParam,
-  currentSeasons,
+  PRERENDER_SEASONS,
   validateLeagueYear,
 } from "@/lib/const/current";
-import { Stack, Title } from "@mantine/core";
-
 import {
-  TARGET_KEYS,
+  PRERENDER_TARGET_KEYS,
   type TargetKey,
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
+import { Stack, Title } from "@mantine/core";
 import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
 import type { Metadata } from "next/types";
 import { type PaceFixture } from "@/lib/pace/pace-types";
@@ -24,8 +23,8 @@ import { fetchPaceFixtures } from "@/lib/pace/pace";
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {
-  return TARGET_KEYS.flatMap((target) =>
-    currentSeasons.map((p) => ({ ...p, target })),
+  return PRERENDER_TARGET_KEYS.flatMap((target) =>
+    PRERENDER_SEASONS.map((p) => ({ ...p, target })),
   );
 }
 

@@ -27,6 +27,10 @@ export const currentSeasons: LeagueYearParam[] = Array.from(
   })),
 );
 
+export const PRERENDER_SEASONS: LeagueYearParam[] = currentSeasons.filter(
+  ({ league }) => league === "E0",
+);
+
 /**
  * This parses the league and year for any page that gets passed that, and
  * either returns info about the league (and the year as a number). If either

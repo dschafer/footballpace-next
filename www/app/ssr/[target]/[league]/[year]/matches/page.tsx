@@ -1,10 +1,10 @@
 import {
   type LeagueYearParam,
-  currentSeasons,
+  PRERENDER_SEASONS,
   validateLeagueYear,
 } from "@/lib/const/current";
+import { PRERENDER_TARGET_KEYS, type TargetKey } from "@/lib/pace/target-key";
 import { SimpleGrid, Stack, Title } from "@mantine/core";
-import { TARGET_KEYS, type TargetKey } from "@/lib/pace/target-key";
 import LeagueFixtures from "@/components/fixtures/league-fixtures";
 import Matches from "@/components/matches/matches";
 import type { Metadata } from "next/types";
@@ -12,8 +12,8 @@ import type { Metadata } from "next/types";
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {
-  return TARGET_KEYS.flatMap((target) =>
-    currentSeasons.map((p) => ({ ...p, target })),
+  return PRERENDER_TARGET_KEYS.flatMap((target) =>
+    PRERENDER_SEASONS.map((p) => ({ ...p, target })),
   );
 }
 
