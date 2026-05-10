@@ -10,6 +10,7 @@ import {
 
 import { ActiveNavLink } from "./active-nav-link";
 import Image from "next/image";
+import { Suspense } from "react";
 import { TeamNavLinks } from "./team-nav-links";
 import leagues from "@/lib/const/leagues";
 import year from "@/lib/const/year";
@@ -65,7 +66,9 @@ export default function NavLinks() {
               leftSection={<IconVersions />}
             />
           ) : null}
-          <TeamNavLinks league={leagueCode} year={year} />
+          <Suspense>
+            <TeamNavLinks league={leagueCode} year={year} />
+          </Suspense>
         </ActiveNavLink>
       ))}
       <ActiveNavLink
