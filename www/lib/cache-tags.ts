@@ -1,5 +1,4 @@
 export const globalDataCacheTag = "data";
-export const teamColorsCacheTag = "team-colors";
 
 export function leagueCacheTag(league: string, year: number): string {
   return `league:${league}:${year}`;
