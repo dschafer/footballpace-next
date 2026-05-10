@@ -18,13 +18,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # Then, use a final image without uv
 FROM python:3.14-slim-trixie
 
-RUN groupadd --system --gid 999 nonroot \
-    && useradd --system --gid 999 --uid 999 --create-home nonroot
-
-COPY --from=builder --chown=nonroot:nonroot /opt/dagster/app /opt/dagster/app
+COPY --from=builder /opt/dagster/app /opt/dagster/app
 ENV PATH="/opt/dagster/app/.venv/bin:$PATH"
 
-USER nonroot
 WORKDIR /opt/dagster/app
 
 EXPOSE 4000
