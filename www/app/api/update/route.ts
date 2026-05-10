@@ -1,6 +1,5 @@
 import {
   fixturesCacheTag,
-  globalDataCacheTag,
   leagueCacheTag,
   matchesCacheTag,
   paceSheetsCacheTag,
@@ -39,15 +38,6 @@ export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const league = searchParams.get("league");
   const yearParam = searchParams.get("year");
-  if (league == null && yearParam == null) {
-    revalidateTags([globalDataCacheTag]);
-    return Response.json(
-      { message: "Revalidated entire site.", tags: [globalDataCacheTag] },
-      {
-        status: 200,
-      },
-    );
-  }
 
   if (!league || yearParam == null) {
     return Response.json(

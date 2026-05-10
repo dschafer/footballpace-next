@@ -8,7 +8,6 @@ import type {
 import { cacheLife, cacheTag } from "next/cache";
 import {
   fixturesCacheTag,
-  globalDataCacheTag,
   leagueCacheTag,
   matchesCacheTag,
   paceSheetsCacheTag,
@@ -68,11 +67,7 @@ async function fetchCachedMatches(
 ): Promise<Match[]> {
   "use cache";
   cacheLife("max");
-  cacheTag(
-    globalDataCacheTag,
-    leagueCacheTag(league, year),
-    matchesCacheTag(league, year),
-  );
+  cacheTag(leagueCacheTag(league, year), matchesCacheTag(league, year));
 
   return findMatches(league, year, args);
 }
@@ -106,11 +101,7 @@ async function fetchCachedFixtures(
 ): Promise<Fixture[]> {
   "use cache";
   cacheLife("max");
-  cacheTag(
-    globalDataCacheTag,
-    leagueCacheTag(league, year),
-    fixturesCacheTag(league, year),
-  );
+  cacheTag(leagueCacheTag(league, year), fixturesCacheTag(league, year));
 
   return findFixtures(league, year, args);
 }
@@ -149,7 +140,6 @@ async function fetchCachedPaceSheetEntries(
   "use cache";
   cacheLife("max");
   cacheTag(
-    globalDataCacheTag,
     paceSheetsCacheTag(league, year),
     targetPaceSheetsCacheTag(league, year, targetFinish),
   );

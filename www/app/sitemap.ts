@@ -1,7 +1,6 @@
-import { cacheLife, cacheTag } from "next/cache";
 import type { MetadataRoute } from "next";
+import { cacheLife } from "next/cache";
 import { fetchMatches } from "@/lib/pace/data";
-import { globalDataCacheTag } from "@/lib/cache-tags";
 import leagues from "@/lib/const/leagues";
 import { teamPath } from "@/lib/url/team-links";
 import year from "@/lib/const/year";
@@ -9,7 +8,6 @@ import year from "@/lib/const/year";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   "use cache";
   cacheLife("max");
-  cacheTag(globalDataCacheTag);
 
   const leagueSitemaps: MetadataRoute.Sitemap[] = await Promise.all(
     Array.from(leagues).map(async ([leagueCode, league]) => {
