@@ -14,6 +14,7 @@ import {
   targetPaceSheetsCacheTag,
 } from "@/lib/cache-tags";
 import { PRERENDER_SEASONS } from "@/lib/const/current";
+import { connection } from "next/server";
 import prisma from "@/lib/prisma";
 import { targetKeyToFinish } from "@/lib/pace/target-key";
 
@@ -49,18 +50,7 @@ function shouldCachePaceSheetData(
   );
 }
 
-async function findMatches(
-  league: string,
-  year: number,
-  args: MatchFindManyArgs,
-): Promise<Match[]> {
-  return prisma.match.findMany({
-    ...args,
-    where: { AND: [{ league, year }, args.where ?? {}] },
-  });
-}
-
-async function fetchCachedMatches(
+export async function fetchCachedMatches(
   league: string,
   year: number,
   args: MatchFindManyArgs = {},
@@ -69,7 +59,10 @@ async function fetchCachedMatches(
   cacheLife("max");
   cacheTag(leagueCacheTag(league, year), matchesCacheTag(league, year));
 
-  return findMatches(league, year, args);
+  return prisma.match.findMany({
+    ...args,
+    where: { AND: [{ league, year }, args.where ?? {}] },
+  });
 }
 
 export async function fetchMatches(
@@ -77,24 +70,13 @@ export async function fetchMatches(
   year: number,
   args: MatchFindManyArgs = {},
 ): Promise<Match[]> {
-  if (shouldCacheSeasonData(league, year)) {
-    return fetchCachedMatches(league, year, args);
+  if (!shouldCacheSeasonData(league, year)) {
+    await connection();
   }
-  return findMatches(league, year, args);
+  return fetchCachedMatches(league, year, args);
 }
 
-async function findFixtures(
-  league: string,
-  year: number,
-  args: FixtureFindManyArgs,
-): Promise<Fixture[]> {
-  return prisma.fixture.findMany({
-    ...args,
-    where: { AND: [{ league, year }, args.where ?? {}] },
-  });
-}
-
-async function fetchCachedFixtures(
+export async function fetchCachedFixtures(
   league: string,
   year: number,
   args: FixtureFindManyArgs = {},
@@ -103,7 +85,10 @@ async function fetchCachedFixtures(
   cacheLife("max");
   cacheTag(leagueCacheTag(league, year), fixturesCacheTag(league, year));
 
-  return findFixtures(league, year, args);
+  return prisma.fixture.findMany({
+    ...args,
+    where: { AND: [{ league, year }, args.where ?? {}] },
+  });
 }
 
 export async function fetchFixtures(
@@ -111,27 +96,13 @@ export async function fetchFixtures(
   year: number,
   args: FixtureFindManyArgs = {},
 ): Promise<Fixture[]> {
-  if (shouldCacheSeasonData(league, year)) {
-    return fetchCachedFixtures(league, year, args);
+  if (!shouldCacheSeasonData(league, year)) {
+    await connection();
   }
-  return findFixtures(league, year, args);
+  return fetchCachedFixtures(league, year, args);
 }
 
-async function findPaceSheetEntries(
-  league: string,
-  year: number,
-  targetFinish: number,
-  args: PaceSheetEntryFindManyArgs,
-): Promise<PaceSheetEntry[]> {
-  return prisma.paceSheetEntry.findMany({
-    ...args,
-    where: {
-      AND: [{ league, year, teamFinish: targetFinish }, args.where ?? {}],
-    },
-  });
-}
-
-async function fetchCachedPaceSheetEntries(
+export async function fetchCachedPaceSheetEntries(
   league: string,
   year: number,
   targetFinish: number,
@@ -144,7 +115,12 @@ async function fetchCachedPaceSheetEntries(
     targetPaceSheetsCacheTag(league, year, targetFinish),
   );
 
-  return findPaceSheetEntries(league, year, targetFinish, args);
+  return prisma.paceSheetEntry.findMany({
+    ...args,
+    where: {
+      AND: [{ league, year, teamFinish: targetFinish }, args.where ?? {}],
+    },
+  });
 }
 
 export async function fetchPaceSheetEntries(
@@ -153,12 +129,19 @@ export async function fetchPaceSheetEntries(
   targetFinish: number,
   args: PaceSheetEntryFindManyArgs = {},
 ): Promise<PaceSheetEntry[]> {
-  if (shouldCachePaceSheetData(league, year, targetFinish)) {
-    return fetchCachedPaceSheetEntries(league, year, targetFinish, args);
+  if (!shouldCachePaceSheetData(league, year, targetFinish)) {
+    await connection();
   }
-  return findPaceSheetEntries(league, year, targetFinish, args);
+  return fetchCachedPaceSheetEntries(league, year, targetFinish, args);
+}
+
+async function fetchCachedTeamColors(): Promise<TeamColor[]> {
+  "use cache";
+  cacheLife("max");
+
+  return prisma.teamColor.findMany();
 }
 
 export async function fetchTeamColors(): Promise<TeamColor[]> {
-  return prisma.teamColor.findMany();
+  return fetchCachedTeamColors();
 }
