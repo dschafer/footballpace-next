@@ -1,10 +1,10 @@
+import type { Fixture, PaceSheetEntry } from "@/prisma/generated/client";
 import type { PaceFixture, PaceTeam } from "./pace-types";
 import {
   fetchFixtures,
   fetchMatches,
   fetchPaceSheetEntries,
 } from "@/lib/pace/data";
-import type { PaceSheetEntry } from "@/prisma/generated/client";
 import { fetchProjectedStandings } from "./projections";
 
 export function matchPointsForTeam({
@@ -36,6 +36,50 @@ export function opponentFinishForPace({
     return opponentActualFinish - 1;
   }
   return opponentActualFinish;
+}
+
+export function paceFixturesForTeam({
+  fixtures,
+  paceSheetMap,
+  targetFinish,
+  team,
+  teamToFinish,
+}: {
+  fixtures: Fixture[];
+  paceSheetMap: Map<string, number>;
+  targetFinish: number;
+  team: string;
+  teamToFinish: Map<string, number>;
+}): PaceFixture[] {
+  const teamFinish = teamToFinish.get(team)!;
+  const paceFixtures: PaceFixture[] = [];
+  let cumulativeExpectedPoints = 0;
+  for (const fixture of fixtures) {
+    if (fixture.homeTeam != team && fixture.awayTeam != team) {
+      continue;
+    }
+    const opponent =
+      team == fixture.homeTeam ? fixture.awayTeam : fixture.homeTeam;
+    const home = team == fixture.homeTeam;
+    const opponentActualFinish = teamToFinish.get(opponent)!;
+    const opponentFinish = opponentFinishForPace({
+      opponentActualFinish,
+      targetFinish,
+      teamFinish,
+    });
+    const expectedPoints = paceSheetMap.get(`${opponentFinish}_${home}`)!;
+    cumulativeExpectedPoints += expectedPoints;
+    paceFixtures.push({
+      fixture,
+      expectedPoints,
+      cumulativeExpectedPoints,
+      home,
+      team,
+      opponent,
+      opponentFinish,
+    });
+  }
+  return paceFixtures;
 }
 
 export async function fetchPaceTeams(
@@ -166,33 +210,11 @@ export async function fetchPaceFixtures(
     projectedStandings.map(({ team }, i) => [team, i + 1]),
   );
 
-  const teamFinish = teamToFinish.get(team)!;
-  const paceFixtures: PaceFixture[] = [];
-  let cumulativeExpectedPoints = 0;
-  for (const fixture of allFixtures) {
-    if (fixture.homeTeam != team && fixture.awayTeam != team) {
-      continue;
-    }
-    const opponent =
-      team == fixture.homeTeam ? fixture.awayTeam : fixture.homeTeam;
-    const home = team == fixture.homeTeam;
-    const opponentActualFinish = teamToFinish.get(opponent)!;
-    const opponentFinish = opponentFinishForPace({
-      opponentActualFinish,
-      targetFinish,
-      teamFinish,
-    });
-    const expectedPoints = paceSheetMap.get(`${opponentFinish}_${home}`)!;
-    cumulativeExpectedPoints += expectedPoints;
-    paceFixtures.push({
-      fixture,
-      expectedPoints,
-      cumulativeExpectedPoints,
-      home,
-      team,
-      opponent,
-      opponentFinish,
-    });
-  }
-  return paceFixtures;
+  return paceFixturesForTeam({
+    fixtures: allFixtures,
+    paceSheetMap,
+    targetFinish,
+    team,
+    teamToFinish,
+  });
 }
