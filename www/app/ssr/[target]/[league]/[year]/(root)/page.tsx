@@ -10,8 +10,11 @@ import {
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
 import AnchorLink from "@/components/anchor-link/anchor-link";
+import LeagueMatches from "@/components/today-matches/league-matches";
 import type { Metadata } from "next/types";
 import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
+import { Suspense } from "react";
+import TodaysMatchesPlaceholder from "@/components/today-matches/todays-matches-placeholder";
 import leagues from "@/lib/const/leagues";
 
 export function generateStaticParams(): (LeagueYearParam & {
@@ -40,6 +43,9 @@ export default async function LeagueRootSSR(
       <Title order={2}>
         {leagues.get(league)?.name} {yearInt}
       </Title>
+      <Suspense fallback={<TodaysMatchesPlaceholder cardCount={4} />}>
+        <LeagueMatches league={league} targetFinish={tf} year={yearInt} />
+      </Suspense>
       <StandingsPaceTable league={league} year={yearInt} targetFinish={tf} />
       <Group style={{ alignSelf: "flex-end" }}>
         <Breadcrumbs separator=" · ">
