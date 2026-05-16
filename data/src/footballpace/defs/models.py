@@ -69,6 +69,15 @@ class TeamColors(pt.Model):
 TeamColorsDagsterType = patito_model_to_dagster_type(TeamColors)
 
 
+class Team(pt.Model):
+    league: str
+    year: int
+    team: str
+
+
+TeamDagsterType = patito_model_to_dagster_type(Team)
+
+
 class MatchWithFinish(pt.Model):
     league: str
     year: int

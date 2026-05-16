@@ -64,6 +64,17 @@ class VercelPostgresResource(dg.ConfigurableResource):
             )
             return cur.rowcount
 
+    def upsert_teams(self, teams: list[dict[str, Any]]) -> int:
+        """Given a list of teams, upserts them into the DB."""
+        with self._db_connection.cursor() as cur:
+            cur.executemany(
+                """INSERT INTO teams (league, year, team)
+    VALUES(%(league)s, %(year)s, %(team)s)
+    ON CONFLICT (league, year, team) DO NOTHING;""",
+                teams,
+            )
+            return cur.rowcount
+
     def upsert_fixtures(self, fixtures: list[dict[str, Any]]) -> int:
         """Given a list of team colors, upserts them into the DB."""
         with self._db_connection.cursor() as cur:
