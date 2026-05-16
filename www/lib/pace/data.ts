@@ -32,7 +32,10 @@ type PaceSheetEntryFindManyArgs = Omit<
 > & { where?: Prisma.PaceSheetEntryWhereInput };
 
 const prerenderSeasonKeys = new Set(
-  PRERENDER_SEASONS.map(({ league, year }) => `${league}:${year}`),
+  PRERENDER_SEASONS.flatMap(({ league, year }) => [
+    `${league}:${year}`,
+    `${league}:${Number(year) - 1}`,
+  ]),
 );
 
 function shouldCacheSeasonData(league: string, year: number): boolean {
