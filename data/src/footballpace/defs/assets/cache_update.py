@@ -30,7 +30,7 @@ def match_results_cache_update(
     season = int(context.partition_key.keys_by_dimension["season"])
     league = context.partition_key.keys_by_dimension["league"]
 
-    response = cache_update_resource.update_league_year(league, season)
+    response = cache_update_resource.update_matches(league, season)
     context.log.info(response)
 
 
@@ -49,7 +49,7 @@ def pace_sheet_entries_cache_update(
     season = int(context.partition_key.keys_by_dimension["predicted_season"])
     league = context.partition_key.keys_by_dimension["league"]
 
-    response = cache_update_resource.update_league_year(league, season)
+    response = cache_update_resource.update_pace_sheets(league, season)
     context.log.info(response)
 
 
@@ -57,12 +57,27 @@ def pace_sheet_entries_cache_update(
     group_name="CacheUpdate",
     kinds={"vercel"},
     automation_condition=db_write_updated_condition(),
-    deps=["fpl_fixtures_postgres", "fpl_results_postgres"],
+    deps=["fpl_fixtures_postgres"],
 )
-def fpl_cache_update(
+def fpl_fixtures_cache_update(
     context: dg.AssetExecutionContext,
     cache_update_resource: CacheUpdateResource,
 ) -> None:
-    """Make sure that Next.js updates FPL-backed caches."""
-    response = cache_update_resource.update_league_year("E0", current_season)
+    """Make sure that Next.js updates FPL-backed fixture caches."""
+    response = cache_update_resource.update_fixtures("E0", current_season)
+    context.log.info(response)
+
+
+@dg.asset(
+    group_name="CacheUpdate",
+    kinds={"vercel"},
+    automation_condition=db_write_updated_condition(),
+    deps=["fpl_results_postgres"],
+)
+def fpl_results_cache_update(
+    context: dg.AssetExecutionContext,
+    cache_update_resource: CacheUpdateResource,
+) -> None:
+    """Make sure that Next.js updates FPL-backed match-result caches."""
+    response = cache_update_resource.update_matches("E0", current_season)
     context.log.info(response)

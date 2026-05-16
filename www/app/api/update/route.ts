@@ -7,10 +7,9 @@ import {
 import { type NextRequest } from "next/server";
 import { revalidateTag } from "next/cache";
 
-type UpdateScope = "all" | "fixtures" | "matches" | "pace-sheets" | "teams";
+type UpdateScope = "fixtures" | "matches" | "pace-sheets" | "teams";
 
 const updateScopes = new Set<UpdateScope>([
-  "all",
   "fixtures",
   "matches",
   "pace-sheets",
@@ -25,13 +24,6 @@ function revalidateTags(tags: string[]) {
 
 function tagsForScope(scope: UpdateScope, league: string, year: number): string[] {
   switch (scope) {
-    case "all":
-      return [
-        matchesCacheTag(league, year),
-        fixturesCacheTag(league, year),
-        paceSheetsCacheTag(league, year),
-        teamsCacheTag(league, year),
-      ];
     case "fixtures":
       return [fixturesCacheTag(league, year)];
     case "matches":
@@ -68,11 +60,14 @@ export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const league = searchParams.get("league");
   const yearParam = searchParams.get("year");
-  const scopeParam = searchParams.get("scope") ?? "all";
+  const scopeParam = searchParams.get("scope");
 
-  if (!league || yearParam == null) {
+  if (!league || yearParam == null || scopeParam == null) {
     return Response.json(
-      { message: "Scoped revalidation requires league and year parameters." },
+      {
+        message:
+          "Scoped revalidation requires league, year, and scope parameters.",
+      },
       {
         status: 400,
       },

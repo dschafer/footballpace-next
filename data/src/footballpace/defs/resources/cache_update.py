@@ -1,8 +1,11 @@
+from typing import Literal
+
 import dagster as dg
 import httpx
 
 
 API_UPDATE_URL = "https://footballpace.com/api/update"
+CacheUpdateScope = Literal["fixtures", "matches", "pace-sheets"]
 
 
 class CacheUpdateResource(dg.ConfigurableResource):
@@ -18,5 +21,16 @@ class CacheUpdateResource(dg.ConfigurableResource):
         ).raise_for_status()
         return response.text
 
-    def update_league_year(self, league: str, year: int) -> str:
-        return self._update({"league": league, "year": year})
+    def _update_league_year(
+        self, league: str, year: int, scope: CacheUpdateScope
+    ) -> str:
+        return self._update({"league": league, "year": year, "scope": scope})
+
+    def update_fixtures(self, league: str, year: int) -> str:
+        return self._update_league_year(league, year, "fixtures")
+
+    def update_matches(self, league: str, year: int) -> str:
+        return self._update_league_year(league, year, "matches")
+
+    def update_pace_sheets(self, league: str, year: int) -> str:
+        return self._update_league_year(league, year, "pace-sheets")
