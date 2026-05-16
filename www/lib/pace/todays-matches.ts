@@ -168,6 +168,16 @@ function completedMatchesInWindowFromPaceTeams({
   return completedTodayMatches({ matchesByFixture, paceTeams });
 }
 
+function completedFixtureKeysFromPaceTeams(paceTeams: PaceTeam[]): Set<string> {
+  const keys = new Set<string>();
+  for (const paceTeam of paceTeams) {
+    for (const paceMatch of paceTeam.paceMatches) {
+      keys.add(fixtureKey(paceMatch.match));
+    }
+  }
+  return keys;
+}
+
 export async function fetchFixtureLeagueMatches({
   league,
   paceTeams,
@@ -220,10 +230,11 @@ async function fetchFixtureMatchesForLeague({
     fetchPaceSheetEntries(league, year, targetFinish),
   ]);
 
+  const completedFixtureKeys = completedFixtureKeysFromPaceTeams(paceTeams);
   const upcomingFixtures = fixtures.filter(
     (fixture) =>
       fixture.kickoffTime != null &&
-      fixture.kickoffTime > now &&
+      !completedFixtureKeys.has(fixtureKey(fixture)) &&
       dateIsInWindow({
         date: fixture.kickoffTime,
         now,
