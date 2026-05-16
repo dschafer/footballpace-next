@@ -8,6 +8,7 @@ import ResultsTable from "@/components/results-table/results-table";
 import { Suspense } from "react";
 import TeamContentPlaceholder from "@/components/team-page/team-content-placeholder";
 import TeamFixtures from "@/components/team-fixtures/team-fixtures";
+import { Text } from "@mantine/core";
 import { fetchPaceTeams } from "@/lib/pace/pace";
 import { fetchTeamColorMap } from "@/lib/color";
 import { shouldCachePaceData } from "@/lib/pace/data";
@@ -42,7 +43,12 @@ async function TeamContentData({
     fetchPaceTeams(league, seasonYear, targetFinish),
     fetchTeamColorMap(),
   ]);
-  const paceTeam = paceTeams.find((pt) => pt.team == team)!;
+  const paceTeam = paceTeams.find((pt) => pt.team == team);
+
+  if (!paceTeam) {
+    return <Text c="dimmed">No matches found for this team yet.</Text>;
+  }
+
   const previewMatches = Array.from(paceTeam.paceMatches).reverse().slice(0, 3);
 
   return (

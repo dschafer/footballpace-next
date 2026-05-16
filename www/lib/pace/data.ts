@@ -3,6 +3,7 @@ import type {
   Match,
   PaceSheetEntry,
   Prisma,
+  Team,
   TeamColor,
 } from "@/prisma/generated/client";
 import { cacheLife, cacheTag } from "next/cache";
@@ -11,6 +12,7 @@ import {
   matchesCacheTag,
   paceSheetsCacheTag,
   targetPaceSheetsCacheTag,
+  teamsCacheTag,
 } from "@/lib/cache-tags";
 import { PRERENDER_SEASONS } from "@/lib/const/current";
 import { connection } from "next/server";
@@ -29,6 +31,10 @@ type PaceSheetEntryFindManyArgs = Omit<
   Prisma.PaceSheetEntryFindManyArgs,
   "include" | "omit" | "select" | "where"
 > & { where?: Prisma.PaceSheetEntryWhereInput };
+type TeamFindManyArgs = Omit<
+  Prisma.TeamFindManyArgs,
+  "include" | "omit" | "select" | "where"
+> & { where?: Prisma.TeamWhereInput };
 
 const prerenderSeasonKeys = new Set(
   PRERENDER_SEASONS.flatMap(({ league, year }) => [
@@ -156,6 +162,32 @@ export async function fetchPaceSheetEntries(
     await connection();
   }
   return fetchCachedPaceSheetEntries(league, year, targetFinish, args);
+}
+
+export async function fetchCachedTeams(
+  league: string,
+  year: number,
+  args: TeamFindManyArgs = {},
+): Promise<Team[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(teamsCacheTag(league, year));
+
+  return prisma.team.findMany({
+    ...args,
+    where: { AND: [{ league, year }, args.where ?? {}] },
+  });
+}
+
+export async function fetchTeams(
+  league: string,
+  year: number,
+  args: TeamFindManyArgs = {},
+): Promise<Team[]> {
+  if (!shouldCacheSeasonData(league, year)) {
+    await connection();
+  }
+  return fetchCachedTeams(league, year, args);
 }
 
 async function fetchCachedTeamColors(): Promise<TeamColor[]> {
