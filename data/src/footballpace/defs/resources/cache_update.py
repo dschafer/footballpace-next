@@ -5,7 +5,7 @@ import httpx
 
 
 API_UPDATE_URL = "https://footballpace.com/api/update"
-CacheUpdateScope = Literal["fixtures", "matches", "pace-sheets"]
+CacheUpdateScope = Literal["fixtures", "matches", "pace-sheets", "teams"]
 
 
 class CacheUpdateResource(dg.ConfigurableResource):
@@ -34,3 +34,6 @@ class CacheUpdateResource(dg.ConfigurableResource):
 
     def update_pace_sheets(self, league: str, year: int) -> str:
         return self._update_league_year(league, year, "pace-sheets")
+
+    def update_teams(self, league: str, year: int) -> str:
+        return self._update_league_year(league, year, "teams")

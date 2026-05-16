@@ -2,9 +2,11 @@ import dagster as dg
 
 from footballpace.defs.assets.cache_update import (
     fpl_fixtures_cache_update,
+    fpl_fixtures_teams_cache_update,
     fpl_results_cache_update,
     match_results_cache_update,
     pace_sheet_entries_cache_update,
+    teams_cache_update,
 )
 from footballpace.partitions import current_season
 
@@ -24,6 +26,10 @@ class FakeCacheUpdateResource:
     def update_pace_sheets(self, league: str, year: int) -> str:
         self.calls.append((league, year, "pace-sheets"))
         return f"{league}:{year}:pace-sheets"
+
+    def update_teams(self, league: str, year: int) -> str:
+        self.calls.append((league, year, "teams"))
+        return f"{league}:{year}:teams"
 
 
 def test_match_results_cache_update_uses_partition_scope() -> None:
@@ -64,3 +70,22 @@ def test_fpl_results_cache_update_uses_match_scope() -> None:
     fpl_results_cache_update(dg.build_asset_context(), cache_update_resource)
 
     assert cache_update_resource.calls == [("E0", current_season, "matches")]
+
+
+def test_teams_cache_update_uses_partition_scope() -> None:
+    cache_update_resource = FakeCacheUpdateResource()
+    context = dg.build_asset_context(
+        partition_key=dg.MultiPartitionKey({"league": "I1", "season": "2024"})
+    )
+
+    teams_cache_update(context, cache_update_resource)
+
+    assert cache_update_resource.calls == [("I1", 2024, "teams")]
+
+
+def test_fpl_fixtures_teams_cache_update_uses_current_epl_scope() -> None:
+    cache_update_resource = FakeCacheUpdateResource()
+
+    fpl_fixtures_teams_cache_update(dg.build_asset_context(), cache_update_resource)
+
+    assert cache_update_resource.calls == [("E0", current_season, "teams")]
