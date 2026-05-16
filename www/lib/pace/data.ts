@@ -184,9 +184,6 @@ export async function fetchTeams(
   year: number,
   args: TeamFindManyArgs = {},
 ): Promise<Team[]> {
-  if (!shouldCacheSeasonData(league, year)) {
-    await connection();
-  }
   return fetchCachedTeams(league, year, args);
 }
 
