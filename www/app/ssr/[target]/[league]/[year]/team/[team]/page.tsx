@@ -9,7 +9,7 @@ import { Stack, Text, Title } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Metadata } from "next/types";
 import TeamContent from "@/components/team-page/team-content";
-import { fetchMatches } from "@/lib/pace/data";
+import { fetchTeams } from "@/lib/pace/data";
 import { teamPath } from "@/lib/url/team-links";
 import year from "@/lib/const/year";
 
@@ -19,19 +19,15 @@ export async function generateStaticParams(): Promise<
   })[]
 > {
   // Only statically generate EPL champion pages since those are most used.
-  const matches = await fetchMatches("E0", year);
-  const params = new Map<string, SeasonPageParam>();
-  for (const m of matches) {
-    for (const team of [m.homeTeam, m.awayTeam]) {
-      params.set(`${m.league}/${m.year}/${team}`, {
-        league: m.league,
-        year: "" + m.year,
-        team,
-      });
-    }
-  }
+  const teams = await fetchTeams("E0", year, { orderBy: { team: "asc" } });
+  const teamParams = teams.map(({ league, year, team }) => ({
+    league,
+    year: "" + year,
+    team,
+  }));
+
   return PRERENDER_TARGET_KEYS.flatMap((target) =>
-    Array.from(params.values()).map((p) => ({ ...p, target })),
+    teamParams.map((p) => ({ ...p, target })),
   );
 }
 
