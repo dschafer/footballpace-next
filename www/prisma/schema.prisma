@@ -55,6 +55,15 @@ model PaceSheetEntry {
   @@map("pace_sheet_entries")
 }
 
+model Team {
+  league String
+  year   Int
+  team   String
+
+  @@id([league, year, team])
+  @@map("teams")
+}
+
 model TeamColor {
   team           String
   primaryColor   String  @map("primary_color")
