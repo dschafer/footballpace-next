@@ -8,7 +8,6 @@ import type {
 import { cacheLife, cacheTag } from "next/cache";
 import {
   fixturesCacheTag,
-  leagueCacheTag,
   matchesCacheTag,
   paceSheetsCacheTag,
   targetPaceSheetsCacheTag,
@@ -81,7 +80,7 @@ export async function fetchCachedMatches(
 ): Promise<Match[]> {
   "use cache";
   cacheLife("max");
-  cacheTag(leagueCacheTag(league, year), matchesCacheTag(league, year));
+  cacheTag(matchesCacheTag(league, year));
 
   return prisma.match.findMany({
     ...args,
@@ -107,7 +106,7 @@ export async function fetchCachedFixtures(
 ): Promise<Fixture[]> {
   "use cache";
   cacheLife("max");
-  cacheTag(leagueCacheTag(league, year), fixturesCacheTag(league, year));
+  cacheTag(fixturesCacheTag(league, year));
 
   return prisma.fixture.findMany({
     ...args,
