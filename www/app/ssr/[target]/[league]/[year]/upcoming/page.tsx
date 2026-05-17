@@ -13,11 +13,13 @@ import {
   targetKeyToFinish,
 } from "@/lib/pace/target-key";
 import { Stack, Title } from "@mantine/core";
+import { fetchMatches, shouldCachePaceData } from "@/lib/pace/data";
 import { isUnplayedFixture, playedFixtureKeys } from "@/lib/pace/fixtures";
 import type { Metadata } from "next/types";
 import { type PaceFixture } from "@/lib/pace/pace-types";
+import { Suspense } from "react";
 import UpcomingTable from "@/components/upcoming-table/upcoming-table";
-import { fetchMatches } from "@/lib/pace/data";
+import UpcomingTablePlaceholder from "@/components/upcoming-table/upcoming-table-placeholder";
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 
 export function generateStaticParams(): (LeagueYearParam & {
@@ -47,15 +49,30 @@ async function rowToFixtures(
   ];
 }
 
-async function UpcomingFixtures({
-  league,
-  year,
-  targetFinish,
-}: {
+type UpcomingFixturesProps = {
   league: string;
   year: number;
   targetFinish: number;
-}) {
+};
+
+function UpcomingFixtures(props: UpcomingFixturesProps) {
+  if (shouldCachePaceData(props.league, props.year, props.targetFinish)) {
+    return <UpcomingFixturesContent {...props} />;
+  }
+  return (
+    <Suspense
+      fallback={<UpcomingTablePlaceholder teamCount={4} matchCount={6} />}
+    >
+      <UpcomingFixturesContent {...props} />
+    </Suspense>
+  );
+}
+
+async function UpcomingFixturesContent({
+  league,
+  year,
+  targetFinish,
+}: UpcomingFixturesProps) {
   const [standings, matches] = await Promise.all([
     fetchStandings(league, year),
     fetchMatches(league, year),
