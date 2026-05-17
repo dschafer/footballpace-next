@@ -12,22 +12,38 @@ import AnchorLink from "@/components/anchor-link/anchor-link";
 import DeltaTableCell from "../pace-display/delta-table-cell";
 import ErrorAlert from "../error/error-alert";
 import PaceTableCell from "../pace-display/pace-table-cell";
+import RecentPaceTablePlaceholder from "@/components/recent-pace-table/recent-pace-table-placeholder";
 import Result from "../pace-display/result";
+import { Suspense } from "react";
 import { fetchPaceTeams } from "@/lib/pace/pace";
+import { shouldCachePaceSheetData } from "@/lib/pace/data";
 import { slicePaceTeams } from "@/lib/pace/pace-types";
 import { teamPath } from "@/lib/url/team-links";
 
-export default async function RecentPaceTable({
-  rowCount,
-  league,
-  year,
-  targetFinish = 1,
-}: {
+type RecentPaceTableProps = {
   rowCount: number;
   league: string;
   year: number;
   targetFinish: number;
-}) {
+};
+
+export default function RecentPaceTable(props: RecentPaceTableProps) {
+  if (shouldCachePaceSheetData(props.league, props.year, props.targetFinish)) {
+    return <RecentPaceTableContent {...props} />;
+  }
+  return (
+    <Suspense fallback={<RecentPaceTablePlaceholder rowCount={props.rowCount} />}>
+      <RecentPaceTableContent {...props} />
+    </Suspense>
+  );
+}
+
+async function RecentPaceTableContent({
+  rowCount,
+  league,
+  year,
+  targetFinish = 1,
+}: RecentPaceTableProps) {
   const paceTeams = await fetchPaceTeams(league, year, targetFinish);
   let pacePosTeams = paceTeams.map((pt, i) => ({ position: i + 1, ...pt }));
   pacePosTeams = slicePaceTeams(pacePosTeams, rowCount, targetFinish);

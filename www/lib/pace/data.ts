@@ -42,7 +42,7 @@ function shouldCacheSeasonData(league: string, year: number): boolean {
   return prerenderSeasonKeys.has(`${league}:${year}`);
 }
 
-function shouldCachePaceSheetData(
+export function shouldCachePaceSheetData(
   league: string,
   year: number,
   targetFinish: number,
