@@ -5,19 +5,11 @@ import {
 } from "@/lib/pace/target-key";
 import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
 import { Stack, Text, Title } from "@mantine/core";
-import { slicePaceTeams, slicePaceTeamsStart } from "@/lib/pace/pace-types";
 
 import AnchorLink from "@/components/anchor-link/anchor-link";
-import LinkableHeader from "@/components/header/linkable-header";
 import type { Metadata } from "next/types";
-import OpponentsTable from "@/components/opponents/opponents-table";
-import PaceChart from "@/components/pace-chart/pace-chart";
-import PaceTable from "@/components/pace-table/pace-table";
-import ResultsTable from "@/components/results-table/results-table";
-import TeamFixtures from "@/components/team-fixtures/team-fixtures";
+import TeamContent from "@/components/team-page/team-content";
 import { fetchMatches } from "@/lib/pace/data";
-import { fetchPaceTeams } from "@/lib/pace/pace";
-import { fetchTeamColorMap } from "@/lib/color";
 import { teamPath } from "@/lib/url/team-links";
 import year from "@/lib/const/year";
 
@@ -61,13 +53,6 @@ export default async function TeamSSR(
   const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   const teamDecoded = decodeURIComponent(team);
   const tf = targetKeyToFinish(league)[target as TargetKey];
-  const [paceTeams, teamColorMap] = await Promise.all([
-    fetchPaceTeams(league, yearInt, tf),
-    fetchTeamColorMap(),
-  ]);
-  const paceTeam = paceTeams.find((pt) => pt.team == teamDecoded)!;
-  const previewMatches = Array.from(paceTeam.paceMatches).reverse().slice(0, 3);
-
   return (
     <Stack>
       <Title order={2}>{teamDecoded}</Title>
@@ -79,38 +64,9 @@ export default async function TeamSSR(
           {leagueInfo.name} {yearInt}
         </Text>
       </AnchorLink>
-      <LinkableHeader order={3} title="Recent Matches" />
-      <ResultsTable
-        paceMatches={previewMatches}
+      <TeamContent
         league={league}
-        team={teamDecoded}
-      />
-      <LinkableHeader order={3} title="Table" />
-      <PaceTable
-        paceTeams={slicePaceTeams(paceTeams, 5, tf)}
-        startPlace={slicePaceTeamsStart(paceTeams, 5, tf)}
-      />
-      <LinkableHeader order={3} title="Pace Chart" />
-      <PaceChart
-        paceTeams={[paceTeam]}
-        teamColorMap={teamColorMap}
-        targetFinish={tf}
-      />
-      <OpponentsTable
-        league={league}
-        year={yearInt}
-        paceTeam={paceTeam}
-        targetFinish={tf}
-      />
-      <LinkableHeader order={3} title="Full Results" />
-      <ResultsTable
-        paceMatches={paceTeam.paceMatches}
-        league={league}
-        team={teamDecoded}
-      />
-      <TeamFixtures
-        league={league}
-        year={yearInt}
+        seasonYear={yearInt}
         team={teamDecoded}
         targetFinish={tf}
       />
