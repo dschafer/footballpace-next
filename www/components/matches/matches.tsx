@@ -8,19 +8,38 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
+import {
+  fetchMatches,
+  shouldCacheSeasonData,
+} from "@/lib/pace/data";
 import ErrorAlert from "../error/error-alert";
 import type { Match } from "@/prisma/generated/client";
+import MatchesPlaceholder from "./matches-placeholder";
 import Result from "../pace-display/result";
-import { fetchMatches } from "@/lib/pace/data";
+import { Suspense } from "react";
 import leagues from "@/lib/const/leagues";
 
-export default async function Matches({
-  league,
-  year,
-}: {
+type MatchesProps = {
   league: string;
   year: number;
-}) {
+};
+
+export default function Matches(props: MatchesProps) {
+  if (shouldCacheSeasonData(props.league, props.year)) {
+    return <MatchesContent {...props} />;
+  }
+  return (
+    <Suspense
+      fallback={
+        <MatchesPlaceholder monthCount={5} dayCount={10} matchCount={5} />
+      }
+    >
+      <MatchesContent {...props} />
+    </Suspense>
+  );
+}
+
+async function MatchesContent({ league, year }: MatchesProps) {
   const matches = await fetchMatches(league, year, {
     orderBy: { date: "desc" },
   });
