@@ -38,7 +38,7 @@ const prerenderSeasonKeys = new Set(
   ]),
 );
 
-function shouldCacheSeasonData(league: string, year: number): boolean {
+export function shouldCacheSeasonData(league: string, year: number): boolean {
   return prerenderSeasonKeys.has(`${league}:${year}`);
 }
 
