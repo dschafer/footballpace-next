@@ -53,6 +53,27 @@ export function shouldCachePaceSheetData(
   );
 }
 
+export function shouldCacheProjectedStandingsData(
+  league: string,
+  year: number,
+): boolean {
+  return (
+    shouldCacheSeasonData(league, year) &&
+    shouldCacheSeasonData(league, year - 1)
+  );
+}
+
+export function shouldCachePaceData(
+  league: string,
+  year: number,
+  targetFinish: number,
+): boolean {
+  return (
+    shouldCacheProjectedStandingsData(league, year) &&
+    shouldCachePaceSheetData(league, year, targetFinish)
+  );
+}
+
 export async function fetchCachedMatches(
   league: string,
   year: number,

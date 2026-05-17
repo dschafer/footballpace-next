@@ -16,7 +16,7 @@ import RecentPaceTablePlaceholder from "@/components/recent-pace-table/recent-pa
 import Result from "../pace-display/result";
 import { Suspense } from "react";
 import { fetchPaceTeams } from "@/lib/pace/pace";
-import { shouldCachePaceSheetData } from "@/lib/pace/data";
+import { shouldCachePaceData } from "@/lib/pace/data";
 import { slicePaceTeams } from "@/lib/pace/pace-types";
 import { teamPath } from "@/lib/url/team-links";
 
@@ -28,7 +28,7 @@ type RecentPaceTableProps = {
 };
 
 export default function RecentPaceTable(props: RecentPaceTableProps) {
-  if (shouldCachePaceSheetData(props.league, props.year, props.targetFinish)) {
+  if (shouldCachePaceData(props.league, props.year, props.targetFinish)) {
     return <RecentPaceTableContent {...props} />;
   }
   return (
