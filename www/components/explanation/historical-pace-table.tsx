@@ -11,17 +11,34 @@ import {
   Text,
 } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
+import HistoricalPaceTablePlaceholder from "./historical-pace-table-placeholder";
+import { Suspense } from "react";
 import { fetchPaceSheets } from "@/lib/pace/pace";
+import { shouldCachePaceSheetData } from "@/lib/pace/data";
 
-export default async function HistoricalPaceTable({
-  league,
-  year,
-  targetFinish = 1,
-}: {
+type HistoricalPaceTableProps = {
   league: string;
   year: number;
   targetFinish?: number;
-}) {
+};
+
+export default function HistoricalPaceTable(props: HistoricalPaceTableProps) {
+  const targetFinish = props.targetFinish ?? 1;
+  if (shouldCachePaceSheetData(props.league, props.year, targetFinish)) {
+    return <HistoricalPaceTableContent {...props} />;
+  }
+  return (
+    <Suspense fallback={<HistoricalPaceTablePlaceholder teamCount={20} />}>
+      <HistoricalPaceTableContent {...props} />
+    </Suspense>
+  );
+}
+
+async function HistoricalPaceTableContent({
+  league,
+  year,
+  targetFinish = 1,
+}: HistoricalPaceTableProps) {
   const paceSheetEntries = await fetchPaceSheets(league, year, targetFinish);
   if (paceSheetEntries.length == 0) {
     return <ErrorAlert />;

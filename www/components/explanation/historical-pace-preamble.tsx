@@ -1,16 +1,35 @@
 import { NumberFormatter, Stack, Text } from "@mantine/core";
 import ErrorAlert from "../error/error-alert";
+import HistoricalPacePreamblePlaceholder from "./historical-pace-preamble-placeholder";
+import { Suspense } from "react";
 import { fetchPaceSheets } from "@/lib/pace/pace";
+import { shouldCachePaceSheetData } from "@/lib/pace/data";
 
-export default async function HistoricalPacePreamble({
-  league,
-  year,
-  targetFinish = 1,
-}: {
+type HistoricalPacePreambleProps = {
   league: string;
   year: number;
   targetFinish?: number;
-}) {
+};
+
+export default function HistoricalPacePreamble(
+  props: HistoricalPacePreambleProps,
+) {
+  const targetFinish = props.targetFinish ?? 1;
+  if (shouldCachePaceSheetData(props.league, props.year, targetFinish)) {
+    return <HistoricalPacePreambleContent {...props} />;
+  }
+  return (
+    <Suspense fallback={<HistoricalPacePreamblePlaceholder />}>
+      <HistoricalPacePreambleContent {...props} />
+    </Suspense>
+  );
+}
+
+async function HistoricalPacePreambleContent({
+  league,
+  year,
+  targetFinish = 1,
+}: HistoricalPacePreambleProps) {
   const paceSheetEntries = await fetchPaceSheets(league, year, targetFinish);
   if (paceSheetEntries.length == 0) {
     return <ErrorAlert />;

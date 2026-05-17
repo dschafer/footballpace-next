@@ -10,16 +10,34 @@ import {
 } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
+import ProjectedStandingsTablePlaceholder from "./projected-standings-table-placeholder";
+import { Suspense } from "react";
 import { fetchProjectedStandings } from "@/lib/pace/projections";
+import { shouldCacheProjectedStandingsData } from "@/lib/pace/data";
 import { teamPath } from "@/lib/url/team-links";
 
-export default async function ProjectedStandingsTable({
-  league,
-  year,
-}: {
+type ProjectedStandingsTableProps = {
   league: string;
   year: number;
-}) {
+};
+
+export default function ProjectedStandingsTable(
+  props: ProjectedStandingsTableProps,
+) {
+  if (shouldCacheProjectedStandingsData(props.league, props.year)) {
+    return <ProjectedStandingsTableContent {...props} />;
+  }
+  return (
+    <Suspense fallback={<ProjectedStandingsTablePlaceholder rowCount={20} />}>
+      <ProjectedStandingsTableContent {...props} />
+    </Suspense>
+  );
+}
+
+async function ProjectedStandingsTableContent({
+  league,
+  year,
+}: ProjectedStandingsTableProps) {
   const projectedStandings = await fetchProjectedStandings(league, year);
   if (projectedStandings.length == 0) {
     return <ErrorAlert />;
