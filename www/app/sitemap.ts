@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         new Set(teamList),
       ).map((team) => ({
         url: `https://footballpace.com${teamPath(leagueCode, year, team)}`,
-        changeFrequency: "daily",
+        changeFrequency: "weekly",
         lastModified,
       }));
       const leagueUrls: MetadataRoute.Sitemap = [
