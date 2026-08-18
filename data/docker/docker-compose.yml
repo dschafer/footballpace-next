@@ -11,7 +11,7 @@ services:
     sysctls:
      - net.ipv6.conf.all.disable_ipv6=1
     networks:
-      - dagster-network
+      - dagster-backend-network
     volumes:
       - dagster-data:/var/lib/postgresql/data
 
@@ -33,8 +33,9 @@ services:
     sysctls:
      - net.ipv6.conf.all.disable_ipv6=1
     env_file: "../.env"
+    volumes: []
     networks:
-      - dagster-network
+      - dagster-backend-network
 
   # This service runs dagster-webserver, which loads your user code from the user code container.
   # Since our instance uses the QueuedRunCoordinator, any runs submitted from the webserver will be put on
@@ -58,10 +59,6 @@ services:
       retries: 5
     container_name: dagster-webserver
     image: dagster
-    expose:
-      - "3000"
-    ports:
-      - "3000:3000"
     env_file: "../.env"
     sysctls:
      - net.ipv6.conf.all.disable_ipv6=1
@@ -70,6 +67,7 @@ services:
       - dagster-local:/opt/dagster/local/
     networks:
       - dagster-network
+      - dagster-backend-network
     depends_on:
       - dagster-postgresql
       - dagster-footballpace-data
@@ -93,7 +91,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - dagster-local:/opt/dagster/local/
     networks:
-      - dagster-network
+      - dagster-backend-network
     depends_on:
       - dagster-postgresql
       - dagster-footballpace-data
@@ -103,6 +101,12 @@ networks:
     driver: bridge
     name: dagster-network
     enable_ipv6: false
+    internal: false
+  dagster-backend-network:
+    driver: bridge
+    name: dagster-backend-network
+    enable_ipv6: false
+    internal: false
 
 volumes:
   dagster-data:
