@@ -1,3 +1,16 @@
+_TEAM_NAME_ALIASES: dict[str, str] = {
+    "Brighton & Hove Albion": "Brighton",
+    "Coventry City": "Coventry",
+    "Hull City": "Hull",
+    "Ipswich Town": "Ipswich",
+    "Leicester City": "Leicester",
+    "Newcastle United": "Newcastle",
+    "Spurs": "Tottenham",
+    "Tottenham Hotspur": "Tottenham",
+    "West Ham United": "West Ham",
+}
+
+
 def canonical_name(team_name: str) -> str:
     """
     This function is ugly.
@@ -16,15 +29,5 @@ def canonical_name(team_name: str) -> str:
     team_name = team_name.removesuffix("FC ")
     team_name = team_name.replace(" Utd", " United")
     team_name = team_name.replace("Man ", "Manchester ")
-    if team_name == "Spurs" or team_name == "Tottenham Hotspur":
-        team_name = "Tottenham"
-    if team_name == "Brighton & Hove Albion":
-        team_name = "Brighton"
-    if team_name == "Leicester City":
-        team_name = "Leicester"
-    if team_name == "West Ham United":
-        team_name = "West Ham"
-    if team_name == "Newcastle United":
-        team_name = "Newcastle"
 
-    return team_name
+    return _TEAM_NAME_ALIASES.get(team_name, team_name)

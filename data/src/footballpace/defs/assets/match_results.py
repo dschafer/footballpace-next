@@ -61,7 +61,7 @@ csv_dtypes = {
     group_name="MatchResults",
     kinds={"Polars"},
     partitions_def=all_seasons_leagues_partition,
-    code_version="v3",
+    code_version="v4",
     dagster_type=MatchDagsterType,
     automation_condition=eager_respecting_data_version,
 )

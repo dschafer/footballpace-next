@@ -41,7 +41,7 @@ def team_colors_json(http_resource: HTTPResource) -> dg.MaterializeResult[bytes]
 @dg.asset(
     group_name="TeamColors",
     kinds={"Polars"},
-    code_version="v3",
+    code_version="v4",
     dagster_type=TeamColorsDagsterType,
     metadata=TeamColorsDagsterType.metadata,
     automation_condition=eager_respecting_data_version,

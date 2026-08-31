@@ -85,7 +85,7 @@ def fpl_fixture_season(years: pl.Series) -> int:
 @dg.asset(
     group_name="FPL",
     kinds={"Polars"},
-    code_version="v3",
+    code_version="v4",
     dagster_type=FPLFixtureDagsterType,
     automation_condition=eager_respecting_data_version,
 )
