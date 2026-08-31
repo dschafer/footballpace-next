@@ -2,6 +2,7 @@ import dagster as dg
 import polars as pl
 
 from footballpace.dataversion import df_data_version, eager_respecting_data_version
+from footballpace.defs.assets.fpl_fixtures import fpl_fixture_season
 from footballpace.defs.models import (
     FPLFixtureDagsterType,
     MatchDagsterType,
@@ -9,7 +10,7 @@ from footballpace.defs.models import (
 )
 from footballpace.defs.resources.vercel import VercelPostgresResource
 from footballpace.markdown import markdown_metadata
-from footballpace.partitions import all_seasons_leagues_partition, current_season
+from footballpace.partitions import all_seasons_leagues_partition
 
 
 def teams_from_matches(
@@ -70,7 +71,7 @@ def teams_df(
 @dg.asset(
     group_name="Teams",
     kinds={"Polars"},
-    code_version="v1",
+    code_version="v2",
     dagster_type=TeamDagsterType,
     ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType)},
     automation_condition=eager_respecting_data_version,
@@ -79,7 +80,11 @@ def fpl_fixtures_teams_df(
     fpl_fixtures_df: pl.DataFrame,
 ) -> dg.MaterializeResult[pl.DataFrame]:
     """Derive the current EPL team list from the complete FPL fixture feed."""
-    teams = teams_from_matches("E0", current_season, fpl_fixtures_df)
+    teams = teams_from_matches(
+        "E0",
+        fpl_fixture_season(fpl_fixtures_df.get_column("year")),
+        fpl_fixtures_df,
+    )
     return dg.MaterializeResult(
         value=teams,
         metadata={
@@ -116,7 +121,7 @@ def teams_postgres(
 @dg.asset(
     group_name="Teams",
     kinds={"Postgres"},
-    code_version="v1",
+    code_version="v2",
     ins={"fpl_fixtures_teams_df": dg.AssetIn(dagster_type=TeamDagsterType)},
     metadata={
         **TeamDagsterType.metadata,
@@ -127,7 +132,11 @@ def teams_postgres(
 )
 def fpl_fixtures_teams_postgres(
     fpl_fixtures_teams_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.MaterializeResult:
-    """Writes FPL-derived current EPL team membership into Postgres."""
+) -> dg.MaterializeResult[int]:
+    """Writes FPL-derived EPL teams to Postgres and returns the updated season."""
+    season = fpl_fixture_season(fpl_fixtures_teams_df.get_column("year"))
     rowcount = vercel_postgres.upsert_teams(fpl_fixtures_teams_df.to_dicts())
-    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(
+        value=season,
+        metadata={"dagster/row_count": rowcount, "season": season},
+    )

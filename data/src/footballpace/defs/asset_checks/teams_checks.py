@@ -6,7 +6,8 @@ from footballpace.defs.asset_checks.helpers import (
     duplicate_key_samples,
     partition_values_match,
 )
-from footballpace.partitions import all_seasons_leagues_partition, current_season
+from footballpace.defs.assets.fpl_fixtures import fpl_fixture_season
+from footballpace.partitions import all_seasons_leagues_partition
 
 TEAM_KEY = ["league", "year", "team"]
 
@@ -83,19 +84,25 @@ def teams_match_partition(
     return dg.AssetCheckResult(passed=passed)
 
 
-@dg.asset_check(asset="fpl_fixtures_teams_df", blocking=True)
-def fpl_fixtures_teams_match_current_epl(
+@dg.asset_check(
+    asset="fpl_fixtures_teams_df",
+    additional_ins={"fpl_fixtures_df": dg.AssetIn(key="fpl_fixtures_df")},
+    blocking=True,
+)
+def fpl_fixtures_teams_match_fixture_season(
     fpl_fixtures_teams_df: pl.DataFrame,
+    fpl_fixtures_df: pl.DataFrame,
 ) -> dg.AssetCheckResult:
-    """Checks that FPL-derived team rows target current EPL."""
+    """Checks that FPL-derived team rows target the fixture feed's EPL season."""
+    season = fpl_fixture_season(fpl_fixtures_df.get_column("year"))
     invalid_rows = fpl_fixtures_teams_df.filter(
-        (pl.col("league") != "E0") | (pl.col("year") != current_season)
+        (pl.col("league") != "E0") | (pl.col("year") != season)
     )
     return dg.AssetCheckResult(
         passed=invalid_rows.is_empty(),
         metadata={
             "invalid_row_count": len(invalid_rows),
             "expected_league": "E0",
-            "expected_year": current_season,
+            "expected_year": season,
         },
     )

@@ -8,7 +8,6 @@ from footballpace.defs.assets.cache_update import (
     pace_sheet_entries_cache_update,
     teams_cache_update,
 )
-from footballpace.partitions import current_season
 
 
 class FakeCacheUpdateResource:
@@ -56,20 +55,20 @@ def test_pace_sheet_entries_cache_update_uses_partition_scope() -> None:
     assert cache_update_resource.calls == [("I1", 2024, "pace-sheets")]
 
 
-def test_fpl_fixtures_cache_update_uses_fixture_scope() -> None:
+def test_fpl_fixtures_cache_update_uses_written_fixture_season() -> None:
     cache_update_resource = FakeCacheUpdateResource()
 
-    fpl_fixtures_cache_update(dg.build_asset_context(), cache_update_resource)
+    fpl_fixtures_cache_update(dg.build_asset_context(), 2024, cache_update_resource)
 
-    assert cache_update_resource.calls == [("E0", current_season, "fixtures")]
+    assert cache_update_resource.calls == [("E0", 2024, "fixtures")]
 
 
-def test_fpl_results_cache_update_uses_match_scope() -> None:
+def test_fpl_results_cache_update_uses_written_result_season() -> None:
     cache_update_resource = FakeCacheUpdateResource()
 
-    fpl_results_cache_update(dg.build_asset_context(), cache_update_resource)
+    fpl_results_cache_update(dg.build_asset_context(), 2024, cache_update_resource)
 
-    assert cache_update_resource.calls == [("E0", current_season, "matches")]
+    assert cache_update_resource.calls == [("E0", 2024, "matches")]
 
 
 def test_teams_cache_update_uses_partition_scope() -> None:
@@ -83,9 +82,11 @@ def test_teams_cache_update_uses_partition_scope() -> None:
     assert cache_update_resource.calls == [("I1", 2024, "teams")]
 
 
-def test_fpl_fixtures_teams_cache_update_uses_current_epl_scope() -> None:
+def test_fpl_fixtures_teams_cache_update_uses_written_team_season() -> None:
     cache_update_resource = FakeCacheUpdateResource()
 
-    fpl_fixtures_teams_cache_update(dg.build_asset_context(), cache_update_resource)
+    fpl_fixtures_teams_cache_update(
+        dg.build_asset_context(), 2024, cache_update_resource
+    )
 
-    assert cache_update_resource.calls == [("E0", current_season, "teams")]
+    assert cache_update_resource.calls == [("E0", 2024, "teams")]

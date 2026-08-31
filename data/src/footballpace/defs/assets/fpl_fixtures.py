@@ -73,6 +73,15 @@ def team_idents(bootstrap_obj) -> dict[int, str]:
     return {team["id"]: team["name"] for team in bootstrap_obj["teams"]}
 
 
+def fpl_fixture_season(years: pl.Series) -> int:
+    seasons = years.unique().to_list()
+    if len(seasons) != 1 or not isinstance(seasons[0], int):
+        raise dg.Failure(
+            description="FPL fixtures must contain exactly one season year."
+        )
+    return seasons[0]
+
+
 @dg.asset(
     group_name="FPL",
     kinds={"Polars"},
@@ -150,7 +159,7 @@ def fpl_fixtures_df(
 @dg.asset(
     group_name="FPL",
     kinds={"Postgres"},
-    code_version="v1",
+    code_version="v2",
     ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType)},
     metadata={
         **FixtureDagsterType.metadata,
@@ -161,10 +170,14 @@ def fpl_fixtures_df(
 )
 def fpl_fixtures_postgres(
     fpl_fixtures_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.MaterializeResult:
-    """Writes the fixtures from FPL into Postgres."""
+) -> dg.MaterializeResult[int]:
+    """Writes FPL fixtures to Postgres and returns the updated season."""
+    season = fpl_fixture_season(fpl_fixtures_df.get_column("year"))
     rowcount = vercel_postgres.upsert_fixtures(fpl_fixtures_df.to_dicts())
-    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(
+        value=season,
+        metadata={"dagster/row_count": rowcount, "season": season},
+    )
 
 
 @dg.asset(
@@ -226,8 +239,11 @@ def fpl_results_df(
 @dg.asset(
     group_name="FPL",
     kinds={"Postgres"},
-    code_version="v1",
-    ins={"fpl_results_df": dg.AssetIn(dagster_type=MatchDagsterType)},
+    code_version="v2",
+    ins={
+        "fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType),
+        "fpl_results_df": dg.AssetIn(dagster_type=MatchDagsterType),
+    },
     metadata={
         **MatchDagsterType.metadata,
         "dagster/table_name": "matches",
@@ -236,8 +252,18 @@ def fpl_results_df(
     automation_condition=eager_respecting_data_version,
 )
 def fpl_results_postgres(
-    fpl_results_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
-) -> dg.MaterializeResult:
-    """Writes the results from FPL into Postgres."""
+    fpl_fixtures_df: pl.DataFrame,
+    fpl_results_df: pl.DataFrame,
+    vercel_postgres: VercelPostgresResource,
+) -> dg.MaterializeResult[int]:
+    """Writes FPL results to Postgres and returns the updated season.
+
+    The fixture frame supplies the season because the results frame is empty before
+    the first completed match.
+    """
+    season = fpl_fixture_season(fpl_fixtures_df.get_column("year"))
     rowcount = vercel_postgres.upsert_matches(fpl_results_df.to_dicts())
-    return dg.MaterializeResult(metadata={"dagster/row_count": rowcount})
+    return dg.MaterializeResult(
+        value=season,
+        metadata={"dagster/row_count": rowcount, "season": season},
+    )

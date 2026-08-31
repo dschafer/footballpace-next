@@ -4,7 +4,6 @@ from footballpace.defs.resources.cache_update import CacheUpdateResource
 from footballpace.partitions import (
     all_predicted_seasons_leagues_partition,
     all_seasons_leagues_partition,
-    current_season,
 )
 from footballpace.row_count import has_nonzero_row_count
 
@@ -57,14 +56,14 @@ def pace_sheet_entries_cache_update(
     group_name="CacheUpdate",
     kinds={"vercel"},
     automation_condition=db_write_updated_condition(),
-    deps=["fpl_fixtures_postgres"],
 )
 def fpl_fixtures_cache_update(
     context: dg.AssetExecutionContext,
+    fpl_fixtures_postgres: int,
     cache_update_resource: CacheUpdateResource,
 ) -> None:
     """Make sure that Next.js updates FPL-backed fixture caches."""
-    response = cache_update_resource.update_fixtures("E0", current_season)
+    response = cache_update_resource.update_fixtures("E0", fpl_fixtures_postgres)
     context.log.info(response)
 
 
@@ -72,14 +71,14 @@ def fpl_fixtures_cache_update(
     group_name="CacheUpdate",
     kinds={"vercel"},
     automation_condition=db_write_updated_condition(),
-    deps=["fpl_results_postgres"],
 )
 def fpl_results_cache_update(
     context: dg.AssetExecutionContext,
+    fpl_results_postgres: int,
     cache_update_resource: CacheUpdateResource,
 ) -> None:
     """Make sure that Next.js updates FPL-backed match-result caches."""
-    response = cache_update_resource.update_matches("E0", current_season)
+    response = cache_update_resource.update_matches("E0", fpl_results_postgres)
     context.log.info(response)
 
 
@@ -106,12 +105,12 @@ def teams_cache_update(
     group_name="CacheUpdate",
     kinds={"vercel"},
     automation_condition=db_write_updated_condition(),
-    deps=["fpl_fixtures_teams_postgres"],
 )
 def fpl_fixtures_teams_cache_update(
     context: dg.AssetExecutionContext,
+    fpl_fixtures_teams_postgres: int,
     cache_update_resource: CacheUpdateResource,
 ) -> None:
     """Make sure that Next.js updates the current EPL team-list cache."""
-    response = cache_update_resource.update_teams("E0", current_season)
+    response = cache_update_resource.update_teams("E0", fpl_fixtures_teams_postgres)
     context.log.info(response)
