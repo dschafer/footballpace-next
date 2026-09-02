@@ -33,6 +33,7 @@ export default async function LeagueMatches({
     ? await fetchFixtureLeagueMatches({
         league,
         paceTeams,
+        selection: teamCount == null ? "nearby" : "recent-and-next",
         targetFinish,
         teamNames,
         year,

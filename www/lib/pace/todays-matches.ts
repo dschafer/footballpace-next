@@ -10,6 +10,8 @@ import { paceFixturesForTeam } from "@/lib/pace/pace";
 
 const nearbyWindowDays = 1;
 
+type FixtureMatchSelection = "nearby" | "recent-and-next";
+
 export type TodayCompletedMatch = {
   away: PaceMatch;
   home: PaceMatch;
@@ -178,15 +180,51 @@ function completedFixtureKeysFromPaceTeams(paceTeams: PaceTeam[]): Set<string> {
   return keys;
 }
 
+function nextUnplayedFixturesForTeams({
+  completedFixtureKeys,
+  fixtures,
+  teamNames,
+}: {
+  completedFixtureKeys: Set<string>;
+  fixtures: Fixture[];
+  teamNames: Set<string>;
+}): Fixture[] {
+  const selectedFixtures: Fixture[] = [];
+  const remainingTeamNames = new Set(teamNames);
+  for (const fixture of fixtures) {
+    if (
+      fixture.kickoffTime == null ||
+      completedFixtureKeys.has(fixtureKey(fixture))
+    ) {
+      continue;
+    }
+    if (
+      !remainingTeamNames.has(fixture.homeTeam) &&
+      !remainingTeamNames.has(fixture.awayTeam)
+    ) {
+      continue;
+    }
+    selectedFixtures.push(fixture);
+    remainingTeamNames.delete(fixture.homeTeam);
+    remainingTeamNames.delete(fixture.awayTeam);
+    if (remainingTeamNames.size == 0) {
+      break;
+    }
+  }
+  return selectedFixtures;
+}
+
 export async function fetchFixtureLeagueMatches({
   league,
   paceTeams,
+  selection,
   targetFinish,
   teamNames,
   year,
 }: {
   league: string;
   paceTeams: PaceTeam[];
+  selection: FixtureMatchSelection;
   targetFinish: number;
   teamNames: Set<string>;
   year: number;
@@ -196,6 +234,7 @@ export async function fetchFixtureLeagueMatches({
     league,
     now: new Date(),
     paceTeams,
+    selection,
     targetFinish,
     teamNames,
     year,
@@ -206,6 +245,7 @@ async function fetchFixtureMatchesForLeague({
   league,
   now,
   paceTeams,
+  selection,
   targetFinish,
   teamNames,
   year,
@@ -213,6 +253,7 @@ async function fetchFixtureMatchesForLeague({
   league: string;
   now: Date;
   paceTeams: PaceTeam[];
+  selection: FixtureMatchSelection;
   targetFinish: number;
   teamNames: Set<string>;
   year: number;
@@ -231,27 +272,36 @@ async function fetchFixtureMatchesForLeague({
   ]);
 
   const completedFixtureKeys = completedFixtureKeysFromPaceTeams(paceTeams);
-  const upcomingFixtures = fixtures.filter(
-    (fixture) =>
-      fixture.kickoffTime != null &&
-      !completedFixtureKeys.has(fixtureKey(fixture)) &&
-      dateIsInWindow({
-        date: fixture.kickoffTime,
-        now,
-        timeZone: leagueInfo.tz,
-        windowDays: nearbyWindowDays,
-      }),
-  );
-  const relevantUpcomingFixtures = upcomingFixtures.filter(
-    (fixture) => teamNames.has(fixture.homeTeam) || teamNames.has(fixture.awayTeam),
-  );
-  const completedMatches = completedMatchesInWindowFromPaceTeams({
-    leagueInfo,
-    now,
-    paceTeams,
-    teamNames,
-    windowDays: nearbyWindowDays,
-  });
+  const relevantUpcomingFixtures =
+    selection == "recent-and-next"
+      ? nextUnplayedFixturesForTeams({
+          completedFixtureKeys,
+          fixtures,
+          teamNames,
+        })
+      : fixtures.filter(
+          (fixture) =>
+            fixture.kickoffTime != null &&
+            !completedFixtureKeys.has(fixtureKey(fixture)) &&
+            dateIsInWindow({
+              date: fixture.kickoffTime,
+              now,
+              timeZone: leagueInfo.tz,
+              windowDays: nearbyWindowDays,
+            }) &&
+            (teamNames.has(fixture.homeTeam) ||
+              teamNames.has(fixture.awayTeam)),
+        );
+  const completedMatches =
+    selection == "recent-and-next"
+      ? recentCompletedMatchesFromPaceTeams({ paceTeams, teamNames })
+      : completedMatchesInWindowFromPaceTeams({
+          leagueInfo,
+          now,
+          paceTeams,
+          teamNames,
+          windowDays: nearbyWindowDays,
+        });
   if (relevantUpcomingFixtures.length == 0 || paceSheetEntries.length == 0) {
     return completedMatches;
   }
