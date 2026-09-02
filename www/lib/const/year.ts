@@ -1,2 +1,2 @@
-const year = 2025;
+const year = 2026;
 export default year;
