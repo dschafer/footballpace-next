@@ -4,6 +4,12 @@
   "license": "MIT",
   "version": "0.0.1",
   "private": true,
+  "pnpm": {
+    "overrides": {
+      "deepmerge-ts@<8.0.0": "8.0.0",
+      "mysql2@<3.22.0": "3.22.0"
+    }
+  },
   "scripts": {
     "dev": "prisma generate --no-hints && next dev",
     "build": "prisma generate --no-hints && next build",
