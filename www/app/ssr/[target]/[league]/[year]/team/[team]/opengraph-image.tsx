@@ -7,8 +7,6 @@ import type { ImageResponse } from "next/og";
 
 type Props = { params: Promise<SeasonPageParam> };
 
-export const dynamic = "force-dynamic";
-
 function getSubtitle(params: SeasonPageParam): string {
   const [leagueInfo, yearInt] = validateLeagueYear(params);
   return `${leagueInfo.flag} ${decodeURIComponent(params.team)} ${yearInt}`;

@@ -6,3 +6,7 @@ allowBuilds:
   prisma: true
   sharp: true
   unrs-resolver: true
+
+overrides:
+  deepmerge-ts@<8.0.0: 8.0.0
+  mysql2@<3.22.0: 3.22.0
