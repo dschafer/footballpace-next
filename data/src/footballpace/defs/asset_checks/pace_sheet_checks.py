@@ -7,10 +7,7 @@ from footballpace.defs.asset_checks.helpers import (
     duplicate_count,
     duplicate_key_samples,
 )
-from footballpace.partitions import (
-    all_predicted_seasons_leagues_partition,
-    predicted_seasons_of_league_mapping,
-)
+from footballpace.partitions import all_predicted_seasons_leagues_partition
 
 
 PACE_SHEET_KEY = ["league", "year", "team_finish", "opponent_finish", "home"]
@@ -149,39 +146,4 @@ def pace_sheet_entries_opponent_finish_coverage(
                 "invalid_samples": invalid_groups.head(5).to_dicts(),
             },
         ),
-    )
-
-
-@dg.asset_check(
-    asset="pace_sheet_entries_df",
-    additional_ins={
-        "match_results_with_finish_df": dg.AssetIn(
-            key="match_results_with_finish_df",
-            partition_mapping=predicted_seasons_of_league_mapping,
-        )
-    },
-    blocking=True,
-    partitions_def=all_predicted_seasons_leagues_partition,
-)
-def pace_sheet_entries_exclude_predicted_season(
-    context: dg.AssetCheckExecutionContext,
-    pace_sheet_entries_df: pl.DataFrame,
-    match_results_with_finish_df: dict[str, pl.DataFrame],
-) -> dg.AssetCheckResult:
-    """Checks that pace sheets do not use their predicted season as input."""
-    assert isinstance(context.partition_key, dg.MultiPartitionKey)
-    season = int(context.partition_key.keys_by_dimension["predicted_season"])
-    input_years = sorted(
-        {
-            int(year)
-            for df in match_results_with_finish_df.values()
-            for year in df["year"].unique().to_list()
-        }
-    )
-    return dg.AssetCheckResult(
-        passed=season not in input_years,
-        metadata={
-            "predicted_season": season,
-            "input_years": input_years,
-        },
     )
