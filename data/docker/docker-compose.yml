@@ -46,6 +46,7 @@ services:
       dockerfile: docker/Dockerfile_dagster
     entrypoint:
       - dagster-webserver
+      - --read-only
       - -h
       - "0.0.0.0"
       - -p
