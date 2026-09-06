@@ -4,6 +4,7 @@ services:
   dagster-postgresql:
     image: postgres:11
     container_name: dagster-postgresql
+    restart: unless-stopped
     environment:
       POSTGRES_USER: "${DAGSTER_POSTGRES_USER}"
       POSTGRES_PASSWORD: "${DAGSTER_POSTGRES_PASSWORD}"
@@ -27,7 +28,7 @@ services:
       dockerfile: docker/Dockerfile_footballpace_data
     container_name: dagster-footballpace-data
     image: dagster-footballpace-data-image
-    restart: always
+    restart: unless-stopped
     environment:
       DAGSTER_CURRENT_IMAGE: "dagster-footballpace-data-image"
     sysctls:
@@ -60,6 +61,7 @@ services:
       retries: 5
     container_name: dagster-webserver
     image: dagster
+    restart: unless-stopped
     environment:
       DAGSTER_POSTGRES_USER: "${DAGSTER_POSTGRES_USER}"
       DAGSTER_POSTGRES_PASSWORD: "${DAGSTER_POSTGRES_PASSWORD}"
@@ -86,7 +88,7 @@ services:
       - run
     container_name: dagster-daemon
     image: dagster
-    restart: on-failure
+    restart: unless-stopped
     env_file: "../.env"
     sysctls:
      - net.ipv6.conf.all.disable_ipv6=1
