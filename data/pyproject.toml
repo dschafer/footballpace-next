@@ -20,6 +20,13 @@ docker = [
 ]
 
 [dependency-groups]
+dagster = [
+    "dagster>=1.13.3",
+    "dagster-docker>=0.29.3",
+    "dagster-graphql>=1.13.3",
+    "dagster-postgres>=0.29.3",
+    "dagster-webserver>=1.13.3",
+]
 dev = [
     "dagster-dg-cli>=1.13.3",
     "pytest>=9.0.3",

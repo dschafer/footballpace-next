@@ -601,6 +601,13 @@ docker = [
 ]
 
 [package.dev-dependencies]
+dagster = [
+    { name = "dagster" },
+    { name = "dagster-docker" },
+    { name = "dagster-graphql" },
+    { name = "dagster-postgres" },
+    { name = "dagster-webserver" },
+]
 dev = [
     { name = "dagster-dg-cli" },
     { name = "pytest" },
@@ -623,6 +630,13 @@ requires-dist = [
 provides-extras = ["docker"]
 
 [package.metadata.requires-dev]
+dagster = [
+    { name = "dagster", specifier = ">=1.13.3" },
+    { name = "dagster-docker", specifier = ">=0.29.3" },
+    { name = "dagster-graphql", specifier = ">=1.13.3" },
+    { name = "dagster-postgres", specifier = ">=0.29.3" },
+    { name = "dagster-webserver", specifier = ">=1.13.3" },
+]
 dev = [
     { name = "dagster-dg-cli", specifier = ">=1.13.3" },
     { name = "pytest", specifier = ">=9.0.3" },

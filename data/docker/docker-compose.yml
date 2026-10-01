@@ -55,7 +55,7 @@ services:
       - -w
       - workspace.yaml
     healthcheck:
-      test: [CMD, curl, -f, http://dagster-webserver:3000/server_info]
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://dagster-webserver:3000/server_info', timeout=5).close()"]
       interval: 30s
       timeout: 10s
       retries: 5
