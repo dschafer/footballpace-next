@@ -14,7 +14,7 @@ class HTTPResource(dg.ConfigurableResource):
 
     @contextmanager
     def yield_for_execution(self, context: dg.InitResourceContext) -> Iterator[Self]:
-        with httpx.Client() as c:
+        with httpx.Client(follow_redirects=True) as c:
             self._httpx_client = c
             yield self
 
