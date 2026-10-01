@@ -1,6 +1,6 @@
 #!/bin/sh
-git remote update
-if [ $(git status | grep behind |  wc -l) -gt 0 ]; then
-  git pull
-  docker compose --env-file ../.env up --detach --build dagster-footballpace-data
-fi
+set -eu
+
+cd "$(dirname "$0")"
+git pull --ff-only
+docker compose --env-file ../.env up --detach --build

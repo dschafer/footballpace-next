@@ -13,4 +13,6 @@ docker compose --env-file ../.env up
 
 ## Keeping updated
 
-To keep the docker deployment updated with new changes, run [update.sh](update.sh) (or add it to a crontab). That will pull changes from origin/main, then redeploy the app code container.
+To keep the Docker deployment updated, run [update.sh](update.sh) (or add its absolute path to a crontab). It runs from its own directory, so it can be invoked from any working directory. The deployment checkout should be on `main`, tracking `origin/main`; the script pulls the current branch's configured upstream with `git pull --ff-only` and stops if the pull fails.
+
+Every successful pull, including when Git is already up to date, is followed by `docker compose --env-file ../.env up --detach --build` for the whole project. This applies app code, webserver, daemon, and other Compose changes, and retries deployment on the next run if a previous build or startup failed. Compose uses cached builds and leaves unchanged running containers alone. Services with changed images or configuration are recreated as needed, preserving mounted volumes, including the PostgreSQL data volume.
