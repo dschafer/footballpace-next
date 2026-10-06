@@ -2,7 +2,7 @@ services:
   # This service runs the postgres DB used by dagster for run storage, schedule storage,
   # and event log storage.
   dagster-postgresql:
-    image: postgres:11
+    image: postgres:18
     container_name: dagster-postgresql
     restart: unless-stopped
     environment:
@@ -14,7 +14,7 @@ services:
     networks:
       - dagster-backend-network
     volumes:
-      - dagster-data:/var/lib/postgresql/data
+      - dagster-data-pg18:/var/lib/postgresql
 
   # This service runs the gRPC server that loads your user code, in both dagster-webserver
   # and dagster-daemon. By setting DAGSTER_CURRENT_IMAGE to its own image, we tell the
@@ -114,7 +114,7 @@ networks:
     internal: false
 
 volumes:
-  dagster-data:
-    name: dagster-data
+  dagster-data-pg18:
+    name: dagster-data-pg18
   dagster-local:
     name: dagster-local
