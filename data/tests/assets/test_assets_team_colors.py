@@ -2,6 +2,7 @@ import dagster as dg
 import polars as pl
 
 from footballpace.defs.assets.team_colors import team_colors_df
+from footballpace.defs.models import TeamColorsDagsterType
 
 from .read_file import read_teamcolors_bytes
 
@@ -18,3 +19,6 @@ def test_team_colors_df():
     assert df["team"][1] == "Arsenal"
     assert df["primary_color"][1] == "EF0107"
     assert df["secondary_color"][1] == "023474"
+
+    type_check = dg.check_dagster_type(TeamColorsDagsterType, df)
+    assert type_check.success, type_check.description

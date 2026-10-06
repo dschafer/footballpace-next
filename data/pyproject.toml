@@ -9,7 +9,7 @@ dependencies = [
   "dagster-webserver>=1.13.3",
   "httpx>=0.28.1",
   "patito>=0.8.6",
-  "polars>=1.40.1",
+  "polars>=2.0.0",
   "psycopg[binary]>=3.3.4",
 ]
 

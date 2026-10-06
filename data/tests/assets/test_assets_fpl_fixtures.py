@@ -9,6 +9,10 @@ from footballpace.defs.assets.fpl_fixtures import (
     fpl_results_df,
     fpl_results_postgres,
 )
+from footballpace.defs.models import (
+    FPLFixtureDagsterType,
+    MatchDagsterType,
+)
 
 from .read_file import read_fpl_bytes
 
@@ -27,6 +31,9 @@ def test_fpl_fixtures_df():
     assert df["year"][0] == 2024
     assert df["kickoff_time"][0] is not None
 
+    type_check = dg.check_dagster_type(FPLFixtureDagsterType, df)
+    assert type_check.success, type_check.description
+
 
 def test_fpl_fixtures_rescheduled_df():
     bootstrap = read_fpl_bytes("bootstrap-static.json")
@@ -41,6 +48,9 @@ def test_fpl_fixtures_rescheduled_df():
     assert df["league"][0] == "E0"
     assert df["year"][0] == 2024
     assert df["kickoff_time"][0] is None
+
+    type_check = dg.check_dagster_type(FPLFixtureDagsterType, df)
+    assert type_check.success, type_check.description
 
 
 def test_fpl_results_df():
@@ -58,6 +68,9 @@ def test_fpl_results_df():
     assert len(df) > 0
     assert df["league"][0] == "E0"
     assert df["year"][0] == 2024
+
+    type_check = dg.check_dagster_type(MatchDagsterType, df)
+    assert type_check.success, type_check.description
 
 
 def test_fpl_fixture_season_rejects_multiple_years() -> None:
@@ -87,6 +100,9 @@ def test_fpl_postgres_assets_carry_fixture_season() -> None:
     results_df = results_output.value
     assert isinstance(results_df, pl.DataFrame)
     assert results_df.is_empty()
+
+    type_check = dg.check_dagster_type(MatchDagsterType, results_df)
+    assert type_check.success, type_check.description
 
     class FakeVercelPostgresResource:
         def upsert_fixtures(self, rows) -> int:

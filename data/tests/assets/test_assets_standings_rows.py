@@ -3,6 +3,7 @@ import polars as pl
 
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.standings_rows import standings_rows_df
+from footballpace.defs.models import StandingsRowDagsterType
 
 from .read_file import read_csv_bytes
 
@@ -25,3 +26,6 @@ def test_standingsrows_df():
     assert lpool["draws"][0] == 10
     assert lpool["goals_for"][0] == 75
     assert lpool["goals_against"][0] == 47
+
+    type_check = dg.check_dagster_type(StandingsRowDagsterType, df)
+    assert type_check.success, type_check.description

@@ -6,6 +6,7 @@ from footballpace.defs.assets.match_results import (
     match_results_df,
     match_results_postgres,
 )
+from footballpace.defs.models import MatchDagsterType
 
 from .read_file import read_csv_bytes
 
@@ -36,6 +37,9 @@ def test_match_results_df_22():
     assert len(df) == (20 * 19)
     assert df["date"][0] == datetime.date(2022, 8, 5)
     assert df["year"][0] == 2022
+
+    type_check = dg.check_dagster_type(MatchDagsterType, df)
+    assert type_check.success, type_check.description
 
 
 def test_match_results_postgres():

@@ -5,6 +5,7 @@ import polars as pl
 from footballpace.defs.assets.match_results import match_results_df
 from footballpace.defs.assets.match_with_finish import match_results_with_finish_df
 from footballpace.defs.assets.standings_rows import standings_rows_df
+from footballpace.defs.models import MatchWithFinishDagsterType
 
 from .read_file import read_csv_bytes
 
@@ -30,3 +31,6 @@ def test_match_results_with_finish():
     assert df["away_team"][0] == "Arsenal"
     assert df["home_finish"][0] == 11
     assert df["away_finish"][0] == 2
+
+    type_check = dg.check_dagster_type(MatchWithFinishDagsterType, df)
+    assert type_check.success, type_check.description

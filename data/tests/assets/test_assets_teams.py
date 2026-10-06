@@ -11,6 +11,7 @@ from footballpace.defs.assets.teams import (
     fpl_fixtures_teams_postgres,
     teams_df,
 )
+from footballpace.defs.models import TeamDagsterType
 
 from .read_file import read_csv_bytes, read_fpl_bytes
 
@@ -38,6 +39,9 @@ def test_teams_df_from_match_results() -> None:
     assert df["year"].unique().to_list() == [2022]
     assert "Liverpool" in df["team"].to_list()
 
+    type_check = dg.check_dagster_type(TeamDagsterType, df)
+    assert type_check.success, type_check.description
+
 
 def test_fpl_fixtures_teams_df_uses_fixture_season() -> None:
     bootstrap = read_fpl_bytes("bootstrap-static.json")
@@ -55,6 +59,9 @@ def test_fpl_fixtures_teams_df_uses_fixture_season() -> None:
     assert len(df) == 20
     assert df["league"].unique().to_list() == ["E0"]
     assert df["year"].unique().to_list() == [2024]
+
+    type_check = dg.check_dagster_type(TeamDagsterType, df)
+    assert type_check.success, type_check.description
 
     check_result = fpl_fixtures_teams_match_fixture_season(df, fixtures_df)
     assert isinstance(check_result, dg.AssetCheckResult)
