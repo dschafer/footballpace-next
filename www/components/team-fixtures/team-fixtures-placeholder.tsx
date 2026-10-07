@@ -9,7 +9,10 @@ import {
   TableThead,
   TableTr,
   Title,
+  VisuallyHidden,
 } from "@mantine/core";
+
+const teamNameWidths = ["65%", "85%", "75%"];
 
 export default function TeamFixturesPlaceholder({
   matchCount,
@@ -18,11 +21,12 @@ export default function TeamFixturesPlaceholder({
 }) {
   return (
     <Stack>
-      <Title order={3}>
-        <Skeleton>Fixtures</Skeleton>
+      <Title order={3} aria-hidden="true">
+        <Skeleton height="1lh" width="100%" />
       </Title>
       <TableScrollContainer minWidth={0}>
-        <Table stickyHeader striped>
+        <VisuallyHidden role="status">Loading fixtures…</VisuallyHidden>
+        <Table stickyHeader striped aria-hidden="true">
           <TableThead>
             <TableTr>
               <TableTh ta="right">Date</TableTh>
@@ -34,13 +38,18 @@ export default function TeamFixturesPlaceholder({
             {[...Array(matchCount)].map((_, i) => (
               <TableTr key={i}>
                 <TableTd ta="right">
-                  <Skeleton>Jan 1, 2024 5:30 PM</Skeleton>
+                  <Skeleton height="1lh" miw="9em" />
                 </TableTd>
                 <TableTd ta="right">
-                  <Skeleton>vs Tottenham</Skeleton>
+                  <Skeleton
+                    height="1lh"
+                    miw="9ch"
+                    width={teamNameWidths[i % teamNameWidths.length]}
+                    ml="auto"
+                  />
                 </TableTd>
                 <TableTd ta="right">
-                  <Skeleton>2.0</Skeleton>
+                  <Skeleton height="1lh" miw="3ch" />
                 </TableTd>
               </TableTr>
             ))}

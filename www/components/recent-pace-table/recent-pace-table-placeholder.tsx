@@ -8,7 +8,11 @@ import {
   TableTh,
   TableThead,
   TableTr,
+  VisuallyHidden,
 } from "@mantine/core";
+
+const teamNameWidths = ["65%", "85%", "75%"];
+const matchResultWidths = ["80%", "95%", "85%"];
 
 export default function RecentPaceTablePlaceholder({
   rowCount,
@@ -17,7 +21,8 @@ export default function RecentPaceTablePlaceholder({
 }) {
   return (
     <TableScrollContainer minWidth={0}>
-      <Table stickyHeader striped>
+      <VisuallyHidden role="status">Loading recent pace…</VisuallyHidden>
+      <Table stickyHeader striped aria-hidden="true">
         <Box component="colgroup">
           <Box component="col" width="5%" />
           <Box component="col" width="35%" />
@@ -40,21 +45,32 @@ export default function RecentPaceTablePlaceholder({
           {[...Array(rowCount)].map((_, rowNum) => {
             return (
               <TableTr key={rowNum}>
-                <TableTd ta="center">{rowNum + 1}</TableTd>
+                <TableTd ta="center">
+                  <Skeleton height="1lh" miw={rowNum < 9 ? "1ch" : "2ch"} />
+                </TableTd>
                 <TableTh ta="left" scope="row">
-                  <Skeleton>Arsenal</Skeleton>
+                  <Skeleton
+                    height="1lh"
+                    miw="6ch"
+                    width={teamNameWidths[rowNum % teamNameWidths.length]}
+                  />
                 </TableTh>
                 <TableTd ta="center">
-                  <Skeleton>Arsenal 7:0 Chelsea</Skeleton>
+                  <Skeleton
+                    height="1lh"
+                    miw="6ch"
+                    width={matchResultWidths[rowNum % matchResultWidths.length]}
+                    mx="auto"
+                  />
                 </TableTd>
                 <TableTd ta="right" p="0">
-                  <Skeleton>+3</Skeleton>
+                  <Skeleton height="1lh" miw="2ch" />
                 </TableTd>
                 <TableTd ta="right" p="xs">
-                  <Skeleton>3</Skeleton>
+                  <Skeleton height="1lh" miw="1ch" />
                 </TableTd>
                 <TableTd ta="right" p="0">
-                  <Skeleton>+3</Skeleton>
+                  <Skeleton height="1lh" miw="2ch" />
                 </TableTd>
               </TableTr>
             );
