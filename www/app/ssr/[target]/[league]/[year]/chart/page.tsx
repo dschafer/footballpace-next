@@ -12,6 +12,7 @@ import { Stack, Title } from "@mantine/core";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import type { Metadata } from "next/types";
 import StandingsPaceChart from "@/components/pace-chart/standings-pace-chart";
+import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
@@ -32,8 +33,9 @@ export default async function ChartSSR(
   props: PageProps<"/ssr/[target]/[league]/[year]/chart">,
 ) {
   const { league, year, target } = await props.params;
+  const targetKey = validateTargetRoute(target);
   const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
-  const tf = targetKeyToFinish(league)[target as TargetKey];
+  const tf = targetKeyToFinish(league)[targetKey];
   return (
     <Stack>
       <Title order={2}>

@@ -14,6 +14,7 @@ import HistoricalPaceTable from "@/components/explanation/historical-pace-table"
 import type { Metadata } from "next/types";
 import ProjectedStandingsPreamble from "@/components/explanation/projected-standings-preamble";
 import ProjectedStandingsTable from "@/components/explanation/projected-standings-table";
+import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
@@ -34,8 +35,9 @@ export default async function ExplanationSSR(
   props: PageProps<"/ssr/[target]/[league]/[year]/explanation">,
 ) {
   const { league, year, target } = await props.params;
+  const targetKey = validateTargetRoute(target);
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
-  const tf = targetKeyToFinish(league)[target as TargetKey];
+  const tf = targetKeyToFinish(league)[targetKey];
   return (
     <Stack>
       <Title order={2}>Historical Pace</Title>

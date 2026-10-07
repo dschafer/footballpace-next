@@ -16,6 +16,7 @@ import StandingsPaceTable from "@/components/pace-table/standings-pace-table";
 import { Suspense } from "react";
 import TodaysMatchesPlaceholder from "@/components/today-matches/todays-matches-placeholder";
 import leagues from "@/lib/const/leagues";
+import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
@@ -36,8 +37,9 @@ export default async function LeagueRootSSR(
   props: PageProps<"/ssr/[target]/[league]/[year]">,
 ) {
   const { league, year, target } = await props.params;
+  const targetKey = validateTargetRoute(target);
   const [_leagueInfo, yearInt] = validateLeagueYear({ league, year });
-  const tf = targetKeyToFinish(league)[target as TargetKey];
+  const tf = targetKeyToFinish(league)[targetKey];
   return (
     <Stack>
       <Title order={2}>

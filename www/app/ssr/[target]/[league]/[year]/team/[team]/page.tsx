@@ -11,6 +11,7 @@ import type { Metadata } from "next/types";
 import TeamContent from "@/components/team-page/team-content";
 import { fetchTeams } from "@/lib/pace/data";
 import { teamPath } from "@/lib/url/team-links";
+import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 import year from "@/lib/const/year";
 
 export async function generateStaticParams(): Promise<
@@ -46,9 +47,10 @@ export default async function TeamSSR(
   props: PageProps<"/ssr/[target]/[league]/[year]/team/[team]">,
 ) {
   const { league, year, team, target } = await props.params;
+  const targetKey = validateTargetRoute(target);
   const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   const teamDecoded = decodeURIComponent(team);
-  const tf = targetKeyToFinish(league)[target as TargetKey];
+  const tf = targetKeyToFinish(league)[targetKey];
   return (
     <Stack>
       <Title order={2}>{teamDecoded}</Title>
