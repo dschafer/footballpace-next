@@ -11,6 +11,13 @@ docker compose --env-file ../.env build --no-cache
 docker compose --env-file ../.env up
 ```
 
+Use Docker Compose 2.17.0 or later. The webserver and daemon wait for PostgreSQL's
+healthcheck to pass before starting. The check uses TCP so the temporary server
+used during database initialization cannot report readiness early. Their database
+dependencies also set `restart: true`, so explicit Compose updates or restarts of
+PostgreSQL restart both services to re-establish database connections. This does
+not propagate automatic container restarts or later healthcheck failures.
+
 ## Keeping updated
 
 Both images install dependencies from `data/uv.lock` with `uv sync --locked`. The
