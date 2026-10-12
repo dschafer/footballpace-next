@@ -1,5 +1,9 @@
 import type { Metadata, ResolvingMetadata } from "next/types";
-import { openGraphMetadata, twitterMetadata } from "@/lib/metadata";
+import {
+  openGraphMetadata,
+  socialImageMetadata,
+  twitterMetadata,
+} from "@/lib/metadata";
 import { validateLeagueYear } from "@/lib/const/current";
 
 export async function generateMetadata(
@@ -14,8 +18,14 @@ export async function generateMetadata(
   };
   return {
     title,
-    openGraph: { ...openGraphMetadata, title },
-    twitter: { ...twitterMetadata, title },
+    ...socialImageMetadata(
+      {
+        openGraph: { ...openGraphMetadata, title },
+        twitter: { ...twitterMetadata, title },
+      },
+      `/${league}/${year}/opengraph-image`,
+      `${leagueInfo.flag} ${leagueInfo.name} ${yearInt}`,
+    ),
   };
 }
 

@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from "next/types";
 import {
   PRERENDER_TARGET_KEYS,
   type TargetKey,
@@ -7,9 +8,9 @@ import { type SeasonPageParam, validateLeagueYear } from "@/lib/const/current";
 import { Stack, Text, Title } from "@mantine/core";
 
 import AnchorLink from "@/components/anchor-link/anchor-link";
-import type { Metadata } from "next/types";
 import TeamContent from "@/components/team-page/team-content";
 import { fetchTeams } from "@/lib/pace/data";
+import { socialImageMetadata } from "@/lib/metadata";
 import { teamPath } from "@/lib/url/team-links";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 import year from "@/lib/const/year";
@@ -34,9 +35,16 @@ export async function generateStaticParams(): Promise<
 
 export async function generateMetadata(
   props: PageProps<"/ssr/[target]/[league]/[year]/team/[team]">,
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { league, year, team } = await props.params;
+  const [leagueInfo, yearInt] = validateLeagueYear({ league, year });
   return {
+    ...socialImageMetadata(
+      await parent,
+      `${teamPath(league, year, team)}/opengraph-image/id`,
+      `${leagueInfo.flag} ${decodeURIComponent(team)} ${yearInt}`,
+    ),
     alternates: {
       canonical: teamPath(league, year, team),
     },
