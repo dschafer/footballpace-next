@@ -10,7 +10,7 @@ export default async function RootLayout(props: LayoutProps<"/ssr/[target]">) {
     <TargetProvider targetKey={target}>
       <Shell
         navLinks={<NavLinks />}
-        targetFinishSelect={<TargetFinishSelect initialValue={1} />}
+        targetFinishSelect={<TargetFinishSelect />}
       >
         {props.children}
       </Shell>

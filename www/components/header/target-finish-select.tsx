@@ -3,32 +3,18 @@
 import {
   TARGET_KEYS,
   type TargetKey,
-  finishToTargetKey,
   targetKeyLabels,
 } from "@/lib/pace/target-key";
-import { useCallback, useState } from "react";
 import { Select } from "@mantine/core";
+import { useCallback } from "react";
+import { useTargetKey } from "@/context/target-context";
 
-export default function TargetFinishSelect({
-  initialValue,
-}: {
-  initialValue: number;
-}) {
-  const [value, setValue] = useState<TargetKey>(() => {
-    try {
-      const url = new URL(window.location.href);
-      const t = url.searchParams.get("target");
-      if (t && (TARGET_KEYS as readonly string[]).includes(t)) {
-        return t as TargetKey;
-      }
-    } catch {}
-    return finishToTargetKey(initialValue);
-  });
+export default function TargetFinishSelect() {
+  const value = useTargetKey();
 
   const onChange = useCallback((val: string | null) => {
     if (!val) return;
     const key = val as TargetKey;
-    setValue(key);
     const url = new URL(window.location.href);
     if (key === "champion") {
       url.searchParams.delete("target");
@@ -63,4 +49,3 @@ export default function TargetFinishSelect({
     />
   );
 }
-
