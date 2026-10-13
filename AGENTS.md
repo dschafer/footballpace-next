@@ -29,6 +29,9 @@
     2) Within each group, sort alphabetically by the first imported identifier (ignore the `type` keyword for sorting), where  capital letters are sorted before lower case letters.
 - Python: idiomatic, black‑style formatting (PEP8) and pytest naming `test_*.py`.
 
+## Terminology
+- In prose, avoid "expected points"; readers are particular about that term. Almost always use "target points" instead.
+
 ## Testing Guidelines
 - Web: Component behavior is verified via data/fixtures and manual runs; lint must pass.
 - Data: `pytest -q` in `data/`. Prefer small, deterministic tests near the code under test.
