@@ -5,14 +5,16 @@ export default function HistoricalPacePreamblePlaceholder() {
     <Stack>
       <Skeleton>
         <Text>
-          This table shows the target number of points a championship team would
-          take from each match, based on historical data.
+          This table shows the target number of points a team would take from
+          each match, based on historical data and the pace target.
         </Text>
       </Skeleton>
       <Skeleton>
         <Text>
-          For example, the hardest match of the year for a championship team is
-          away to the team that finishes 2nd.
+          For example, consider an away match against the highest-finishing
+          opponent (note that if the pace target is the championship, the
+          highest-finished opponent would be projected to finish 2nd, even if in
+          reality they finished 1st).
         </Text>
       </Skeleton>
     </Stack>
