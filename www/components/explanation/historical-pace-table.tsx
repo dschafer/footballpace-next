@@ -44,8 +44,12 @@ async function HistoricalPaceTableContent({
     return <ErrorAlert />;
   }
 
-  const homePace = [...Array(paceSheetEntries.length / 2 + 1)];
-  const awayPace = [...Array(paceSheetEntries.length / 2 + 1)];
+  const opponentPositions = Array.from(
+    new Set(paceSheetEntries.map((entry) => entry.opponentFinish)),
+  ).sort((a, b) => a - b);
+  const paceArrayLength = opponentPositions[opponentPositions.length - 1] + 1;
+  const homePace = new Array<number>(paceArrayLength);
+  const awayPace = new Array<number>(paceArrayLength);
   for (const entry of paceSheetEntries) {
     if (entry.home) {
       homePace[entry.opponentFinish] = entry.expectedPoints;
@@ -104,19 +108,19 @@ async function HistoricalPaceTableContent({
           </TableTr>
         </TableThead>
         <TableTbody>
-          {[...Array(paceSheetEntries.length / 2)].map((_, i) => (
-            <TableTr key={i}>
-              <TableTd ta="right">{i + 2}</TableTd>
+          {opponentPositions.map((position) => (
+            <TableTr key={position}>
+              <TableTd ta="right">{position}</TableTd>
               <TableTd ta="right">
                 <NumberFormatter
-                  value={homePace[i + 2]}
+                  value={homePace[position]}
                   decimalScale={2}
                   fixedDecimalScale
                 />
               </TableTd>
               <TableTd ta="right">
                 <NumberFormatter
-                  value={awayPace[i + 2]}
+                  value={awayPace[position]}
                   decimalScale={2}
                   fixedDecimalScale
                 />
