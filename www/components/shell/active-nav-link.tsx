@@ -3,7 +3,7 @@
 import { NavLink, type NavLinkProps, createPolymorphicComponent } from "@mantine/core";
 import { isLocalPathHref, withTargetParam } from "@/lib/url/with-target";
 import Link from "next/link";
-import { forwardRef } from "react";
+import type { RefAttributes } from "react";
 import { usePathname } from "next/navigation";
 import { useTargetKey } from "@/context/target-context";
 interface ActiveNavLinkProps extends NavLinkProps {
@@ -20,9 +20,9 @@ export const ActiveNavLink = createPolymorphicComponent<
   "a",
   ActiveNavLinkProps
 >(
-  forwardRef<HTMLAnchorElement, ActiveNavLinkProps>(function ActiveNavLink(
-    { pageUrl, prefixUrl, href, ...others },
-    ref,
+  function ActiveNavLink(
+    { pageUrl, prefixUrl, href, ...others }: ActiveNavLinkProps &
+      RefAttributes<HTMLAnchorElement>,
   ) {
     const pathname = usePathname().replace(/^\/ssr\/[^/]+(?=\/|$)/, "") || "/";
     const targetKey = useTargetKey();
@@ -44,7 +44,6 @@ export const ActiveNavLink = createPolymorphicComponent<
           component={Link}
           defaultOpened={active}
           href={finalHref}
-          ref={ref}
           {...others}
         >
           {others.children}
@@ -57,11 +56,10 @@ export const ActiveNavLink = createPolymorphicComponent<
         active={active}
         defaultOpened={active}
         href={finalHref}
-        ref={ref}
         {...others}
       >
         {others.children}
       </NavLink>
     );
-  }),
+  },
 );
