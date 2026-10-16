@@ -6,7 +6,6 @@ import {
   TableTd,
   Text,
   darken,
-  isLightColor,
   useComputedColorScheme,
 } from "@mantine/core";
 
@@ -72,9 +71,8 @@ export default function OpponentsTableCell({
       ];
     }
     const bg = bgColors[maybePaceMatch.points];
-    const fg = isLightColor(bg) ? "black" : "white";
     return (
-      <TableTd ta="right" p="xs" bg={bg} color={fg}>
+      <TableTd ta="right" p="xs" bg={bg}>
         <Stack gap="xs">
           <Result match={match} link={true} multiline={true} />
           <Text span size="sm" inherit>
