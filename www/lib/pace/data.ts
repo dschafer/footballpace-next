@@ -6,7 +6,7 @@ import type {
   Team,
   TeamColor,
 } from "@/prisma/generated/client";
-import { cacheLife, cacheTag } from "next/cache";
+import { cacheLife, cacheTag, prefetch } from "next/cache";
 import {
   fixturesCacheTag,
   matchesCacheTag,
@@ -15,7 +15,6 @@ import {
   teamsCacheTag,
 } from "@/lib/cache-tags";
 import { PRERENDER_SEASONS } from "@/lib/const/current";
-import { connection } from "next/server";
 import prisma from "@/lib/prisma";
 import { targetKeyToFinish } from "@/lib/pace/target-key";
 
@@ -100,7 +99,7 @@ export async function fetchMatches(
   args: MatchFindManyArgs = {},
 ): Promise<Match[]> {
   if (!shouldCacheSeasonData(league, year)) {
-    await connection();
+    await prefetch();
   }
   return fetchCachedMatches(league, year, args);
 }
@@ -126,7 +125,7 @@ export async function fetchFixtures(
   args: FixtureFindManyArgs = {},
 ): Promise<Fixture[]> {
   if (!shouldCacheSeasonData(league, year)) {
-    await connection();
+    await prefetch();
   }
   return fetchCachedFixtures(league, year, args);
 }
@@ -159,7 +158,7 @@ export async function fetchPaceSheetEntries(
   args: PaceSheetEntryFindManyArgs = {},
 ): Promise<PaceSheetEntry[]> {
   if (!shouldCachePaceSheetData(league, year, targetFinish)) {
-    await connection();
+    await prefetch();
   }
   return fetchCachedPaceSheetEntries(league, year, targetFinish, args);
 }

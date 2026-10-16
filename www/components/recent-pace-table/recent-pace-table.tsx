@@ -94,6 +94,7 @@ async function RecentPaceTableContent({
                 <TableTh ta="left" scope="row">
                   <AnchorLink
                     href={teamPath(league, year, paceTeam.team)}
+                    prefetch={true}
                     inherit
                   >
                     {paceTeam.team}
