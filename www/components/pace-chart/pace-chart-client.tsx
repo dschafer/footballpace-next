@@ -2,11 +2,11 @@
 
 import { Box, Select, Skeleton } from "@mantine/core";
 import { LineChart, type LineChartSeries } from "@mantine/charts";
+import type { DateRow } from "./date-chart-data";
 import { useIsClient } from "@/lib/use-is-client";
 import { useState } from "react";
 
 export type MatchdayRow = { matchday: number; [key: string]: number | string };
-export type DateRow = { date: string; [key: string]: number | string | null };
 
 type AxisMode = "matchday" | "date";
 
@@ -54,8 +54,9 @@ export default function PaceChartClient({
         data={data}
         series={series}
         dataKey={dataKey}
-        curveType="linear"
-        connectNulls
+        curveType={axisMode === "date" ? "stepAfter" : "linear"}
+        connectNulls={axisMode === "matchday"}
+        withDots={axisMode === "matchday"}
         withLegend
         xAxisLabel={xAxisLabel}
         yAxisLabel={`vs. ${paceLabel} Pace`}
