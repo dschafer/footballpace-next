@@ -36,7 +36,7 @@ export default async function TeamFixtures({
   const upcomingFixtures = fixtures.filter((f) =>
     isUnplayedFixture(f.fixture, playedKeys),
   );
-  if (fixtures.length == 0) {
+  if (upcomingFixtures.length == 0) {
     return null;
   }
   const dateTimeFormat = Intl.DateTimeFormat(undefined, {
