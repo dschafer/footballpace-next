@@ -6,7 +6,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { PRERENDER_TARGET_KEYS, targetKeyToFinish } from "@/lib/pace/target-key";
+import {
+  PRERENDER_TARGET_KEYS,
+  targetKeyLabels,
+  targetKeyToFinish,
+} from "@/lib/pace/target-key";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import LeagueMatches from "@/components/today-matches/league-matches";
 import type { Metadata } from "next/types";
@@ -28,6 +32,14 @@ export const metadata: Metadata = {
 export default async function HomeSSR(props: PageProps<"/ssr/[target]">) {
   const { target } = await props.params;
   const targetKey = validateTargetRoute(target);
+  const benchmark =
+    targetKey === "champion"
+      ? "champion"
+      : targetKey === "ucl"
+        ? "last Champions League–qualifying team"
+        : "last relegation-safe team";
+  const paceLabel =
+    targetKey === "champion" ? "championship" : targetKeyLabels[targetKey];
   return (
     <Stack>
       <SimpleGrid cols={{ base: 1, lg: 2 }}>
@@ -71,11 +83,12 @@ export default async function HomeSSR(props: PageProps<"/ssr/[target]">) {
       </Title>
       <Text>
         Football Pace is a version of the standings table that accounts for
-        strength of schedule. It looks at historical data to see how a typical
-        champion performs in each match, based on home/away and the opponent
-        {"'"}s finishing position. It then presents a new version of the
+        strength of schedule. It looks at historical data to see how a typical{" "}
+        {benchmark} performs in each match, based on home/away and the opponent
+        {"'"}s finishing position. These benchmarks define the target points for
+        each match. It then presents a new version of the
         standings table, that shows how each team is doing compared to typical
-        championship pace, given their schedule so far.
+        {paceLabel} pace, given their schedule so far.
       </Text>
     </Stack>
   );

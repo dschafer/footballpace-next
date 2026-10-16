@@ -19,6 +19,7 @@ import {
   TableTr,
   Text,
 } from "@mantine/core";
+import { finishToTargetKey, targetKeyLabels } from "@/lib/pace/target-key";
 import { useMemo, useState } from "react";
 import AnchorLink from "@/components/anchor-link/anchor-link";
 import ErrorAlert from "../error/error-alert";
@@ -40,6 +41,11 @@ export default function UpcomingTable({
   fixtures: Map<string, PaceFixture[]>;
   targetFinish: number;
 }) {
+  const targetKey = finishToTargetKey(targetFinish);
+  const benchmark =
+    targetKey === "champion"
+      ? "previous title-winning teams"
+      : `previous teams that finished ${targetFinish}th (${targetKeyLabels[targetKey]} target)`;
   // Unique fixture key (match-level), ignoring date
   const fixtureKey = (f: Fixture) =>
     [f.league, f.year, f.homeTeam, f.awayTeam].join("|");
@@ -299,16 +305,15 @@ export default function UpcomingTable({
                 <Text inherit span fw={700}>
                   Difficulty
                 </Text>{" "}
-                is the average number of points that previous title-winning
-                teams dropped in the corresponding match.
+                is the average number of points that {benchmark} dropped in the
+                corresponding match (three points minus the target points).
               </Text>
               <Text>
                 <Text inherit span fw={700}>
                   Total Difficulty
                 </Text>{" "}
                 hence represents how many points each team can afford to drop
-                over this run if they want to keep pace with previous
-                title-winning teams.
+                over this run if they want to keep pace with {benchmark}.
               </Text>
             </Stack>
           </TableCaption>
