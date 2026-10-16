@@ -6,6 +6,8 @@ import { TargetProvider } from "@/context/target-context";
 import { socialImageMetadata } from "@/lib/metadata";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
+export const instant = false;
+
 export async function generateMetadata(
   _props: LayoutProps<"/ssr/[target]">,
   parent: ResolvingMetadata,

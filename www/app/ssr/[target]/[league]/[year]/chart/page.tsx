@@ -14,6 +14,8 @@ import type { Metadata } from "next/types";
 import StandingsPaceChart from "@/components/pace-chart/standings-pace-chart";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
+export const instant = false;
+
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {

@@ -15,6 +15,8 @@ import { teamPath } from "@/lib/url/team-links";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 import year from "@/lib/const/year";
 
+export const instant = false;
+
 export async function generateStaticParams(): Promise<
   (SeasonPageParam & {
     target: TargetKey;

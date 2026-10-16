@@ -16,6 +16,8 @@ import ProjectedStandingsPreamble from "@/components/explanation/projected-stand
 import ProjectedStandingsTable from "@/components/explanation/projected-standings-table";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
+export const instant = false;
+
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {

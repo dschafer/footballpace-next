@@ -23,6 +23,8 @@ import UpcomingTablePlaceholder from "@/components/upcoming-table/upcoming-table
 import { fetchPaceFixtures } from "@/lib/pace/pace";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
+export const instant = false;
+
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {

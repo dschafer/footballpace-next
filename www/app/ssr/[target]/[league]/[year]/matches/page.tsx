@@ -9,6 +9,8 @@ import LeagueFixtures from "@/components/fixtures/league-fixtures";
 import Matches from "@/components/matches/matches";
 import type { Metadata } from "next/types";
 
+export const instant = false;
+
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {

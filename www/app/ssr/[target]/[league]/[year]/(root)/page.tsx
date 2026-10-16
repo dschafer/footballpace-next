@@ -18,6 +18,8 @@ import TodaysMatchesPlaceholder from "@/components/today-matches/todays-matches-
 import leagues from "@/lib/const/leagues";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 
+export const instant = false;
+
 export function generateStaticParams(): (LeagueYearParam & {
   target: TargetKey;
 })[] {

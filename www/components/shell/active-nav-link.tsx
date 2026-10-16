@@ -24,7 +24,7 @@ export const ActiveNavLink = createPolymorphicComponent<
     { pageUrl, prefixUrl, href, ...others },
     ref,
   ) {
-    const pathname = usePathname();
+    const pathname = usePathname().replace(/^\/ssr\/[^/]+(?=\/|$)/, "") || "/";
     const targetKey = useTargetKey();
     let active = false;
     if (pageUrl) {

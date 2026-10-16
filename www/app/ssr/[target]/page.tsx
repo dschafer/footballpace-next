@@ -21,6 +21,8 @@ import leagues from "@/lib/const/leagues";
 import { validateTargetRoute } from "@/lib/pace/validate-target-route";
 import year from "@/lib/const/year";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return PRERENDER_TARGET_KEYS.map((target) => ({ target }));
 }
