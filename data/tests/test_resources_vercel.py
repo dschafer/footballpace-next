@@ -225,15 +225,15 @@ def test_upsert_team_colors_updates_both_colors(
 @pytest.mark.parametrize(
     ("previous_kickoff", "next_kickoff", "affected_rows"),
     [
-        ("2026-10-24T14:00:00Z", "2026-10-24T14:00:00Z", 1),
-        (None, None, 1),
+        ("2026-10-24T14:00:00Z", "2026-10-24T14:00:00Z", 0),
+        (None, None, 0),
         ("2026-10-24T14:00:00Z", "2026-10-25T15:00:00Z", 1),
         (None, "2026-10-24T14:00:00Z", 1),
         ("2026-10-24T14:00:00Z", None, 1),
     ],
     ids=["unchanged", "still-unknown", "rescheduled", "scheduled", "postponed"],
 )
-def test_upsert_fixtures_updates_kickoff_times(
+def test_upsert_fixtures_only_updates_changed_kickoff_times(
     vercel_database: tuple[VercelPostgresResource, sqlite3.Connection],
     previous_kickoff: str | None,
     next_kickoff: str | None,
@@ -260,7 +260,7 @@ def test_upsert_fixtures_updates_kickoff_times(
     assert [dict(row) for row in database.execute("SELECT * FROM fixtures")] == [
         {**fixture, "kickoff_time": next_kickoff}
     ]
-    assert resource.upsert_fixtures([updated_fixture]) == 1
+    assert resource.upsert_fixtures([updated_fixture]) == 0
 
 
 def test_upsert_fixtures_preserves_conflict_key_scopes(
@@ -275,7 +275,7 @@ def test_upsert_fixtures_preserves_conflict_key_scopes(
         "kickoff_time": None,
     }
     assert resource.upsert_fixtures([fixture]) == 1
-    assert resource.upsert_fixtures([fixture]) == 1
+    assert resource.upsert_fixtures([fixture]) == 0
 
     new_fixtures = [
         {**fixture, **key_change}

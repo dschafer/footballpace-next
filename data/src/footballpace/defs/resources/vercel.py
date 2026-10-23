@@ -76,12 +76,13 @@ class VercelPostgresResource(dg.ConfigurableResource):
             return cur.rowcount
 
     def upsert_fixtures(self, fixtures: list[dict[str, Any]]) -> int:
-        """Given a list of team colors, upserts them into the DB."""
+        """Insert fixtures or update changed kickoff times; return affected rows."""
         with self._db_connection.cursor() as cur:
             cur.executemany(
                 """INSERT INTO fixtures (league, year, home_team, away_team, kickoff_time)
     VALUES(%(league)s, %(year)s, %(home_team)s, %(away_team)s, %(kickoff_time)s)
-    ON CONFLICT (league, year, home_team, away_team) DO UPDATE SET kickoff_time = EXCLUDED.kickoff_time;""",
+    ON CONFLICT (league, year, home_team, away_team) DO UPDATE SET kickoff_time = EXCLUDED.kickoff_time
+    WHERE fixtures.kickoff_time IS DISTINCT FROM EXCLUDED.kickoff_time;""",
                 fixtures,
             )
             return cur.rowcount
