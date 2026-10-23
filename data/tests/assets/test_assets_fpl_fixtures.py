@@ -84,7 +84,8 @@ def test_fpl_fixture_season_rejects_multiple_years() -> None:
     )
 
 
-def test_fpl_postgres_assets_carry_fixture_season() -> None:
+@pytest.mark.parametrize("fixture_row_count", [0, 1, 380])
+def test_fpl_postgres_assets_carry_season_and_write_count(fixture_row_count: int) -> None:
     bootstrap = read_fpl_bytes("bootstrap-static.json")
     fixtures = read_fpl_bytes("fixtures.json")
     fixtures_output = fpl_fixtures_df(dg.build_asset_context(), bootstrap, fixtures)
@@ -106,7 +107,8 @@ def test_fpl_postgres_assets_carry_fixture_season() -> None:
 
     class FakeVercelPostgresResource:
         def upsert_fixtures(self, rows) -> int:
-            return len(rows)
+            assert len(rows) == 380
+            return fixture_row_count
 
         def upsert_matches(self, rows) -> int:
             return len(rows)
@@ -120,5 +122,9 @@ def test_fpl_postgres_assets_carry_fixture_season() -> None:
 
     assert isinstance(fixtures_postgres_output, dg.MaterializeResult)
     assert fixtures_postgres_output.value == 2024
+    assert fixtures_postgres_output.metadata is not None
+    assert fixtures_postgres_output.metadata["dagster/row_count"] == fixture_row_count
     assert isinstance(results_postgres_output, dg.MaterializeResult)
     assert results_postgres_output.value == 2024
+    assert results_postgres_output.metadata is not None
+    assert results_postgres_output.metadata["dagster/row_count"] == 0
