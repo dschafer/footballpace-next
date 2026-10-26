@@ -40,9 +40,7 @@ export default function Matches(props: MatchesProps) {
 }
 
 async function MatchesContent({ league, year }: MatchesProps) {
-  const matches = await fetchMatches(league, year, {
-    orderBy: { date: "desc" },
-  });
+  const matches = (await fetchMatches(league, year)).toReversed();
   if (matches.length == 0) {
     return <ErrorAlert />;
   }

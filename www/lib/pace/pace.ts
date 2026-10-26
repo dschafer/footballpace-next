@@ -89,7 +89,7 @@ export async function fetchPaceTeams(
 ): Promise<PaceTeam[]> {
   const [projectedStandings, allMatches, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
-    fetchMatches(league, year, { orderBy: { date: "asc" } }),
+    fetchMatches(league, year),
     fetchPaceSheetMap(league, year, targetFinish),
   ]);
 
