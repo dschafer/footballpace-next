@@ -249,7 +249,9 @@ def fpl_results_df(
         "dagster/table_name": "matches",
     },
     tags={"db_write": "true"},
-    automation_condition=eager_respecting_data_version,
+    automation_condition=eager_respecting_data_version.ignore(
+        dg.AssetSelection.assets("fpl_fixtures_df")
+    ),
 )
 def fpl_results_postgres(
     fpl_fixtures_df: pl.DataFrame,
