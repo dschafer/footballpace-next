@@ -235,9 +235,7 @@ export async function fetchFixtureLeagueMatches({
   }
 
   const [fixtures, projectedStandings, paceSheetEntries] = await Promise.all([
-    fetchFixtures(league, year, {
-      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-    }),
+    fetchFixtures(league, year),
     fetchProjectedStandings(league, year),
     fetchPaceSheetEntries(league, year, targetFinish),
   ]);

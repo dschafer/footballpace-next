@@ -18,10 +18,6 @@ import { PRERENDER_SEASONS } from "@/lib/const/current";
 import prisma from "@/lib/prisma";
 import { targetKeyToFinish } from "@/lib/pace/target-key";
 
-type FixtureFindManyArgs = Omit<
-  Prisma.FixtureFindManyArgs,
-  "include" | "omit" | "select" | "where"
-> & { where?: Prisma.FixtureWhereInput };
 type PaceSheetEntryFindManyArgs = Omit<
   Prisma.PaceSheetEntryFindManyArgs,
   "include" | "omit" | "select" | "where"
@@ -101,27 +97,25 @@ export async function fetchMatches(
 export async function fetchCachedFixtures(
   league: string,
   year: number,
-  args: FixtureFindManyArgs = {},
 ): Promise<Fixture[]> {
   "use cache";
   cacheLife("max");
   cacheTag(fixturesCacheTag(league, year));
 
   return prisma.fixture.findMany({
-    ...args,
-    where: { AND: [{ league, year }, args.where ?? {}] },
+    where: { league, year },
+    orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
   });
 }
 
 export async function fetchFixtures(
   league: string,
   year: number,
-  args: FixtureFindManyArgs = {},
 ): Promise<Fixture[]> {
   if (!shouldCacheSeasonData(league, year)) {
     await prefetch();
   }
-  return fetchCachedFixtures(league, year, args);
+  return fetchCachedFixtures(league, year);
 }
 
 export async function fetchCachedPaceSheetEntries(

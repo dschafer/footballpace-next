@@ -28,16 +28,8 @@ export default async function OpponentsTable({
   paceTeam: PaceTeam;
   targetFinish?: number;
 }) {
-  const [fixtures, paceSheetEntries, projectedStandings] = await Promise.all([
-    fetchFixtures(league, year, {
-      where: {
-        OR: [
-          { homeTeam: paceTeam.team },
-          { awayTeam: paceTeam.team },
-        ],
-      },
-      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-    }),
+  const [allFixtures, paceSheetEntries, projectedStandings] = await Promise.all([
+    fetchFixtures(league, year),
     fetchPaceSheets(league, year, targetFinish),
     fetchProjectedStandings(league, year),
   ]);
@@ -45,6 +37,10 @@ export default async function OpponentsTable({
     return null;
   }
 
+  const fixtures = allFixtures.filter(
+    (fixture) =>
+      fixture.homeTeam == paceTeam.team || fixture.awayTeam == paceTeam.team,
+  );
   const teamPsr = projectedStandings.find((psr) => psr.team == paceTeam.team)!;
   const arrangedProjectedStandings = projectedStandings.filter(
     (psr) => psr.team != paceTeam.team,

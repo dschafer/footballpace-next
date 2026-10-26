@@ -200,9 +200,7 @@ export async function fetchPaceFixtures(
 ): Promise<PaceFixture[]> {
   const [projectedStandings, allFixtures, paceSheetMap] = await Promise.all([
     fetchProjectedStandings(league, year),
-    fetchFixtures(league, year, {
-      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-    }),
+    fetchFixtures(league, year),
     fetchPaceSheetMap(league, year, targetFinish),
   ]);
 

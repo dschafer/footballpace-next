@@ -35,9 +35,7 @@ export default function LeagueFixtures(props: LeagueFixturesProps) {
 
 async function LeagueFixturesContent({ league, year }: LeagueFixturesProps) {
   const [fixtures, matches] = await Promise.all([
-    fetchFixtures(league, year, {
-      orderBy: { kickoffTime: { sort: "asc", nulls: "last" } },
-    }),
+    fetchFixtures(league, year),
     fetchMatches(league, year),
   ]);
   const playedKeys = playedFixtureKeys(matches);
