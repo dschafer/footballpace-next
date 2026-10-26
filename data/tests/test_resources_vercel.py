@@ -191,13 +191,34 @@ def test_upsert_pace_sheet_entries_updates_points_and_preserves_conflict_key_sco
 
 
 @pytest.mark.parametrize(
-    ("previous_secondary", "next_secondary"),
-    [(None, None), (None, "#ffffff"), ("#ffffff", None), ("#ffffff", "#000000")],
+    ("previous_secondary", "next_primary", "next_secondary", "affected_rows"),
+    [
+        (None, "#ff0000", None, 0),
+        ("#ffffff", "#ff0000", "#ffffff", 0),
+        (None, "#dd0000", None, 1),
+        ("#ffffff", "#dd0000", "#ffffff", 1),
+        (None, "#ff0000", "#ffffff", 1),
+        ("#ffffff", "#ff0000", None, 1),
+        ("#ffffff", "#ff0000", "#000000", 1),
+        ("#ffffff", "#dd0000", "#000000", 1),
+    ],
+    ids=[
+        "unchanged-unknown-secondary",
+        "unchanged-known-secondary",
+        "primary-changed-unknown-secondary",
+        "primary-changed-known-secondary",
+        "secondary-set",
+        "secondary-cleared",
+        "secondary-changed",
+        "both-changed",
+    ],
 )
-def test_upsert_team_colors_updates_both_colors(
+def test_upsert_team_colors_only_updates_changed_colors(
     vercel_database: tuple[VercelPostgresResource, sqlite3.Connection],
     previous_secondary: str | None,
+    next_primary: str,
     next_secondary: str | None,
+    affected_rows: int,
 ) -> None:
     resource, database = vercel_database
     colors = {
@@ -206,14 +227,15 @@ def test_upsert_team_colors_updates_both_colors(
         "secondary_color": previous_secondary,
     }
     assert resource.upsert_team_colors([colors]) == 1
-    assert resource.upsert_team_colors([colors]) == 1
+    assert resource.upsert_team_colors([colors]) == 0
 
     updated_colors = {
         **colors,
-        "primary_color": "#dd0000",
+        "primary_color": next_primary,
         "secondary_color": next_secondary,
     }
-    assert resource.upsert_team_colors([updated_colors]) == 1
+    assert resource.upsert_team_colors([updated_colors]) == affected_rows
+    assert resource.upsert_team_colors([updated_colors]) == 0
 
     new_colors = {**colors, "team": "Liverpool"}
     assert resource.upsert_team_colors([new_colors]) == 1

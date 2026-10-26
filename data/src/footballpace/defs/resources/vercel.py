@@ -60,7 +60,9 @@ class VercelPostgresResource(dg.ConfigurableResource):
             cur.executemany(
                 """INSERT INTO team_colors (team, primary_color, secondary_color)
     VALUES(%(team)s, %(primary_color)s, %(secondary_color)s)
-    ON CONFLICT (team) DO UPDATE SET (primary_color, secondary_color) = (EXCLUDED.primary_color, EXCLUDED.secondary_color);""",
+    ON CONFLICT (team) DO UPDATE SET (primary_color, secondary_color) = (EXCLUDED.primary_color, EXCLUDED.secondary_color)
+    WHERE team_colors.primary_color IS DISTINCT FROM EXCLUDED.primary_color
+       OR team_colors.secondary_color IS DISTINCT FROM EXCLUDED.secondary_color;""",
                 team_colors,
             )
             return cur.rowcount
