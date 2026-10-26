@@ -6,6 +6,7 @@ from footballpace.defs.assets.fpl_fixtures import (
     fpl_fixture_season,
     fpl_fixtures_df,
     fpl_fixtures_postgres,
+    fpl_fixtures_schedule_df,
     fpl_results_df,
     fpl_results_postgres,
 )
@@ -73,6 +74,29 @@ def test_fpl_results_df():
     assert type_check.success, type_check.description
 
 
+def test_fpl_fixtures_schedule_changes_with_kickoff_but_not_score() -> None:
+    fixture_output = fpl_fixtures_df(
+        read_fpl_bytes("bootstrap-static.json"), read_fpl_bytes("fixtures.json")
+    )
+    assert isinstance(fixture_output, dg.MaterializeResult)
+    fixtures = fixture_output.value
+    assert isinstance(fixtures, pl.DataFrame)
+
+    original = fpl_fixtures_schedule_df(fixtures)
+    rescheduled = fpl_fixtures_schedule_df(
+        fixtures.with_columns(pl.col("kickoff_time") + pl.duration(days=1))
+    )
+    rescored = fpl_fixtures_schedule_df(
+        fixtures.with_columns(pl.col("ft_home_goals") + 1)
+    )
+    assert isinstance(original, dg.MaterializeResult)
+    assert isinstance(rescheduled, dg.MaterializeResult)
+    assert isinstance(rescored, dg.MaterializeResult)
+    assert original.data_version is not None
+    assert rescheduled.data_version != original.data_version
+    assert rescored.data_version == original.data_version
+
+
 def test_fpl_fixture_season_rejects_multiple_years() -> None:
     years = pl.Series("year", [2025, 2026])
 
@@ -92,6 +116,11 @@ def test_fpl_postgres_assets_carry_season_and_write_count(fixture_row_count: int
     assert isinstance(fixtures_output, dg.MaterializeResult)
     fixtures_df = fixtures_output.value
     assert isinstance(fixtures_df, pl.DataFrame)
+
+    schedule_output = fpl_fixtures_schedule_df(fixtures_df)
+    assert isinstance(schedule_output, dg.MaterializeResult)
+    schedule_df = schedule_output.value
+    assert isinstance(schedule_df, pl.DataFrame)
 
     results_output = fpl_results_df(
         dg.build_asset_context(),
@@ -114,7 +143,7 @@ def test_fpl_postgres_assets_carry_season_and_write_count(fixture_row_count: int
             return len(rows)
 
     fixtures_postgres_output = fpl_fixtures_postgres(
-        fixtures_df, FakeVercelPostgresResource()
+        schedule_df, FakeVercelPostgresResource()
     )
     results_postgres_output = fpl_results_postgres(
         fixtures_df, results_df, FakeVercelPostgresResource()

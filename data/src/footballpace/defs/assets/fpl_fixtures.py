@@ -11,6 +11,7 @@ from footballpace.dataversion import (
 )
 from footballpace.defs.models import (
     FPLFixtureDagsterType,
+    Fixture,
     FixtureDagsterType,
     MatchDagsterType,
 )
@@ -158,9 +159,34 @@ def fpl_fixtures_df(
 
 @dg.asset(
     group_name="FPL",
-    kinds={"Postgres"},
-    code_version="v2",
+    kinds={"Polars"},
+    code_version="v1",
+    dagster_type=FixtureDagsterType,
     ins={"fpl_fixtures_df": dg.AssetIn(dagster_type=FPLFixtureDagsterType)},
+    automation_condition=eager_respecting_data_version,
+)
+def fpl_fixtures_schedule_df(
+    fpl_fixtures_df: pl.DataFrame,
+) -> dg.MaterializeResult[pl.DataFrame]:
+    """Track changes to stored fixture fields independently of match results."""
+    fixtures = fpl_fixtures_df.select(Fixture.columns).sort(
+        "league", "year", "kickoff_time", "home_team", "away_team", nulls_last=True
+    )
+    return dg.MaterializeResult(
+        value=fixtures,
+        metadata={
+            "dagster/row_count": len(fixtures),
+            "preview": markdown_metadata(fixtures.head()),
+        },
+        data_version=dg.DataVersion(df_data_version(fixtures)),
+    )
+
+
+@dg.asset(
+    group_name="FPL",
+    kinds={"Postgres"},
+    code_version="v3",
+    ins={"fpl_fixtures_schedule_df": dg.AssetIn(dagster_type=FixtureDagsterType)},
     metadata={
         **FixtureDagsterType.metadata,
         "dagster/table_name": "fixtures",
@@ -169,11 +195,11 @@ def fpl_fixtures_df(
     automation_condition=eager_respecting_data_version,
 )
 def fpl_fixtures_postgres(
-    fpl_fixtures_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
+    fpl_fixtures_schedule_df: pl.DataFrame, vercel_postgres: VercelPostgresResource
 ) -> dg.MaterializeResult[int]:
     """Writes FPL fixtures to Postgres and returns the updated season."""
-    season = fpl_fixture_season(fpl_fixtures_df.get_column("year"))
-    rowcount = vercel_postgres.upsert_fixtures(fpl_fixtures_df.to_dicts())
+    season = fpl_fixture_season(fpl_fixtures_schedule_df.get_column("year"))
+    rowcount = vercel_postgres.upsert_fixtures(fpl_fixtures_schedule_df.to_dicts())
     return dg.MaterializeResult(
         value=season,
         metadata={"dagster/row_count": rowcount, "season": season},
