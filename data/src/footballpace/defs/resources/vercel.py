@@ -48,7 +48,8 @@ class VercelPostgresResource(dg.ConfigurableResource):
             cur.executemany(
                 """INSERT INTO pace_sheet_entries (league, year, team_finish, opponent_finish, home, expected_points)
     VALUES(%(league)s, %(year)s, %(team_finish)s, %(opponent_finish)s, %(home)s, %(expected_points)s)
-    ON CONFLICT (league, year, team_finish, opponent_finish, home) DO UPDATE SET expected_points = EXCLUDED.expected_points;""",
+    ON CONFLICT (league, year, team_finish, opponent_finish, home) DO UPDATE SET expected_points = EXCLUDED.expected_points
+    WHERE pace_sheet_entries.expected_points IS DISTINCT FROM EXCLUDED.expected_points;""",
                 pace_sheet_entries,
             )
             return cur.rowcount

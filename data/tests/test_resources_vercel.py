@@ -165,10 +165,11 @@ def test_upsert_pace_sheet_entries_updates_points_and_preserves_conflict_key_sco
         "expected_points": 1.5,
     }
     assert resource.upsert_pace_sheet_entries([entry]) == 1
-    assert resource.upsert_pace_sheet_entries([entry]) == 1
+    assert resource.upsert_pace_sheet_entries([entry]) == 0
 
     updated_entry = {**entry, "expected_points": 2.5}
     assert resource.upsert_pace_sheet_entries([updated_entry]) == 1
+    assert resource.upsert_pace_sheet_entries([updated_entry]) == 0
 
     new_entries = [
         {**entry, **key_change}
