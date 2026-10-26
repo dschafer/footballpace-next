@@ -4,7 +4,11 @@ import dagster as dg
 import polars as pl
 
 from footballpace.canonical import canonical_name
-from footballpace.dataversion import bytes_data_version, eager_respecting_data_version
+from footballpace.dataversion import (
+    bytes_data_version,
+    df_data_version,
+    eager_respecting_data_version,
+)
 from footballpace.defs.models import MatchDagsterType
 from footballpace.defs.resources.footballdata import FootballDataResource
 from footballpace.defs.resources.vercel import VercelPostgresResource
@@ -61,7 +65,7 @@ csv_dtypes = {
     group_name="MatchResults",
     kinds={"Polars"},
     partitions_def=all_seasons_leagues_partition,
-    code_version="v4",
+    code_version="v5",
     dagster_type=MatchDagsterType,
     automation_condition=eager_respecting_data_version,
 )
@@ -128,6 +132,7 @@ def match_results_df(
             "ft_away_goals",
             "ft_result",
         )
+        .sort("league", "year", "date", "home_team", "away_team")
     ).collect()
 
     # We need to use strict=False above, hence this check
@@ -148,6 +153,7 @@ def match_results_df(
             ),
             "teams": metadata_teams,
         },
+        data_version=dg.DataVersion(df_data_version(df)),
     )
 
 

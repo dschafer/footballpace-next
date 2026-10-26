@@ -42,6 +42,30 @@ def test_match_results_df_22():
     assert type_check.success, type_check.description
 
 
+def test_match_results_data_version_tracks_stored_columns() -> None:
+    csv_bytes = (
+        b"Div,Date,HomeTeam,AwayTeam,FTHG,FTAG,FTR,Referee\n"
+        b"E0,05/08/2022,Crystal Palace,Arsenal,0,2,A,Original referee\n"
+    )
+    with dg.build_asset_context(
+        partition_key=dg.MultiPartitionKey({"season": "2022"})
+    ) as context:
+        original = match_results_df(context, csv_bytes)
+        referee_changed = match_results_df(
+            context, csv_bytes.replace(b"Original referee", b"New referee")
+        )
+        score_changed = match_results_df(
+            context, csv_bytes.replace(b",0,2,A,", b",0,3,A,")
+        )
+
+    assert isinstance(original, dg.MaterializeResult)
+    assert isinstance(referee_changed, dg.MaterializeResult)
+    assert isinstance(score_changed, dg.MaterializeResult)
+    assert original.data_version is not None
+    assert referee_changed.data_version == original.data_version
+    assert score_changed.data_version != original.data_version
+
+
 def test_match_results_postgres():
     csv_bytes = read_csv_bytes("E0_2022.csv")
     df_output = match_results_df(
