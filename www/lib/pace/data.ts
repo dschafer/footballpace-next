@@ -15,6 +15,7 @@ import {
   teamsCacheTag,
 } from "@/lib/cache-tags";
 import { PRERENDER_SEASONS } from "@/lib/const/current";
+import leagues from "@/lib/const/leagues";
 import prisma from "@/lib/prisma";
 import { targetKeyToFinish } from "@/lib/pace/target-key";
 
@@ -112,6 +113,9 @@ export async function fetchFixtures(
   league: string,
   year: number,
 ): Promise<Fixture[]> {
+  if (!leagues.get(league)?.fixtures) {
+    return [];
+  }
   if (!shouldCacheSeasonData(league, year)) {
     await prefetch();
   }
