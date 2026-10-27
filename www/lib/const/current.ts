@@ -47,8 +47,13 @@ export function validateLeagueYear(
   if (!leagueInfo) {
     notFound();
   }
-  const yearInt = parseInt(param.year, 10);
-  if (isNaN(yearInt) || !Number.isInteger(yearInt)) {
+  const yearInt = Number(param.year);
+  if (
+    !Number.isInteger(yearInt) ||
+    String(yearInt) !== param.year ||
+    yearInt < 1993 ||
+    yearInt > year
+  ) {
     notFound();
   }
   return [leagueInfo, yearInt];
