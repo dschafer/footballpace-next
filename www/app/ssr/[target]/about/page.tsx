@@ -40,9 +40,10 @@ export default function AboutPage() {
           <Text fw={700} span>
             Target Points
           </Text>
-          , based on how historical league champions perform in matches against
-          opponents who finished in that position. From this, we can also
-          compute the match{"'"}s{" "}
+          , based on the points league champions earned in past seasons. We rank
+          the home and away averages separately, assigning the fewest target
+          points in each group to the highest-finishing opponent. From this, we
+          can also compute the match{"'"}s{" "}
           <Text fw={700} span>
             Difficulty
           </Text>

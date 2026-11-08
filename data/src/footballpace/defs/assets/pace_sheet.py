@@ -93,6 +93,8 @@ def pace_sheet_entries_df(
         .agg(pl.col("expected_points").mean())
         .join(LEAGUE_TEAM_FINISH_DF, on=["league", "team_finish"], how="semi")
         .group_by("league", "home", "team_finish")
+        # Sort independently so the highest-finishing opponent gets the lowest
+        # target, even when the historical averages fall in a different order.
         .agg(
             pl.col("opponent_finish").sort(descending=False),
             pl.col("expected_points").sort(descending=False),
